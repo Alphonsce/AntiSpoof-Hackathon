@@ -601,11 +601,11 @@ class Model(nn.Module):
 
         self.out_layer = nn.Linear(9 * gat_dims[1], 2)
 
-    def forward(self, x):
+    def forward(self, x, Freq_aug=False):
 
         x = x.unsqueeze(1)
 
-        x = self.conv_time(x, mask=False)
+        x = self.conv_time(x, mask=Freq_aug)
         x = x.unsqueeze(dim=1)
         x = F.max_pool2d(torch.abs(x), (3, 3))
 

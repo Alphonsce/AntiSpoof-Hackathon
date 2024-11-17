@@ -4,32 +4,50 @@ import torch
 from torch import Tensor
 from torch.utils.data import Dataset
 
+from tqdm import tqdm
+
 ___author__ = "Hemlata Tak, Jee-weon Jung"
 __email__ = "tak@eurecom.fr, jeeweon.jung@navercorp.com"
 
 
-def genSpoof_list(dir_meta, is_train=False, is_eval=False):
+def genSpoof_list(dir_meta, is_train=False, is_eval=False, train_type="2019"):
+    '''
+    Train 2019_metadata format:
+    ----
+    speaker path no_need no_need label
+    LA_0039 LA_E_2834763 - A11 spoof
+    
+    Eval 2021_eval format:
+    speaker path idk idk idk label idk idk
+    LA_0009 LA_E_9332881 alaw ita_tx A07 spoof notrim eval
+    ---
+    
+    '''
 
     d_meta = {}
     file_list = []
     with open(dir_meta, "r") as f:
         l_meta = f.readlines()
 
+    # I modified for train
     if is_train:
-        for line in l_meta:
-            _, key, _, _, _, label = line.strip().split(" ")
+        for line in tqdm(l_meta, desc="Reading train data"):
+            if train_type == "2019":
+                _, key, _, _, label = line.strip().split(" ")
+            elif train_type == "2021":
+                _, key, _, _, _, label, _, _ = line.strip().split(" ")
             file_list.append(key)
             d_meta[key] = 1 if label == "bonafide" else 0
         return d_meta, file_list
 
     elif is_eval:
         for line in l_meta:
-            _, key, _, _, _, _ = line.strip().split(" ")
+            _, key, _, _, _, label, _, _ = line.strip().split(" ")
             file_list.append(key)
         return file_list
     else:
-        for line in l_meta:
-            _, key, _, _, _, label = line.strip().split(" ")
+        for line in tqdm(l_meta, desc="Reading eval data"):
+            _, key, _, _, _, label, _, _ = line.strip().split(" ")
             file_list.append(key)
             d_meta[key] = 1 if label == "bonafide" else 0
         return d_meta, file_list

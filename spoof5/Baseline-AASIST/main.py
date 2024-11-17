@@ -53,8 +53,20 @@ def main(args: argparse.Namespace) -> None:
 
     # define database related paths
     output_dir = Path(args.output_dir)
+    
     database_path = Path(config["database_path"])
-    dev_trial_path = database_path / "ASVspoof5.dev.metainfor.txt"
+    train_flac_dir = Path(config["train_flac_dir"])
+    eval_flac_dir = Path(config["eval_flac_dir"])
+    train_meta_file = Path(config["train_meta_file"])
+    eval_meta_file = Path(config["eval_meta_file"])
+    
+    trn_database_path = database_path / train_flac_dir
+    dev_database_path = database_path / eval_flac_dir
+
+    trn_list_path = database_path / train_meta_file
+    # Used to create file with scores to compute metrics:
+    dev_trial_path = database_path / eval_meta_file
+    
     # define model related paths
     model_tag = "{}_ep{}_bs{}".format(
         os.path.splitext(os.path.basename(args.config))[0],
@@ -79,10 +91,9 @@ def main(args: argparse.Namespace) -> None:
     # define model architecture
     model = get_model(model_config, device)
 
-    print(f"DEFINED A MODEL!!!")
-
     # define dataloaders
-    trn_loader, dev_loader = get_loader(database_path, args.seed, config)
+    
+    trn_loader, dev_loader = get_loader(database_path, train_flac_dir, eval_flac_dir, train_meta_file, eval_meta_file, args.seed, config)
 
     # evaluates pretrained model
     # NOTE: Currently it is evaluated on the development set instead of the evaluation set
@@ -187,15 +198,15 @@ def get_model(model_config: Dict, device: torch.device):
 
 
 def get_loader(
-    database_path: str, seed: int, config: dict
+    database_path: str, train_flac_dir, eval_flac_dir, train_meta_file, eval_meta_file, seed: int, config: dict
 ) -> List[torch.utils.data.DataLoader]:
     """Make PyTorch DataLoaders for train / developement"""
 
-    trn_database_path = database_path / "flac_T/"
-    dev_database_path = database_path / "flac_D/"
+    trn_database_path = database_path / train_flac_dir
+    dev_database_path = database_path / eval_flac_dir
 
-    trn_list_path = database_path / "ASVspoof5.train.metainfor.txt"
-    dev_trial_path = database_path / "ASVspoof5.dev.metainfor.txt"
+    trn_list_path = database_path / train_meta_file
+    dev_trial_path = database_path / eval_meta_file
 
     d_label_trn, file_train = genSpoof_list(
         dir_meta=trn_list_path, is_train=True, is_eval=False
@@ -257,7 +268,9 @@ def produce_evaluation_file(
     # assert len(trial_lines) == len(fname_list) == len(score_list)
     with open(save_path, "w") as fh:
         for fn, sco, trl in zip(fname_list, score_list, trial_lines):
-            spk_id, utt_id, _, _, src, key = trl.strip().split(" ")
+            # spk_id, utt_id, _, _, src, key = trl.strip().split(" ")
+            # For 2021 eval file: LA_0009 LA_E_9332881 alaw ita_tx A07 spoof notrim eval
+            spk_id, utt_id, _, _, _, key, _, _ = trl.strip().split(" ")
             assert fn == utt_id
             fh.write("{} {} {} {}\n".format(spk_id, utt_id, sco, key))
     print("Scores saved to {}".format(save_path))
