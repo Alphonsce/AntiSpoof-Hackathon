@@ -8,7 +8,7 @@ import torch.distributed as dist
 from ddp_util import all_gather
 import logger
 import config
-from data.augmentation import WaveformAugmetation
+from data_utils.augmentation import WaveformAugmetation
 
 class Trainer:
     

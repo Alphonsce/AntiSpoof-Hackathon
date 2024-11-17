@@ -6,9 +6,9 @@ import os
 import torch
 import torch.nn as nn
 from trainer import Trainer
-from data.train_set import ASVspoof2019LA as TrainSet
-from data.test_set import ASVspoof2021LA_eval as TestSet
-from data.preprocess import PreEmphasis
+from data_utils.train_set import ASVspoof2019LA as TrainSet
+from data_utils.test_set import ASVspoof2021LA_eval as TestSet
+from data_utils.preprocess import PreEmphasis
 from models.rawformer import Rawformer_L, Rawformer_S, Rawformer_SE
 from logger import Logger
 import wandb
@@ -17,6 +17,8 @@ import torch.utils.data as data
 import datetime
 import numpy as np
 import config
+
+from rawboost_args import create_rawboost_args
 
 def set_seed(seed):
     random.seed(seed)
@@ -35,7 +37,7 @@ def getDataLoader(dataset, batch_size, num_workers):
                            num_workers=num_workers
                            )
 
-def run(rank, world_size, port):
+def run(rank, world_size, port, rawboost_args):
     
     # ------------------------- DDP setup ------------------------- #
     os.environ["MASTER_ADDR"] = 'localhost'
@@ -51,7 +53,7 @@ def run(rank, world_size, port):
     set_seed(exp_config.random_seed)
         
     # ------------------------- Data sets ------------------------- #
-    train_loader = getDataLoader(dataset=TrainSet(), batch_size=exp_config.batch_size_train, num_workers=sys_config.num_workers)
+    train_loader = getDataLoader(dataset=TrainSet(rawboost_args), batch_size=exp_config.batch_size_train, num_workers=sys_config.num_workers)
     test_loader = getDataLoader(dataset=TestSet(), batch_size=exp_config.batch_size_test, num_workers=sys_config.num_workers)
     
     # ------------------------- set model ------------------------- #
@@ -105,9 +107,12 @@ if __name__ == "__main__":
     
     torch.cuda.empty_cache()
     
+    rawboost_args = create_rawboost_args()
+    
     port = f'10{datetime.datetime.now().microsecond % 100}'
     world_size = torch.cuda.device_count()
-    mp.spawn(run, 
-             args=(world_size, port),
-             nprocs=world_size
-             )
+    mp.spawn(
+        run, 
+        args=(world_size, port, rawboost_args),
+        nprocs=world_size,
+    )

@@ -6,9 +6,13 @@ RUN pip install torch==1.11.0+cu115 -f https://download.pytorch.org/whl/torch_st
 RUN pip install torchaudio==0.11.0+cu115 -f https://download.pytorch.org/whl/torch_stable.html
 RUN pip install pip --upgrade
 RUN pip install wandb
-RUN pip install torch_audiomentations
 
 COPY ./ /app/
 WORKDIR /app
+
+RUN pip install git+https://github.com/asteroid-team/torch-audiomentations
+
+ENV https_proxy=http://192.168.101.101:3128
+ENV http_proxy=http://192.168.101.101:3128
 
 ENTRYPOINT ["bash"]
