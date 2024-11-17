@@ -11,4 +11,4 @@ RUN pip install torch_audiomentations
 COPY ./ /app/
 WORKDIR /app
 
-CMD ["python",  "main.py"]
+ENTRYPOINT ["bash"]
