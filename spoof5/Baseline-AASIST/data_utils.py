@@ -50,7 +50,7 @@ def pad_random(x: np.ndarray, max_len: int = 64600):
     # if duration is already long enough
     if x_len >= max_len:
         stt = np.random.randint(x_len - max_len)
-        return x[stt:stt + max_len]
+        return x[stt : stt + max_len]
 
     # if too short
     num_repeats = int(max_len / x_len) + 1
@@ -61,7 +61,7 @@ def pad_random(x: np.ndarray, max_len: int = 64600):
 class TrainDataset(Dataset):
     def __init__(self, list_IDs, labels, base_dir):
         """self.list_IDs	: list of strings (each string: utt key),
-           self.labels      : dictionary (key: utt key, value: label integer)"""
+        self.labels      : dictionary (key: utt key, value: label integer)"""
         self.list_IDs = list_IDs
         self.labels = labels
         self.base_dir = base_dir
@@ -81,8 +81,7 @@ class TrainDataset(Dataset):
 
 class TestDataset(Dataset):
     def __init__(self, list_IDs, base_dir):
-        """self.list_IDs	: list of strings (each string: utt key),
-        """
+        """self.list_IDs	: list of strings (each string: utt key),"""
         self.list_IDs = list_IDs
         self.base_dir = base_dir
         self.cut = 64600  # take ~4 sec audio (64600 samples)

@@ -23,26 +23,26 @@ def str_to_bool(val):
     0
     """
     val = val.lower()
-    if val in ('y', 'yes', 't', 'true', 'on', '1'):
+    if val in ("y", "yes", "t", "true", "on", "1"):
         return True
-    if val in ('n', 'no', 'f', 'false', 'off', '0'):
+    if val in ("n", "no", "f", "false", "off", "0"):
         return False
-    raise ValueError('invalid truth value {}'.format(val))
+    raise ValueError("invalid truth value {}".format(val))
 
 
 def cosine_annealing(step, total_steps, lr_max, lr_min):
     """Cosine Annealing for learning rate decay scheduler"""
-    return lr_min + (lr_max -
-                     lr_min) * 0.5 * (1 + np.cos(step / total_steps * np.pi))
+    return lr_min + (lr_max - lr_min) * 0.5 * (1 + np.cos(step / total_steps * np.pi))
 
 
 def keras_decay(step, decay=0.0001):
     """Learning rate decay in Keras-style"""
-    return 1. / (1. + decay * step)
+    return 1.0 / (1.0 + decay * step)
 
 
 class SGDRScheduler(torch.optim.lr_scheduler._LRScheduler):
     """SGD with restarts scheduler"""
+
     def __init__(self, optimizer, T0, T_mul, eta_min, last_epoch=-1):
         self.Ti = T0
         self.T_mul = T_mul
@@ -60,31 +60,34 @@ class SGDRScheduler(torch.optim.lr_scheduler._LRScheduler):
             T_cur = 0
 
         return [
-            self.eta_min + (base_lr - self.eta_min) *
-            (1 + np.cos(np.pi * T_cur / self.Ti)) / 2
+            self.eta_min
+            + (base_lr - self.eta_min) * (1 + np.cos(np.pi * T_cur / self.Ti)) / 2
             for base_lr in self.base_lrs
         ]
 
 
 def _get_optimizer(model_parameters, optim_config):
     """Defines optimizer according to the given config"""
-    optimizer_name = optim_config['optimizer']
+    optimizer_name = optim_config["optimizer"]
 
-    if optimizer_name == 'sgd':
-        optimizer = torch.optim.SGD(model_parameters,
-                                    lr=optim_config['base_lr'],
-                                    momentum=optim_config['momentum'],
-                                    weight_decay=optim_config['weight_decay'],
-                                    nesterov=optim_config['nesterov'])
-    elif optimizer_name == 'adam':
-        optimizer = torch.optim.Adam(model_parameters,
-                                     lr=optim_config['base_lr'],
-                                     betas=optim_config['betas'],
-                                     weight_decay=optim_config['weight_decay'],
-                                     amsgrad=str_to_bool(
-                                         optim_config['amsgrad']))
+    if optimizer_name == "sgd":
+        optimizer = torch.optim.SGD(
+            model_parameters,
+            lr=optim_config["base_lr"],
+            momentum=optim_config["momentum"],
+            weight_decay=optim_config["weight_decay"],
+            nesterov=optim_config["nesterov"],
+        )
+    elif optimizer_name == "adam":
+        optimizer = torch.optim.Adam(
+            model_parameters,
+            lr=optim_config["base_lr"],
+            betas=optim_config["betas"],
+            weight_decay=optim_config["weight_decay"],
+            amsgrad=str_to_bool(optim_config["amsgrad"]),
+        )
     else:
-        print('Un-known optimizer', optimizer_name)
+        print("Un-known optimizer", optimizer_name)
         sys.exit()
 
     return optimizer
@@ -94,20 +97,20 @@ def _get_scheduler(optimizer, optim_config):
     """
     Defines learning rate scheduler according to the given config
     """
-    if optim_config['scheduler'] == 'multistep':
+    if optim_config["scheduler"] == "multistep":
         scheduler = torch.optim.lr_scheduler.MultiStepLR(
             optimizer,
-            milestones=optim_config['milestones'],
-            gamma=optim_config['lr_decay'])
+            milestones=optim_config["milestones"],
+            gamma=optim_config["lr_decay"],
+        )
 
-    elif optim_config['scheduler'] == 'sgdr':
-        scheduler = SGDRScheduler(optimizer, optim_config['T0'],
-                                  optim_config['Tmult'],
-                                  optim_config['lr_min'])
+    elif optim_config["scheduler"] == "sgdr":
+        scheduler = SGDRScheduler(
+            optimizer, optim_config["T0"], optim_config["Tmult"], optim_config["lr_min"]
+        )
 
-    elif optim_config['scheduler'] == 'cosine':
-        total_steps = optim_config['epochs'] * \
-            optim_config['steps_per_epoch']
+    elif optim_config["scheduler"] == "cosine":
+        total_steps = optim_config["epochs"] * optim_config["steps_per_epoch"]
 
         scheduler = torch.optim.lr_scheduler.LambdaLR(
             optimizer,
@@ -115,11 +118,14 @@ def _get_scheduler(optimizer, optim_config):
                 step,
                 total_steps,
                 1,  # since lr_lambda computes multiplicative factor
-                optim_config['lr_min'] / optim_config['base_lr']))
+                optim_config["lr_min"] / optim_config["base_lr"],
+            ),
+        )
 
-    elif optim_config['scheduler'] == 'keras_decay':
+    elif optim_config["scheduler"] == "keras_decay":
         scheduler = torch.optim.lr_scheduler.LambdaLR(
-            optimizer, lr_lambda=lambda step: keras_decay(step))
+            optimizer, lr_lambda=lambda step: keras_decay(step)
+        )
     else:
         scheduler = None
     return scheduler
@@ -141,8 +147,8 @@ def seed_worker(worker_id):
     random.seed(worker_seed)
 
 
-def set_seed(seed, config = None):
-    """ 
+def set_seed(seed, config=None):
+    """
     set initial seed for reproduction
     """
     if config is None:
@@ -153,5 +159,7 @@ def set_seed(seed, config = None):
     torch.manual_seed(seed)
     if torch.cuda.is_available():
         torch.cuda.manual_seed_all(seed)
-        torch.backends.cudnn.deterministic = str_to_bool(config["cudnn_deterministic_toggle"])
+        torch.backends.cudnn.deterministic = str_to_bool(
+            config["cudnn_deterministic_toggle"]
+        )
         torch.backends.cudnn.benchmark = str_to_bool(config["cudnn_benchmark_toggle"])

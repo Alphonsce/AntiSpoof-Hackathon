@@ -2,30 +2,22 @@
 SEMAA model
 Weijiang Xia, BUPT， Beijing
 """
+
 """
 AASIST
 Copyright (c) 2021-present NAVER Corp.
 MIT license
 """
 import random
-from typing import Union
-from utils import create_optimizer, seed_worker, set_seed, str_to_bool
+from typing import Dict, List, Union
+
 import numpy as np
 import torch
 import torch.nn as nn
 import torch.nn.functional as F
-from torch import Tensor
-import fairseq
-# from torchstat import stat
-from thop import profile
-
-
-import json
 import torch.nn.init as init
+from torch import Tensor
 from torch.autograd import Function
-from typing import Dict, List, Union
-from importlib import import_module
-
 
 
 class SelfAttention(nn.Module):
@@ -34,7 +26,9 @@ class SelfAttention(nn.Module):
 
         # self.output_size = output_size
         self.hidden_size = hidden_size
-        self.att_weights = nn.Parameter(torch.Tensor(1, hidden_size), requires_grad=True)
+        self.att_weights = nn.Parameter(
+            torch.Tensor(1, hidden_size), requires_grad=True
+        )
 
         self.mean_only = mean_only
 
@@ -43,7 +37,9 @@ class SelfAttention(nn.Module):
     def forward(self, inputs):
 
         batch_size = inputs.size(0)
-        weights = torch.bmm(inputs, self.att_weights.permute(1, 0).unsqueeze(0).repeat(batch_size, 1, 1))
+        weights = torch.bmm(
+            inputs, self.att_weights.permute(1, 0).unsqueeze(0).repeat(batch_size, 1, 1)
+        )
 
         if inputs.size(0) == 1:
             attentions = F.softmax(torch.tanh(weights), dim=1)
@@ -52,7 +48,6 @@ class SelfAttention(nn.Module):
 
             attentions = F.softmax(torch.tanh(weights.squeeze()), dim=1)
             weighted = torch.mul(inputs, attentions.unsqueeze(2).expand_as(inputs))
-
 
         if self.mean_only:
             return weighted.sum(1)
@@ -90,14 +85,14 @@ class GraphAttentionLayer(nn.Module):
         self.act = nn.SELU(inplace=True)
 
         # temperature
-        self.temp = 1.
+        self.temp = 1.0
         if "temperature" in kwargs:
             self.temp = kwargs["temperature"]
 
     def forward(self, x):
-        '''
+        """
         x   :(#bs, #node, #dim)
-        '''
+        """
         # apply input dropout
         x = self.input_drop(x)
 
@@ -113,12 +108,12 @@ class GraphAttentionLayer(nn.Module):
         return x
 
     def _pairwise_mul_nodes(self, x):
-        '''
+        """
         Calculates pairwise multiplication of nodes.
         - for attention map
         x           :(#bs, #node, #dim)
         out_shape   :(#bs, #node, #node, #dim)
-        '''
+        """
 
         nb_nodes = x.size(1)
         x = x.unsqueeze(2).expand(-1, -1, nb_nodes, -1)
@@ -127,10 +122,10 @@ class GraphAttentionLayer(nn.Module):
         return x * x_mirror
 
     def _derive_att_map(self, x):
-        '''
+        """
         x           :(#bs, #node, #dim)
         out_shape   :(#bs, #node, #node, 1)
-        '''
+        """
         att_map = self._pairwise_mul_nodes(x)
         # size: (#bs, #node, #node, #dim_out)
         att_map = torch.tanh(self.att_proj(att_map))
@@ -197,15 +192,15 @@ class HtrgGraphAttentionLayer(nn.Module):
         self.act = nn.SELU(inplace=True)
 
         # temperature
-        self.temp = 1.
+        self.temp = 1.0
         if "temperature" in kwargs:
             self.temp = kwargs["temperature"]
 
     def forward(self, x1, x2, master=None):
-        '''
+        """
         x1  :(#bs, #node, #dim)
         x2  :(#bs, #node, #dim)
-        '''
+        """
         num_type1 = x1.size(1)
         num_type2 = x2.size(1)
 
@@ -213,7 +208,6 @@ class HtrgGraphAttentionLayer(nn.Module):
         x2 = self.proj_type2(x2)
 
         x = torch.cat([x1, x2], dim=1)
-
 
         if master is None:
             master = torch.mean(x, dim=1, keepdim=True)
@@ -239,9 +233,6 @@ class HtrgGraphAttentionLayer(nn.Module):
 
         return x1, x2, master
 
-
-
-
     def _update_master(self, x, master):
 
         att_map = self._derive_att_map_master(x, master)
@@ -250,12 +241,12 @@ class HtrgGraphAttentionLayer(nn.Module):
         return master
 
     def _pairwise_mul_nodes(self, x):
-        '''
+        """
         Calculates pairwise multiplication of nodes.
         - for attention map
         x           :(#bs, #node, #dim)
         out_shape   :(#bs, #node, #node, #dim)
-        '''
+        """
 
         nb_nodes = x.size(1)
         x = x.unsqueeze(2).expand(-1, -1, nb_nodes, -1)
@@ -264,10 +255,10 @@ class HtrgGraphAttentionLayer(nn.Module):
         return x * x_mirror
 
     def _derive_att_map_master(self, x, master):
-        '''
+        """
         x           :(#bs, #node, #dim)
         out_shape   :(#bs, #node, #node, 1)
-        '''
+        """
         att_map = x * master
         att_map = torch.tanh(self.att_projM(att_map))
 
@@ -281,10 +272,10 @@ class HtrgGraphAttentionLayer(nn.Module):
         return att_map
 
     def _derive_att_map(self, x, num_type1, num_type2):
-        '''
+        """
         x           :(#bs, #node, #dim)
         out_shape   :(#bs, #node, #node, 1)
-        '''
+        """
         att_map = self._pairwise_mul_nodes(x)
         # size: (#bs, #node, #node, #dim_out)
         att_map = torch.tanh(self.att_proj(att_map))
@@ -293,13 +284,17 @@ class HtrgGraphAttentionLayer(nn.Module):
         att_board = torch.zeros_like(att_map[:, :, :, 0]).unsqueeze(-1)
 
         att_board[:, :num_type1, :num_type1, :] = torch.matmul(
-            att_map[:, :num_type1, :num_type1, :], self.att_weight11)
+            att_map[:, :num_type1, :num_type1, :], self.att_weight11
+        )
         att_board[:, num_type1:, num_type1:, :] = torch.matmul(
-            att_map[:, num_type1:, num_type1:, :], self.att_weight22)
+            att_map[:, num_type1:, num_type1:, :], self.att_weight22
+        )
         att_board[:, :num_type1, num_type1:, :] = torch.matmul(
-            att_map[:, :num_type1, num_type1:, :], self.att_weight12)
+            att_map[:, :num_type1, num_type1:, :], self.att_weight12
+        )
         att_board[:, num_type1:, :num_type1, :] = torch.matmul(
-            att_map[:, num_type1:, :num_type1, :], self.att_weight12)
+            att_map[:, num_type1:, :num_type1, :], self.att_weight12
+        )
 
         att_map = att_board
 
@@ -320,8 +315,7 @@ class HtrgGraphAttentionLayer(nn.Module):
 
     def _project_master(self, x, master, att_map):
 
-        x1 = self.proj_with_attM(torch.matmul(
-            att_map.squeeze(-1).unsqueeze(1), x))
+        x1 = self.proj_with_attM(torch.matmul(att_map.squeeze(-1).unsqueeze(1), x))
         x2 = self.proj_without_attM(master)
 
         return x1 + x2
@@ -387,23 +381,28 @@ class CONV(nn.Module):
 
     @staticmethod
     def to_hz(mel):
-        return 700 * (10**(mel / 2595) - 1)
+        return 700 * (10 ** (mel / 2595) - 1)
 
-    def __init__(self,
-                 out_channels,
-                 kernel_size,
-                 sample_rate=16000,
-                 in_channels=1,
-                 stride=1,
-                 padding=0,
-                 dilation=1,
-                 bias=False,
-                 groups=1,
-                 mask=False):
+    def __init__(
+        self,
+        out_channels,
+        kernel_size,
+        sample_rate=16000,
+        in_channels=1,
+        stride=1,
+        padding=0,
+        dilation=1,
+        bias=False,
+        groups=1,
+        mask=False,
+    ):
         super().__init__()
         if in_channels != 1:
 
-            msg = "SincConv only support one input channel (here, in_channels = {%i})" % (in_channels)
+            msg = (
+                "SincConv only support one input channel (here, in_channels = {%i})"
+                % (in_channels)
+            )
             raise ValueError(msg)
         self.out_channels = out_channels
         self.kernel_size = kernel_size
@@ -417,9 +416,9 @@ class CONV(nn.Module):
         self.dilation = dilation
         self.mask = mask
         if bias:
-            raise ValueError('SincConv does not support bias.')
+            raise ValueError("SincConv does not support bias.")
         if groups > 1:
-            raise ValueError('SincConv does not support groups.')
+            raise ValueError("SincConv does not support groups.")
 
         NFFT = 512
         f = int(self.sample_rate / 2) * np.linspace(0, 1, int(NFFT / 2) + 1)
@@ -430,16 +429,19 @@ class CONV(nn.Module):
         filbandwidthsf = self.to_hz(filbandwidthsmel)
 
         self.mel = filbandwidthsf
-        self.hsupp = torch.arange(-(self.kernel_size - 1) / 2,
-                                  (self.kernel_size - 1) / 2 + 1)
+        self.hsupp = torch.arange(
+            -(self.kernel_size - 1) / 2, (self.kernel_size - 1) / 2 + 1
+        )
         self.band_pass = torch.zeros(self.out_channels, self.kernel_size)
         for i in range(len(self.mel) - 1):
             fmin = self.mel[i]
             fmax = self.mel[i + 1]
-            hHigh = (2*fmax/self.sample_rate) * \
-                np.sinc(2*fmax*self.hsupp/self.sample_rate)
-            hLow = (2*fmin/self.sample_rate) * \
-                np.sinc(2*fmin*self.hsupp/self.sample_rate)
+            hHigh = (2 * fmax / self.sample_rate) * np.sinc(
+                2 * fmax * self.hsupp / self.sample_rate
+            )
+            hLow = (2 * fmin / self.sample_rate) * np.sinc(
+                2 * fmin * self.hsupp / self.sample_rate
+            )
             hideal = hHigh - hLow
 
             self.band_pass[i, :] = Tensor(np.hamming(self.kernel_size)) * Tensor(hideal)
@@ -450,19 +452,21 @@ class CONV(nn.Module):
             A = np.random.uniform(0, 20)
             A = int(A)
             A0 = random.randint(0, band_pass_filter.shape[0] - A)
-            band_pass_filter[A0:A0 + A, :] = 0
+            band_pass_filter[A0 : A0 + A, :] = 0
         else:
             band_pass_filter = band_pass_filter
 
         self.filters = (band_pass_filter).view(self.out_channels, 1, self.kernel_size)
 
-        return F.conv1d(x,
-                        self.filters,
-                        stride=self.stride,
-                        padding=self.padding,
-                        dilation=self.dilation,
-                        bias=None,
-                        groups=1)
+        return F.conv1d(
+            x,
+            self.filters,
+            stride=self.stride,
+            padding=self.padding,
+            dilation=self.dilation,
+            bias=None,
+            groups=1,
+        )
 
 
 class Residual_block(nn.Module):
@@ -472,32 +476,37 @@ class Residual_block(nn.Module):
 
         if not self.first:
             self.bn1 = nn.BatchNorm2d(num_features=nb_filts[0])
-        self.conv1 = nn.Conv2d(in_channels=nb_filts[0],
-                               out_channels=nb_filts[1],
-                               kernel_size=(2, 3),
-                               padding=(1, 1),
-                               stride=1)
+        self.conv1 = nn.Conv2d(
+            in_channels=nb_filts[0],
+            out_channels=nb_filts[1],
+            kernel_size=(2, 3),
+            padding=(1, 1),
+            stride=1,
+        )
         self.selu = nn.SELU(inplace=True)
 
         self.bn2 = nn.BatchNorm2d(num_features=nb_filts[1])
-        self.conv2 = nn.Conv2d(in_channels=nb_filts[1],
-                               out_channels=nb_filts[1],
-                               kernel_size=(2, 3),
-                               padding=(0, 1),
-                               stride=1)
+        self.conv2 = nn.Conv2d(
+            in_channels=nb_filts[1],
+            out_channels=nb_filts[1],
+            kernel_size=(2, 3),
+            padding=(0, 1),
+            stride=1,
+        )
 
         if nb_filts[0] != nb_filts[1]:
             self.downsample = True
-            self.conv_downsample = nn.Conv2d(in_channels=nb_filts[0],
-                                             out_channels=nb_filts[1],
-                                             padding=(0, 1),
-                                             kernel_size=(1, 3),
-                                             stride=1)
+            self.conv_downsample = nn.Conv2d(
+                in_channels=nb_filts[0],
+                out_channels=nb_filts[1],
+                padding=(0, 1),
+                kernel_size=(1, 3),
+                stride=1,
+            )
 
         else:
             self.downsample = False
         self.mp = nn.MaxPool2d((1, 3))
-
 
     def forward(self, x):
         identity = x
@@ -527,13 +536,13 @@ class Model(nn.Module):
         super().__init__()
 
         self.d_args = d_args
-        filts = d_args["filts"]        #"filts": [70, [1, 32], [32, 32], [32, 64], [64, 64]],
-        gat_dims = d_args["gat_dims"]   #[64, 32],
+        filts = d_args["filts"]  # "filts": [70, [1, 32], [32, 32], [32, 64], [64, 64]],
+        gat_dims = d_args["gat_dims"]  # [64, 32],
         pool_ratios = d_args["pool_ratios"]
         temperatures = d_args["temperatures"]
-        self.conv_time = CONV(out_channels=filts[0],
-                              kernel_size=d_args["first_conv"],
-                              in_channels=1)
+        self.conv_time = CONV(
+            out_channels=filts[0], kernel_size=d_args["first_conv"], in_channels=1
+        )
         self.first_bn = nn.BatchNorm2d(num_features=1)
 
         self.drop = nn.Dropout(0.5, inplace=True)
@@ -554,29 +563,33 @@ class Model(nn.Module):
             nn.Sequential(Residual_block(nb_filts=filts[3])),
             nn.Sequential(Residual_block(nb_filts=filts[4])),
             nn.Sequential(Residual_block(nb_filts=filts[4])),
-            nn.Sequential(Residual_block(nb_filts=filts[4]))
+            nn.Sequential(Residual_block(nb_filts=filts[4])),
         )
 
         self.pos_S = nn.Parameter(torch.randn(1, 23, 128))
         self.master1 = nn.Parameter(torch.randn(1, 1, gat_dims[0]))
         self.master2 = nn.Parameter(torch.randn(1, 1, gat_dims[0]))
 
-        self.GAT_layer_S = GraphAttentionLayer(128,
-                                               gat_dims[0],
-                                               temperature=temperatures[0])
-        self.GAT_layer_T = GraphAttentionLayer(128,
-                                               gat_dims[0],
-                                               temperature=temperatures[1])
+        self.GAT_layer_S = GraphAttentionLayer(
+            128, gat_dims[0], temperature=temperatures[0]
+        )
+        self.GAT_layer_T = GraphAttentionLayer(
+            128, gat_dims[0], temperature=temperatures[1]
+        )
 
         self.HtrgGAT_layer_ST11 = HtrgGraphAttentionLayer(
-            gat_dims[0], gat_dims[1], temperature=temperatures[2])
+            gat_dims[0], gat_dims[1], temperature=temperatures[2]
+        )
         self.HtrgGAT_layer_ST12 = HtrgGraphAttentionLayer(
-            gat_dims[1], gat_dims[1], temperature=temperatures[2])
+            gat_dims[1], gat_dims[1], temperature=temperatures[2]
+        )
 
         self.HtrgGAT_layer_ST21 = HtrgGraphAttentionLayer(
-            gat_dims[0], gat_dims[1], temperature=temperatures[2])
+            gat_dims[0], gat_dims[1], temperature=temperatures[2]
+        )
         self.HtrgGAT_layer_ST22 = HtrgGraphAttentionLayer(
-            gat_dims[1], gat_dims[1], temperature=temperatures[2])
+            gat_dims[1], gat_dims[1], temperature=temperatures[2]
+        )
 
         self.pool_S = GraphPool(pool_ratios[0], gat_dims[0], 0.3)
         self.pool_T = GraphPool(pool_ratios[1], gat_dims[0], 0.3)
@@ -609,10 +622,9 @@ class Model(nn.Module):
         w1 = F.softmax(w, dim=3)
 
         mu_s = torch.sum(e * w1, dim=3)
-        sg_s = torch.sqrt((torch.sum((e ** 2) * w1, dim=3) - mu_s ** 2).clamp(min=1e-4))
+        sg_s = torch.sqrt((torch.sum((e**2) * w1, dim=3) - mu_s**2).clamp(min=1e-4))
         e_S = torch.cat((mu_s, sg_s), 1)
         e_S = torch.abs(e_S)
-
 
         # spectral GAT (GAT-S)
 
@@ -621,14 +633,12 @@ class Model(nn.Module):
 
         out_S = self.pool_S(gat_S)  # (#bs, #node, #dim)
 
-
         # ASP_T
         w2 = F.softmax(w, dim=2)
         mu_t = torch.sum(e * w2, dim=2)
-        sg_t = torch.sqrt((torch.sum((e ** 2) * w2, dim=2) - mu_t ** 2).clamp(min=1e-4))
+        sg_t = torch.sqrt((torch.sum((e**2) * w2, dim=2) - mu_t**2).clamp(min=1e-4))
         e_T = torch.cat((mu_t, sg_t), 1)
         e_T = torch.abs(e_T)
-
 
         # temporal GAT (GAT-T)
 
@@ -636,31 +646,37 @@ class Model(nn.Module):
         gat_T = self.GAT_layer_T(e_T)
         out_T = self.pool_T(gat_T)
 
-
         # learnable master node
-        master1 = self.master1.expand(x.size(0), -1, -1)      #[bs,1,64]
+        master1 = self.master1.expand(x.size(0), -1, -1)  # [bs,1,64]
         master2 = self.master2.expand(x.size(0), -1, -1)
 
         # inference 1
-        out_T1, out_S1, master1 = self.HtrgGAT_layer_ST11(out_T, out_S, master=self.master1)
+        out_T1, out_S1, master1 = self.HtrgGAT_layer_ST11(
+            out_T, out_S, master=self.master1
+        )
         out_S1 = self.pool_hS1(out_S1)
         out_T1 = self.pool_hT1(out_T1)
 
-        out_T_aug, out_S_aug, master_aug = self.HtrgGAT_layer_ST12(out_T1, out_S1, master=master1)
+        out_T_aug, out_S_aug, master_aug = self.HtrgGAT_layer_ST12(
+            out_T1, out_S1, master=master1
+        )
         out_T1 = out_T1 + out_T_aug
         out_S1 = out_S1 + out_S_aug
         master1 = master1 + master_aug
 
         # inference 2
-        out_T2, out_S2, master2 = self.HtrgGAT_layer_ST21(out_T, out_S, master=self.master2)
+        out_T2, out_S2, master2 = self.HtrgGAT_layer_ST21(
+            out_T, out_S, master=self.master2
+        )
         out_S2 = self.pool_hS2(out_S2)
         out_T2 = self.pool_hT2(out_T2)
 
-        out_T_aug, out_S_aug, master_aug = self.HtrgGAT_layer_ST22(out_T2, out_S2, master=master2)
+        out_T_aug, out_S_aug, master_aug = self.HtrgGAT_layer_ST22(
+            out_T2, out_S2, master=master2
+        )
         out_T2 = out_T2 + out_T_aug
         out_S2 = out_S2 + out_S_aug
         master2 = master2 + master_aug
-
 
         out_T1 = self.drop_way(out_T1)
         out_T2 = self.drop_way(out_T2)
@@ -682,11 +698,9 @@ class Model(nn.Module):
         out_Tzsa3 = out_T.unsqueeze(1)
         T_avg = torch.mean(out_Tzsa3, dim=1)
 
-
         S_max = torch.abs(out_S)
         out_Szsa3 = out_S.unsqueeze(1)
         S_avg = torch.mean(out_Szsa3, dim=1)
-
 
         last_hidden = torch.cat([T_max, T_avg, S_max, S_avg, master.squeeze(1)], dim=1)
 
