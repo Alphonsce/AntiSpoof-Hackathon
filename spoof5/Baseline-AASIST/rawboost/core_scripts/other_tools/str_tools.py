@@ -15,14 +15,14 @@ __copyright__ = "Copyright 2020, Xin Wang"
 
 
 def f_realpath(f_dir, f_name, f_ext):
-    """ file_path = f_realpath(f_dir, f_name, f_ext)
+    """file_path = f_realpath(f_dir, f_name, f_ext)
     Args:
       f_dir: string, directory
       f_name: string, file name
       f_ext: string, file name extension
 
     Return:
-      file_path: realpath     
+      file_path: realpath
     """
     file_path = os.path.join(f_dir, f_name)
     if f_ext.startswith(os.extsep):
@@ -30,19 +30,20 @@ def f_realpath(f_dir, f_name, f_ext):
     else:
         file_path = file_path + os.extsep + f_ext
     return file_path
-                
+
+
 def string_chop(InStr):
-    """ output = string_chop(InStr)
+    """output = string_chop(InStr)
     Chop the ending '\r' and '\n' from input string
-    
+
     Args:
         InStr: str, the input string
 
     Return:
         output: str
-    
+
     '\r' corresponds to '0x0d' or 13,
-    '\n' corresponds to '0x0a' or 10                               
+    '\n' corresponds to '0x0a' or 10
     """
     if len(InStr) >= 2 and ord(InStr[-1]) == 10 and ord(InStr[-2]) == 13:
         return InStr[:-2]
@@ -50,6 +51,7 @@ def string_chop(InStr):
         return InStr[:-1]
     else:
         return InStr
+
 
 if __name__ == "__main__":
     print("string tools")

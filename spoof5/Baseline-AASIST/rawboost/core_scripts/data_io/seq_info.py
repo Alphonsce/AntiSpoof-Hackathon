@@ -16,17 +16,13 @@ __email__ = "wangxin@nii.ac.jp"
 __copyright__ = "Copyright 2020, Xin Wang"
 
 
-class SeqInfo():
-    """ Definition of sequence information
+class SeqInfo:
+    """Definition of sequence information
     Save the information about one utterance (which may be a trunck from
     the original data utterance)
     """
-    def __init__(self,
-                 length = 0,
-                 seq_name = '',
-                 seg_idx = 0,
-                 start_pos = 0,
-                 info_id = 0):
+
+    def __init__(self, length=0, seq_name="", seg_idx=0, start_pos=0, info_id=0):
         """
         Args:
             length: length this utterance segment
@@ -41,18 +37,19 @@ class SeqInfo():
         self.seg_idx = seg_idx
         self.start_pos = int(start_pos)
         self.info_id = info_id
-        
-        
+
     def print_to_dic(self):
         """
         Print to dictionary format in order to dump
         """
-        return {"length": self.length,
-                "seq_name": self.seq_name,
-                "seg_idx": self.seg_idx,
-                "start_pos": self.start_pos,
-                "info_id": self.info_id}
-    
+        return {
+            "length": self.length,
+            "seq_name": self.seq_name,
+            "seg_idx": self.seg_idx,
+            "start_pos": self.start_pos,
+            "info_id": self.info_id,
+        }
+
     def load_from_dic(self, dic):
         """
         Load seq informaiton from dictionary
@@ -70,18 +67,16 @@ class SeqInfo():
         """
         Print infor to str
         """
-        temp = "{:d},{},{:d},{:d},{:d}".format(self.info_id, \
-                                               self.seq_name, \
-                                               self.seg_idx, \
-                                               self.length, \
-                                               self.start_pos)
+        temp = "{:d},{},{:d},{:d},{:d}".format(
+            self.info_id, self.seq_name, self.seg_idx, self.length, self.start_pos
+        )
         return temp
 
     def parse_from_str(self, input_str):
         """
         Parse a input string (which should be generated from print_to_str)
         """
-        temp = input_str.split(',')
+        temp = input_str.split(",")
         self.seq_name = temp[1]
         try:
             self.info_id = int(temp[0])
@@ -91,7 +86,7 @@ class SeqInfo():
         except ValueError:
             nii_warn.f_die("Seq infor cannot parse {}".format(input_str))
         return
-    
+
     def seq_length(self):
         return self.length
 
@@ -101,16 +96,19 @@ class SeqInfo():
     def seq_start_pos(self):
         return self.start_pos
 
+
 ############
 ### Util to parse the output from print_to_str
 ############
 
+
 def parse_length(input_str):
-    return int(input_str.split(',')[3])
+    return int(input_str.split(",")[3])
+
 
 def parse_filename(input_str):
-    return input_str.split(',')[1]
+    return input_str.split(",")[1]
 
-    
+
 if __name__ == "__main__":
     print("Definition of seq_info class")

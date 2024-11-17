@@ -9,30 +9,28 @@ from __future__ import absolute_import
 
 import os
 import sys
+
+import core_scripts.op_manager.conf as nii_op_config
+import core_scripts.op_manager.lr_scheduler as nii_lr_scheduler
+import core_scripts.op_manager.op_process_monitor as nii_op_monitor
+import core_scripts.other_tools.display as nii_warn
+import core_scripts.other_tools.list_tools as nii_list_tools
+import core_scripts.other_tools.str_tools as nii_str_tk
 import numpy as np
 import torch
 import torch.optim as torch_optim
 import torch.optim.lr_scheduler as torch_optim_steplr
-
-
-import core_scripts.other_tools.list_tools as nii_list_tools
-import core_scripts.other_tools.display as nii_warn
-import core_scripts.other_tools.str_tools as nii_str_tk
-import core_scripts.op_manager.conf as nii_op_config
-import core_scripts.op_manager.op_process_monitor as nii_op_monitor
-import core_scripts.op_manager.lr_scheduler as nii_lr_scheduler
 
 __author__ = "Xin Wang"
 __email__ = "wangxin@nii.ac.jp"
 __copyright__ = "Copyright 2020, Xin Wang"
 
 
-class OptimizerWrapper():
-    """ Wrapper over optimizer
-    """
+class OptimizerWrapper:
+    """Wrapper over optimizer"""
+
     def __init__(self, model, args):
-        """ Initialize an optimizer over model.parameters()
-        """
+        """Initialize an optimizer over model.parameters()"""
         # check valildity of model
         if not hasattr(model, "parameters"):
             nii_warn.f_print("model is not torch.nn", "error")
@@ -49,29 +47,26 @@ class OptimizerWrapper():
         # create optimizer
         if self.op_flag == "Adam":
             if self.l2_penalty > 0:
-                self.optimizer = torch_optim.Adam(model.parameters(), 
-                                                  lr=self.lr, 
-                                                  weight_decay=self.l2_penalty)
+                self.optimizer = torch_optim.Adam(
+                    model.parameters(), lr=self.lr, weight_decay=self.l2_penalty
+                )
             else:
-                self.optimizer = torch_optim.Adam(model.parameters(),
-                                                  lr=self.lr)
+                self.optimizer = torch_optim.Adam(model.parameters(), lr=self.lr)
 
         else:
-            nii_warn.f_print("%s not availabel" % (self.op_flag),
-                             "error")
+            nii_warn.f_print("%s not availabel" % (self.op_flag), "error")
             nii_warn.f_die("Please change optimizer")
 
         # number of epochs
         self.epochs = args.epochs
         self.no_best_epochs = args.no_best_epochs
-        
+
         # lr scheduler
         self.lr_scheduler = nii_lr_scheduler.LRScheduler(self.optimizer, args)
         return
 
     def print_info(self):
-        """ print message of optimizer
-        """
+        """print message of optimizer"""
         mes = "Optimizer:\n  Type: {} ".format(self.op_flag)
         mes += "\n  Learing rate: {:2.6f}".format(self.lr)
         mes += "\n  Epochs: {:d}".format(self.epochs)
@@ -86,15 +81,15 @@ class OptimizerWrapper():
 
     def get_epoch_num(self):
         return self.epochs
-    
+
     def get_no_best_epoch_num(self):
         return self.no_best_epochs
 
     def get_lr_info(self):
-        
+
         if self.lr_scheduler.f_valid():
             # no way to look into the updated lr rather than using _last_lr
-            tmp = ''
+            tmp = ""
             for updated_lr in self.lr_scheduler.f_last_lr():
                 if np.abs(self.lr - updated_lr) > 0.0000001:
                     tmp += "{:.2e} ".format(updated_lr)
@@ -103,6 +98,7 @@ class OptimizerWrapper():
             return tmp
         else:
             return None
-    
+
+
 if __name__ == "__main__":
     print("Optimizer Wrapper")

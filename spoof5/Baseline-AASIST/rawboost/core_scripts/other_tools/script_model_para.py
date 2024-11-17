@@ -11,13 +11,15 @@ Usage:
 """
 
 from __future__ import print_function
+
+import importlib
 import os
 import sys
+
 import numpy as np
 import torch
 import torch.nn as nn
 import torch.nn.functional as F
-import importlib
 
 __author__ = "Xin Wang"
 __email__ = "wangxin@nii.ac.jp"
@@ -25,26 +27,29 @@ __copyright__ = "Copyright 2020, Xin Wang"
 
 
 def f_model_show(pt_model):
-    """                                                                      
-    f_model_show(pt_model)                                                   
-    Args: pt_model, a Pytorch model                                          
-                                                                             
-    Print the informaiton of the model                                       
     """
-    #f_model_check(pt_model)
-    
+    f_model_show(pt_model)
+    Args: pt_model, a Pytorch model
+
+    Print the informaiton of the model
+    """
+    # f_model_check(pt_model)
+
     print(pt_model)
     num = sum(p.numel() for p in pt_model.parameters() if p.requires_grad)
     print("Parameter number: {:d}".format(num))
     for name, p in pt_model.named_parameters():
         if p.requires_grad:
-            print("Layer: {:s}\tPara. num: {:<10d} ({:02.1f}%)\tShape: {:s}"\
-                  .format(name, p.numel(), p.numel()*100.0/num, str(p.shape)))
+            print(
+                "Layer: {:s}\tPara. num: {:<10d} ({:02.1f}%)\tShape: {:s}".format(
+                    name, p.numel(), p.numel() * 100.0 / num, str(p.shape)
+                )
+            )
     return
 
 
 if __name__ == "__main__":
-    
+
     sys.path.insert(0, os.getcwd())
 
     if len(sys.argv) == 3:

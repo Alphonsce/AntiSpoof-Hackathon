@@ -53,20 +53,20 @@ def main(args: argparse.Namespace) -> None:
 
     # define database related paths
     output_dir = Path(args.output_dir)
-    
+
     database_path = Path(config["database_path"])
     train_flac_dir = Path(config["train_flac_dir"])
     eval_flac_dir = Path(config["eval_flac_dir"])
     train_meta_file = Path(config["train_meta_file"])
     eval_meta_file = Path(config["eval_meta_file"])
-    
+
     trn_database_path = database_path / train_flac_dir
     dev_database_path = database_path / eval_flac_dir
 
     trn_list_path = database_path / train_meta_file
     # Used to create file with scores to compute metrics:
     dev_trial_path = database_path / eval_meta_file
-    
+
     # define model related paths
     model_tag = "{}_ep{}_bs{}".format(
         os.path.splitext(os.path.basename(args.config))[0],
@@ -90,10 +90,22 @@ def main(args: argparse.Namespace) -> None:
 
     # define model architecture
     model = get_model(model_config, device)
+    if args.model_path_train is not None:
+        model.load_state_dict(torch.load(args.model_path_train, map_location=device))
+        print("Model loaded : {}".format(args.model_path_train))
 
     # define dataloaders
-    
-    trn_loader, dev_loader = get_loader(database_path, train_flac_dir, eval_flac_dir, train_meta_file, eval_meta_file, args.seed, config)
+
+    trn_loader, dev_loader = get_loader(
+        database_path,
+        train_flac_dir,
+        eval_flac_dir,
+        train_meta_file,
+        eval_meta_file,
+        args.seed,
+        config,
+        args
+    )
 
     # evaluates pretrained model
     # NOTE: Currently it is evaluated on the development set instead of the evaluation set
@@ -198,7 +210,14 @@ def get_model(model_config: Dict, device: torch.device):
 
 
 def get_loader(
-    database_path: str, train_flac_dir, eval_flac_dir, train_meta_file, eval_meta_file, seed: int, config: dict
+    database_path: str,
+    train_flac_dir,
+    eval_flac_dir,
+    train_meta_file,
+    eval_meta_file,
+    seed: int,
+    config: dict,
+    args: argparse.ArgumentParser
 ) -> List[torch.utils.data.DataLoader]:
     """Make PyTorch DataLoaders for train / developement"""
 
@@ -214,7 +233,7 @@ def get_loader(
     print("no. training files:", len(file_train))
 
     train_set = TrainDataset(
-        list_IDs=file_train, labels=d_label_trn, base_dir=trn_database_path
+        list_IDs=file_train, labels=d_label_trn, base_dir=trn_database_path, use_rawboost=args.use_rawboost, algo_rawboost=args.algo, args=args
     )
     gen = torch.Generator()
     gen.manual_seed(seed)
@@ -346,4 +365,129 @@ if __name__ == "__main__":
         default=None,
         help="directory to the model weight file (can be also given in the config file)",
     )
+    
+    parser.add_argument(
+        "--model_path_train",
+        type=str,
+        default=None,
+        help="directory to the model weight file (can be also given in the config file)",
+    )
+
+    ##===================================================Rawboost data augmentation parameters======================================================================#
+
+    parser.add_argument(
+        "--use_rawboost",
+        action="store_true",
+        help="To use rawboost augemntation or not",
+    )
+
+    parser.add_argument(
+        "--algo",
+        type=int,
+        default=4,
+        help="Rawboost algos discriptions. 0: No augmentation 1: LnL_convolutive_noise, 2: ISD_additive_noise, 3: SSI_additive_noise, 4: series algo (1+2+3), \
+                          5: series algo (1+2), 6: series algo (1+3), 7: series algo(2+3), 8: parallel algo(1,2) .[default=0]",
+    )
+
+    # LnL_convolutive_noise parameters
+    parser.add_argument(
+        "--nBands",
+        type=int,
+        default=5,
+        help="number of notch filters.The higher the number of bands, the more aggresive the distortions is.[default=5]",
+    )
+    parser.add_argument(
+        "--minF",
+        type=int,
+        default=20,
+        help="minimum centre frequency [Hz] of notch filter.[default=20] ",
+    )
+    parser.add_argument(
+        "--maxF",
+        type=int,
+        default=8000,
+        help="maximum centre frequency [Hz] (<sr/2)  of notch filter.[default=8000]",
+    )
+    parser.add_argument(
+        "--minBW",
+        type=int,
+        default=100,
+        help="minimum width [Hz] of filter.[default=100] ",
+    )
+    parser.add_argument(
+        "--maxBW",
+        type=int,
+        default=1000,
+        help="maximum width [Hz] of filter.[default=1000] ",
+    )
+    parser.add_argument(
+        "--minCoeff",
+        type=int,
+        default=10,
+        help="minimum filter coefficients. More the filter coefficients more ideal the filter slope.[default=10]",
+    )
+    parser.add_argument(
+        "--maxCoeff",
+        type=int,
+        default=100,
+        help="maximum filter coefficients. More the filter coefficients more ideal the filter slope.[default=100]",
+    )
+    parser.add_argument(
+        "--minG",
+        type=int,
+        default=0,
+        help="minimum gain factor of linear component.[default=0]",
+    )
+    parser.add_argument(
+        "--maxG",
+        type=int,
+        default=0,
+        help="maximum gain factor of linear component.[default=0]",
+    )
+    parser.add_argument(
+        "--minBiasLinNonLin",
+        type=int,
+        default=5,
+        help=" minimum gain difference between linear and non-linear components.[default=5]",
+    )
+    parser.add_argument(
+        "--maxBiasLinNonLin",
+        type=int,
+        default=20,
+        help=" maximum gain difference between linear and non-linear components.[default=20]",
+    )
+    parser.add_argument(
+        "--N_f",
+        type=int,
+        default=5,
+        help="order of the (non-)linearity where N_f=1 refers only to linear components.[default=5]",
+    )
+
+    # ISD_additive_noise parameters
+    parser.add_argument(
+        "--P",
+        type=int,
+        default=10,
+        help="Maximum number of uniformly distributed samples in [%].[defaul=10]",
+    )
+    parser.add_argument(
+        "--g_sd", type=int, default=2, help="gain parameters > 0. [default=2]"
+    )
+
+    # SSI_additive_noise parameters
+    parser.add_argument(
+        "--SNRmin",
+        type=int,
+        default=10,
+        help="Minimum SNR value for coloured additive noise.[defaul=10]",
+    )
+    parser.add_argument(
+        "--SNRmax",
+        type=int,
+        default=40,
+        help="Maximum SNR value for coloured additive noise.[defaul=40]",
+    )
+
+    ##===================================================Rawboost data augmentation ======================================================================#
+
     main(parser.parse_args())
