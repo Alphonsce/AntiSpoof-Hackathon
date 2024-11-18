@@ -5,7 +5,7 @@ class SysConfig:
     
     def __init__(self):
         
-        self.wandb_disabled             = False
+        self.wandb_disabled             = True
         self.wandb_project              = 'ASVSpoof-Rawformer'
         self.wandb_name                 = 'Rawformer+Rawboost-4'
         self.wandb_entity               = 'jurujin'
@@ -22,9 +22,13 @@ class SysConfig:
         
         self.num_workers                            = 4
         
+        self.ckpt_save_dir = "./checkpoints/"
+        self.ckpt_load_path = None
+        
 class ExpConfig:
     
     def __init__(self):
+        self.eval_every_n_epochs = 2
         
         self.random_seed                = 1024
         
@@ -35,7 +39,7 @@ class ExpConfig:
         self.test_duration_sec          = 4
         
         self.batch_size_train           = 32
-        self.batch_size_test            = 40
+        self.batch_size_test            = 80
         self.embedding_size             = 64
         self.max_epoch                  = 300
         

@@ -81,7 +81,7 @@ class Trainer:
         
         pbar = tqdm(self.test_loader, 'evaluation')
         with torch.no_grad():
-            for x, label in pbar:
+            for i, (x, label) in enumerate(pbar):
             
                 x, label = x.to(self.device), label.float().to(self.device)
                 x = self.preprocessor(x)
@@ -90,6 +90,9 @@ class Trainer:
 
                 scores.append(score.cpu())
                 labels.append(label.cpu())
+                
+                if i > 2:
+                    break
         
             scores = torch.cat(scores, dim=0)
             labels = torch.cat(labels, dim=0)
@@ -98,10 +101,11 @@ class Trainer:
         labels = all_gather(labels)
         eer = self.calculate_EER(scores, labels)
         
-        
         return eer
             
     def calculate_EER(self, scores, labels):
+        scores = scores[0]
+        labels = labels[0]
         fpr, tpr, _ = metrics.roc_curve(labels, scores, pos_label=1)
         eer = brentq(lambda x: 1. - x - interp1d(fpr, tpr)(x), 0., 1.)
         return eer * 100

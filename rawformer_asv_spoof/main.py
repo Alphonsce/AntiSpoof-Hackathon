@@ -62,6 +62,10 @@ def run(rank, world_size, port, rawboost_args):
     model = DDP( Rawformer_SE(device=device, sample_rate=exp_config.sample_rate, transformer_hidden=exp_config.transformer_hidden).to(device) )
     loss_fn = nn.BCELoss().to(device) #DDP is not needed when a module doesn't have any parameter that requires a gradient.
     
+    if sys_config.ckpt_load_path is not None:
+        model.load_state_dict(torch.load(exp_config.ckpt_load_path, weights_only=True, map_location=device))
+        print(f"LOADED CHECKPOINT FROM {exp_config.ckpt_load_path}")
+    
     # ------------------------- optimizer ------------------------- #
     optimizer = torch.optim.AdamW(params=model.parameters(), lr=exp_config.lr)
     # scheduler = torch.optim.lr_scheduler.CosineAnnealingWarmRestarts(
@@ -80,14 +84,19 @@ def run(rank, world_size, port, rawboost_args):
         
         logger.print(f'epoch: {epoch}')
         trainer.train()
+        
         #scheduler.step()
         
         # -------------------- evaluation ----------------------- #
-        if epoch % 5 == 1 or epoch == exp_config.max_epoch:
+        if epoch % exp_config.eval_every_n_epochs == 1 or epoch == exp_config.max_epoch:
             
             eer = trainer.test()
             logger.print(f'EER: {eer}')
             logger.wandbLog({'EER_LA' : eer, 'epoch' : epoch})
+            
+            if sys_config.ckpt_save_dir is not None:
+                save_path = sys_config.ckpt_save_dir + f"ep_{epoch}_rawboost_algo_{rawboost_args.algo}_allow_aug_{exp_config.allow_data_augmentation}" + ".pth"
+                torch.save(model.state_dict(), save_path)
             
             if eer < best_eer:
                 # miss_count = 0
