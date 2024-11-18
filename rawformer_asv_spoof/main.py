@@ -83,25 +83,26 @@ def run(rank, world_size, port, rawboost_args):
     for epoch in range(1, exp_config.max_epoch + 1):
         
         logger.print(f'epoch: {epoch}')
-        trainer.train()
+        # trainer.train()
         
         #scheduler.step()
+        print(epoch, exp_config.eval_every_n_epochs, epoch % exp_config.eval_every_n_epochs)
         
         # -------------------- evaluation ----------------------- #
-        if epoch % exp_config.eval_every_n_epochs == 1 or epoch == exp_config.max_epoch:
+        if epoch % exp_config.eval_every_n_epochs == 0 or epoch == exp_config.max_epoch:
+            print(f"{epoch}: EVALUATING")
+            # eer = trainer.test()
+            # logger.print(f'EER: {eer}')
+            # logger.wandbLog({'EER_LA' : eer, 'epoch' : epoch})
             
-            eer = trainer.test()
-            logger.print(f'EER: {eer}')
-            logger.wandbLog({'EER_LA' : eer, 'epoch' : epoch})
+            # if sys_config.ckpt_save_dir is not None:
+            #     save_path = sys_config.ckpt_save_dir + f"ep_{epoch}_rawboost_algo_{rawboost_args.algo}_allow_aug_{exp_config.allow_data_augmentation}" + ".pth"
+            #     torch.save(model.state_dict(), save_path)
             
-            if sys_config.ckpt_save_dir is not None:
-                save_path = sys_config.ckpt_save_dir + f"ep_{epoch}_rawboost_algo_{rawboost_args.algo}_allow_aug_{exp_config.allow_data_augmentation}" + ".pth"
-                torch.save(model.state_dict(), save_path)
-            
-            if eer < best_eer:
-                # miss_count = 0
-                best_eer = eer
-                logger.wandbLog({'BestEER_LA' : eer, 'epoch' : epoch})
+            # if eer < best_eer:
+            #     # miss_count = 0
+            #     best_eer = eer
+            #     logger.wandbLog({'BestEER_LA' : eer, 'epoch' : epoch})
             # else:
             #     miss_count += 1
             #     if miss_count > 1:

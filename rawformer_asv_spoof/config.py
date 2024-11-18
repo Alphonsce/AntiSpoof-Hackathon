@@ -5,7 +5,7 @@ class SysConfig:
     
     def __init__(self):
         
-        self.wandb_disabled             = True
+        self.wandb_disabled             = False
         self.wandb_project              = 'ASVSpoof-Rawformer'
         self.wandb_name                 = 'Rawformer+Rawboost-4'
         self.wandb_entity               = 'jurujin'
@@ -28,7 +28,7 @@ class SysConfig:
 class ExpConfig:
     
     def __init__(self):
-        self.eval_every_n_epochs = 2
+        self.eval_every_n_epochs = 3
         
         self.random_seed                = 1024
         

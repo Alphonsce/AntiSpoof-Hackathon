@@ -166,3 +166,5 @@ pretrained/
 
 # SLURM output
 slurm-*.out
+
+checkpoints
