@@ -28,13 +28,9 @@ def create_tsv(
     if not out_dir.exists():
         out_dir.mkdir()
 
-    with open(
-        out_dir / "train100.tsv", "w"
-    ) as train100_f, open(
+    with open(out_dir / "train100.tsv", "w") as train100_f, open(
         out_dir / "train960.tsv", "w"
-    ) as train960_f, open(
-        out_dir / "valid.tsv", "w"
-    ) as valid_f:
+    ) as train960_f, open(out_dir / "valid.tsv", "w") as valid_f:
         print(root_dir, file=train100_f)
         print(root_dir, file=train960_f)
         print(root_dir, file=valid_f)
@@ -53,20 +49,15 @@ def create_tsv(
 
 
 def parse_args():
-    parser = ArgumentParser(
-        description="Prepare audio data."
-    )
+    parser = ArgumentParser(description="Prepare audio data.")
     parser.add_argument(
-        "--data",
-        type=Path,
-        required=True,
-        help="Path to the original dataset."
+        "--data", type=Path, required=True, help="Path to the original dataset."
     )
     parser.add_argument(
         "--out",
         type=Path,
         default=Path("data/librispeech"),
-        help="Path to save the output."
+        help="Path to save the output.",
     )
     args = parser.parse_args()
     return args
@@ -74,7 +65,7 @@ def parse_args():
 
 if __name__ == "__main__":
     args = parse_args()
-    
+
     assert args.data.is_dir(), args.data
     args.out.mkdir(parents=True, exist_ok=True)
 

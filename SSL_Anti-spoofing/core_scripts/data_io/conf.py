@@ -23,7 +23,7 @@ __copyright__ = "Copyright 2020, Xin Wang"
 # data type for host
 h_dtype = np.float32
 # data type string format for numpy
-h_dtype_str = '<f4'
+h_dtype_str = "<f4"
 
 # data type for device (GPU)
 d_dtype = torch.float32
@@ -36,18 +36,18 @@ std_floor = 0.00000001
 # File name configuration
 # ---------------------------
 # name of the mean/std file for input features
-mean_std_i_file = 'mean_std_input.bin'
+mean_std_i_file = "mean_std_input.bin"
 # name of the mean/std file for output features
-mean_std_o_file = 'mean_std_output.bin'
+mean_std_o_file = "mean_std_output.bin"
 # name of the the uttrerance length file
-data_len_file = 'utt_length.dic'
+data_len_file = "utt_length.dic"
 
 
 # ---------------------------
 # F0 extention and unvoiced value
 # ---------------------------
 # dictionary: key is F0 file extention, value is unvoiced value
-f0_unvoiced_dic = {'.f0' : 0}
+f0_unvoiced_dic = {".f0": 0}
 
 
 # ---------------------------
@@ -57,4 +57,4 @@ f0_unvoiced_dic = {'.f0' : 0}
 data_seq_min_length = 40
 
 # default configuration for torch.DataLoader
-default_loader_conf = {'batch_size':1, 'shuffle':False, 'num_workers':0}
+default_loader_conf = {"batch_size": 1, "shuffle": False, "num_workers": 0}

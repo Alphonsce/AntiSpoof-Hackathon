@@ -7,7 +7,7 @@ class SysConfig:
         
         self.wandb_disabled             = False
         self.wandb_project              = 'ASVSpoof-Rawformer'
-        self.wandb_name                 = 'Rawformer+Rawboost-4'
+        self.wandb_name                 = 'Rawformer-ACN-Aug'
         self.wandb_entity               = 'jurujin'
         self.wandb_key                  = 'b117cc2bdbcbc127dc0a49d6d94cc6f49a6ef821'
         self.wandb_notes                = 'lr=8*1e-4, ts_hidden=660, rand_seed=1024, pre-emphasis=0.97'
@@ -22,7 +22,7 @@ class SysConfig:
         
         self.num_workers                            = 4
         
-        self.ckpt_save_dir = "./checkpoints/"
+        self.ckpt_save_dir = f"./checkpoints/{self.wandb_name}/"
         self.ckpt_load_path = None
         
 class ExpConfig:
@@ -43,10 +43,11 @@ class ExpConfig:
         self.embedding_size             = 64
         self.max_epoch                  = 300
         
-        self.lr                         = 5 * 1e-4
+        self.lr                         = 10 * 1e-4
         self.lr_min                     = 1e-6 # this could not work because i turned off scheduler in some cases
         
         self.transformer_hidden         = 660
         
-        self.allow_data_augmentation    = False
-        self.data_augmentation          = ['ACN', 'HPF', 'LPF', 'GAN'] # Augmentations besides RawBoost
+        self.allow_data_augmentation    = True
+        # self.data_augmentation          = ['ACN', 'HPF', 'LPF', 'GAN'] # Augmentations besides RawBoost
+        self.data_augmentation = ["ACN"]

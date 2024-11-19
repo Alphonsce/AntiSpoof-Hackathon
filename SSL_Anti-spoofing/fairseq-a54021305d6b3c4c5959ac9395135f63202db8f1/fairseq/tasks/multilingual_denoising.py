@@ -94,7 +94,7 @@ class MultilingualDenoisingTask(DenoisingTask):
         languages by upsampling them.
         """
         prob = dataset_lens / dataset_lens.sum()
-        smoothed_prob = prob ** self.args.multilang_sampling_alpha
+        smoothed_prob = prob**self.args.multilang_sampling_alpha
         smoothed_prob = smoothed_prob / smoothed_prob.sum()
         return smoothed_prob
 
@@ -180,9 +180,11 @@ class MultilingualDenoisingTask(DenoisingTask):
                 shuffle=self.args.shuffle_instance,
                 seed=self.seed,
                 args=self.args,
-                eos=None
-                if not self.args.add_lang_token
-                else self.source_dictionary.index("[{}]".format(language)),
+                eos=(
+                    None
+                    if not self.args.add_lang_token
+                    else self.source_dictionary.index("[{}]".format(language))
+                ),
             )
             lang_datasets.append(lang_dataset)
 

@@ -745,9 +745,9 @@ class TransformerDecoder(FairseqDecoder):
             weights_key = "{}.embed_positions.weights".format(name)
             if weights_key in state_dict:
                 del state_dict[weights_key]
-            state_dict[
-                "{}.embed_positions._float_tensor".format(name)
-            ] = torch.FloatTensor(1)
+            state_dict["{}.embed_positions._float_tensor".format(name)] = (
+                torch.FloatTensor(1)
+            )
 
         for i in range(len(self.layers)):
             # update layer norms
@@ -760,9 +760,9 @@ class TransformerDecoder(FairseqDecoder):
                 for m in ("weight", "bias"):
                     k = "{}.layers.{}.layer_norms.{}.{}".format(name, i, old, m)
                     if k in state_dict:
-                        state_dict[
-                            "{}.layers.{}.{}.{}".format(name, i, new, m)
-                        ] = state_dict[k]
+                        state_dict["{}.layers.{}.{}.{}".format(name, i, new, m)] = (
+                            state_dict[k]
+                        )
                         del state_dict[k]
 
         version_key = "{}.version".format(name)

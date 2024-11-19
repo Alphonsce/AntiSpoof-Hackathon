@@ -11,15 +11,19 @@ if __name__ == "__main__":
     out_name = "pretrained/hubert-large-ll60k.fairseq.pth"
 
     fairseq_ckpt = "pretrained/fairseq/hubert_large_ll60k.pt"
-    ensemble, cfg, task = fairseq.checkpoint_utils.load_model_ensemble_and_task([fairseq_ckpt])
+    ensemble, cfg, task = fairseq.checkpoint_utils.load_model_ensemble_and_task(
+        [fairseq_ckpt]
+    )
     original = ensemble[0]
     imported = import_fairseq_model(original)
     print(imported)
-    
+
     # default config of hubert large
     hubert_large_config = dict(
         extractor_mode="layer_norm",
-        extractor_conv_layer_config=[(512, 10, 5)] + [(512, 3, 2)] * 4 + [(512, 2, 2)] * 2,
+        extractor_conv_layer_config=[(512, 10, 5)]
+        + [(512, 3, 2)] * 4
+        + [(512, 2, 2)] * 2,
         extractor_conv_bias=False,
         encoder_embed_dim=1024,
         encoder_projection_dropout=0.1,
@@ -34,7 +38,7 @@ if __name__ == "__main__":
         encoder_ff_interm_features=[4096] * 24,
         encoder_ff_interm_dropout=0.0,
         encoder_dropout=0.1,
-        encoder_layer_norm_first=True,     # hubert large uses pre norm
+        encoder_layer_norm_first=True,  # hubert large uses pre norm
         encoder_layer_drop=0.05,
         aux_num_out=None,
         normalize_waveform=True,
@@ -47,14 +51,14 @@ if __name__ == "__main__":
 
     torch.save(
         {
-            'state_dict': imported.state_dict(),
-            'config': hubert_large_config,
-        }, 
-        out_name
+            "state_dict": imported.state_dict(),
+            "config": hubert_large_config,
+        },
+        out_name,
     )
 
     # verify the saved ckpt
     ckpt = torch.load(out_name, map_location="cpu")
-    model = wav2vec2_model(**ckpt['config'])
-    res = model.load_state_dict(ckpt['state_dict'], strict=False)
+    model = wav2vec2_model(**ckpt["config"])
+    res = model.load_state_dict(ckpt["state_dict"], strict=False)
     print(f"Missing: {res.missing_keys}\nUnexpected: {res.unexpected_keys}")

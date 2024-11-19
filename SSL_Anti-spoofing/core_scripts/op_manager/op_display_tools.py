@@ -18,11 +18,11 @@ __copyright__ = "Copyright 2020, Xin Wang"
 
 
 def print_gen_info(seq_name, time):
-    """ Print the information during inference
-    """
+    """Print the information during inference"""
     mes = "Generating {}, time: {:.3f}s".format(seq_name, time)
     nii_display.f_print_message(mes)
-    return mes + '\n'
+    return mes + "\n"
+
 
 def _print_loss(loss_array):
     mes = ""
@@ -31,21 +31,20 @@ def _print_loss(loss_array):
     else:
         mes = []
         for data in loss_array:
-            mes.append('%6.2f' % (data))
-        mes = ' '.join(mes)
+            mes.append("%6.2f" % (data))
+        mes = " ".join(mes)
     mes += "| "
     return mes
 
-def print_train_info(epoch, time_tr, loss_tr, time_val, 
-                     loss_val, isbest, lr_info):
-    """ Print the information during training
-    """
+
+def print_train_info(epoch, time_tr, loss_tr, time_val, loss_val, isbest, lr_info):
+    """Print the information during training"""
     mes = "{:>7d} | ".format(epoch)
     mes = mes + "{:>12.1f} | ".format(time_tr + time_val)
     mes += _print_loss(loss_tr)
     mes += _print_loss(loss_val)
-    #mes = mes + "{:>12.4f} | ".format(loss_tr)
-    #mes = mes + "{:>12.4f} | ".format(loss_val)    
+    # mes = mes + "{:>12.4f} | ".format(loss_tr)
+    # mes = mes + "{:>12.4f} | ".format(loss_val)
     if isbest:
         mes = mes + "{:>5s}".format("yes")
     else:
@@ -53,11 +52,11 @@ def print_train_info(epoch, time_tr, loss_tr, time_val,
     if lr_info:
         mes = mes + lr_info
     nii_display.f_print_message(mes, flush=True)
-    return mes + '\n'
+    return mes + "\n"
+
 
 def print_log_head():
-    """ Print the head information
-    """ 
+    """Print the head information"""
     nii_display.f_print_message("{:->62s}".format(""))
     mes = "{:>7s} | ".format("Epoch")
     mes = mes + "{:>12s} | ".format("Duration(s)")
@@ -66,11 +65,11 @@ def print_log_head():
     mes = mes + "{:>5s}".format("Best")
     nii_display.f_print_message(mes)
     nii_display.f_print_message("{:->62s}".format(""), flush=True)
-    return mes + '\n'
+    return mes + "\n"
+
 
 def print_log_tail():
-    """ Print the tail line
-    """
+    """Print the tail line"""
     nii_display.f_print_message("{:->62s}".format(""))
     return
 

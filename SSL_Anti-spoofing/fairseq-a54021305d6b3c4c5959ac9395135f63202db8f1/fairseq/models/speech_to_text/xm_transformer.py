@@ -252,9 +252,9 @@ class Wav2VecEncoderWithAdaptor(FairseqEncoder):
 
         return {
             "encoder_out": [x],  # T x B x C
-            "encoder_padding_mask": [enc_padding_mask]
-            if enc_padding_mask.any()
-            else [],  # B x T
+            "encoder_padding_mask": (
+                [enc_padding_mask] if enc_padding_mask.any() else []
+            ),  # B x T
             "encoder_embedding": [],  # B x T x C
             "encoder_states": [],  # List[T x B x C]
             "src_tokens": [],

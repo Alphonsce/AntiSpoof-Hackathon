@@ -15,24 +15,25 @@ __copyright__ = "Copyright 2021, Xin Wang"
 
 #####
 ## Parse the curly bracket
-##### 
+#####
 
 # from https://github.com/fatchord/WaveRNN
-_curly_re = re.compile(r'(.*?)\{(.+?)\}(.*)')
+_curly_re = re.compile(r"(.*?)\{(.+?)\}(.*)")
 
 # symbol to indicate phonemic annotation
-_curly_symbol = '{'
+_curly_symbol = "{"
+
 
 def parse_curly_bracket(text):
-    """ Prase the text based on curly brackets
+    """Prase the text based on curly brackets
     Inspired by https://github.com/fatchord/WaveRNN: when input text
     is mixed with raw text and phonemic annotation, the {} pair indicates
     the phonemic part
-    
+
     input
     -----
       text: str
-    
+
     output
     ------
       text_list: list of str
@@ -44,7 +45,7 @@ def parse_curly_bracket(text):
 
     while len(text_tmp):
         re_matched = _curly_re.match(text_tmp)
-        
+
         if re_matched:
             # e.g., 'text {AH II} test'
             # group(1), group(2) -> ['text ', 'AH II']

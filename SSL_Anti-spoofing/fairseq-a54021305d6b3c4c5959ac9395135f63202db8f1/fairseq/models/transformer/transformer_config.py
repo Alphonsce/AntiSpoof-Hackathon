@@ -314,9 +314,7 @@ class TransformerConfig(FairseqDataclass):
             args_dict = (
                 args._asdict()
                 if safe_hasattr(args, "_asdict")
-                else vars(args)
-                if safe_hasattr(args, "__dict__")
-                else {}
+                else vars(args) if safe_hasattr(args, "__dict__") else {}
             )  # namedtupled doesn't have __dict__ :-/
             for key, value in args_dict.items():
                 if key not in seen:

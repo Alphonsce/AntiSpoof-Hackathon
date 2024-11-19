@@ -11,12 +11,12 @@ def parse_args():
     parser.add_argument(
         "--config_path",
         type=pathlib.Path,
-        help="Path to the checkpoint file containing the pruned config."
+        help="Path to the checkpoint file containing the pruned config.",
     )
     parser.add_argument(
         "--ckpt_after_final_distill",
         type=pathlib.Path,
-        help="Path to the checkpoint file after final distill."
+        help="Path to the checkpoint file after final distill.",
     )
     args = parser.parse_args()
     return args
@@ -29,10 +29,14 @@ if __name__ == "__main__":
 
     ckpt = torch.load(args.ckpt_after_final_distill, map_location="cpu")
     student_model_state_dict = {
-        k[len("student_model."):]: v for k, v in ckpt["state_dict"].items() if k.startswith("student_model.")
+        k[len("student_model.") :]: v
+        for k, v in ckpt["state_dict"].items()
+        if k.startswith("student_model.")
     }
     distill_linear_projs_state_dict = {
-        k[len("distill_linear_projs."):]: v for k, v in ckpt["state_dict"].items() if k.startswith("distill_linear_projs.")
+        k[len("distill_linear_projs.") :]: v
+        for k, v in ckpt["state_dict"].items()
+        if k.startswith("distill_linear_projs.")
     }
 
     out_path = args.ckpt_after_final_distill.parent / "pruned_hubert_base.pth"
@@ -42,8 +46,8 @@ if __name__ == "__main__":
             "config": config,
             "distill_linear_projs": distill_linear_projs_state_dict,
         },
-        out_path
+        out_path,
     )
-    
-    load_pruned_model(out_path)     # verify if it works
+
+    load_pruned_model(out_path)  # verify if it works
     print(f"Successfully saved pruned model weights and config to: {out_path}")

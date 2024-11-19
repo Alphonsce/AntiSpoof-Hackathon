@@ -29,12 +29,12 @@ class MultitaskCriterion:
                     task_obj.args.criterion_cfg, task_obj
                 )
             else:
-                self.multitask_criterion[
-                    task_name
-                ] = LabelSmoothedCrossEntropyCriterion(
-                    task_obj,
-                    task_obj.args.criterion_cfg.sentence_avg,
-                    label_smoothing=task_obj.args.criterion_cfg.label_smoothing,
+                self.multitask_criterion[task_name] = (
+                    LabelSmoothedCrossEntropyCriterion(
+                        task_obj,
+                        task_obj.args.criterion_cfg.sentence_avg,
+                        label_smoothing=task_obj.args.criterion_cfg.label_smoothing,
+                    )
                 )
 
     def set_multitask_loss_weight(self, task_name, weight=0.0):

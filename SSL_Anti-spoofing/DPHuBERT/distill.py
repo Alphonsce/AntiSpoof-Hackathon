@@ -31,7 +31,9 @@ def run_train(args):
 
     # Callbacks
     lr_monitor = LearningRateMonitor()  # log learning rates for all param groups
-    model_checkpoint = ModelCheckpoint(dirpath=args.exp_dir / "ckpts", verbose=True)   # only save the latest epoch
+    model_checkpoint = ModelCheckpoint(
+        dirpath=args.exp_dir / "ckpts", verbose=True
+    )  # only save the latest epoch
     callbacks = [lr_monitor, model_checkpoint]
 
     trainer = pl.Trainer(
@@ -52,37 +54,47 @@ def run_train(args):
 
     # Create teacher model
     teacher_ckpt = torch.load(args.teacher_ckpt, map_location="cpu")
-    teacher_model = wav2vec2_model(**teacher_ckpt['config'])
+    teacher_model = wav2vec2_model(**teacher_ckpt["config"])
     _LG.info(f"Teacher model:\n{teacher_model}")
-    teacher_result = teacher_model.load_state_dict(teacher_ckpt['state_dict'], strict=False)
-    _LG.info(f"Load pretrained ckpt to teacher: missing {teacher_result.missing_keys}, unexpected {teacher_result.unexpected_keys}")
+    teacher_result = teacher_model.load_state_dict(
+        teacher_ckpt["state_dict"], strict=False
+    )
+    _LG.info(
+        f"Load pretrained ckpt to teacher: missing {teacher_result.missing_keys}, unexpected {teacher_result.unexpected_keys}"
+    )
     # Freeze teacher model
     for p in teacher_model.parameters():
         p.requires_grad = False
     _LG.info("Freeze parameters of the teacher model by setting requires_grad=False")
     teacher_model.eval()
-    
+
     # Create student model
     student_ckpt = torch.load(args.student_ckpt, map_location="cpu")
     pruning_units = args.pruning_units.split(",")
     _LG.info(f"Pruning units: {pruning_units}")
-    student_config = student_ckpt['config']
+    student_config = student_ckpt["config"]
     student_config.update(
         dict(
-            extractor_prune_conv_channels = "conv" in pruning_units,
-            encoder_prune_attention_heads = "head" in pruning_units,
-            encoder_prune_attention_layer = "attlayer" in pruning_units,
-            encoder_prune_feed_forward_intermediate = "interm" in pruning_units,
-            encoder_prune_feed_forward_layer = "ffnlayer" in pruning_units,
+            extractor_prune_conv_channels="conv" in pruning_units,
+            encoder_prune_attention_heads="head" in pruning_units,
+            encoder_prune_attention_layer="attlayer" in pruning_units,
+            encoder_prune_feed_forward_intermediate="interm" in pruning_units,
+            encoder_prune_feed_forward_layer="ffnlayer" in pruning_units,
         )
     )
     student_model = wav2vec2_model(**student_config)
     _LG.info(f"Student model:\n{student_model}")
-    student_result = student_model.load_state_dict(student_ckpt['state_dict'], strict=False)
-    _LG.info(f"Load pretrained ckpt to student: missing {student_result.missing_keys}, unexpected {student_result.unexpected_keys}")
+    student_result = student_model.load_state_dict(
+        student_ckpt["state_dict"], strict=False
+    )
+    _LG.info(
+        f"Load pretrained ckpt to student: missing {student_result.missing_keys}, unexpected {student_result.unexpected_keys}"
+    )
 
     # Create linear layers which transform student hiddens to teacher hiddens
-    distill_layer_groups = [[int(l) for l in g.split(",")] for g in args.distill_layers.split(".")]
+    distill_layer_groups = [
+        [int(l) for l in g.split(",")] for g in args.distill_layers.split(".")
+    ]
     _LG.info(f"Distill transformer layers: {distill_layer_groups}")
     distill_layers = []
     for g in distill_layer_groups:
@@ -92,18 +104,19 @@ def run_train(args):
 
     if args.distill_mode == "layer2layer":
         distill_linear_projs = nn.ModuleList()
-        for g in distill_layer_groups:      # layers in the same group share a linear layer
+        for g in distill_layer_groups:  # layers in the same group share a linear layer
             tmp_linear = nn.Linear(student_embed_dim, teacher_embed_dim)
             _init_layer_transform(tmp_linear)
             for _ in range(len(g)):
                 distill_linear_projs.append(tmp_linear)
-    elif args.distill_mode == "predlayer":      # same as DistilHuBERT
+    elif args.distill_mode == "predlayer":  # same as DistilHuBERT
         # use independent linear layers, cannot be shared
         distill_linear_projs = nn.ModuleList(
             nn.Sequential(
                 nn.Linear(student_embed_dim, teacher_embed_dim),
                 nn.GELU(),
-            ) for _ in range(len(distill_layers))
+            )
+            for _ in range(len(distill_layers))
         )
     else:
         raise ValueError(f"Invalid distill mode: {args.distill_mode}")
@@ -139,7 +152,7 @@ def run_train(args):
     )
 
     trainer.fit(
-        distill_module, 
+        distill_module,
         ckpt_path=args.resume_checkpoint,
     )
 
@@ -170,10 +183,7 @@ def _parse_args():
         help="Number of seconds of audio in a mini-batch. (Default: 87.5)",
     )
     parser.add_argument(
-        "--num_workers",
-        default=1,
-        type=int,
-        help="Number of workers in DataLoader."
+        "--num_workers", default=1, type=int, help="Number of workers in DataLoader."
     )
 
     # general training related
@@ -190,10 +200,7 @@ def _parse_args():
         help="Directory to save checkpoints and logs to. (Default: './exp')",
     )
     parser.add_argument(
-        "--log_interval",
-        default=50,
-        type=int,
-        help="Log interval in steps."
+        "--log_interval", default=50, type=int, help="Log interval in steps."
     )
     parser.add_argument(
         "--learning_rate",
@@ -238,16 +245,10 @@ def _parse_args():
         help="Number of GPUs per node to use for training. (Default: 4)",
     )
     parser.add_argument(
-        "--accum_grad",
-        default=1,
-        type=int,
-        help="Gradient accumulation steps."
+        "--accum_grad", default=1, type=int, help="Gradient accumulation steps."
     )
     parser.add_argument(
-        "--precision",
-        default=32,
-        type=int,
-        help="Precision for training."
+        "--precision", default=32, type=int, help="Precision for training."
     )
 
     # distillation related
@@ -255,51 +256,45 @@ def _parse_args():
         "--teacher_ckpt",
         default=pathlib.Path("pretrained_ckpts/hubert-base-ls960.pth"),
         type=pathlib.Path,
-        help="Path to the teacher model checkpoint."
+        help="Path to the teacher model checkpoint.",
     )
     parser.add_argument(
         "--student_ckpt",
         default=pathlib.Path("pretrained_ckpts/hubert-base-ls960.pth"),
         type=pathlib.Path,
-        help="Path to the student model checkpoint (for initialization)."
+        help="Path to the student model checkpoint (for initialization).",
     )
     parser.add_argument(
         "--distill_layers",
         default="0.4,8,12",
         type=str,
-        help="Distill layer indices (use period to separate groups and comma to separate layers within a group)."
+        help="Distill layer indices (use period to separate groups and comma to separate layers within a group).",
     )
     parser.add_argument(
         "--distill_mode",
         type=str,
         default="layer2layer",
         choices=["layer2layer", "predlayer"],
-        help="Distill mode, either layer2layer or predlayer."
+        help="Distill mode, either layer2layer or predlayer.",
     )
     parser.add_argument(
-        "--l2_weight",
-        default=0.0,
-        type=float,
-        help="Weight of MSE loss."
+        "--l2_weight", default=0.0, type=float, help="Weight of MSE loss."
     )
     parser.add_argument(
-        "--l1_weight",
-        default=1.0,
-        type=float,
-        help="Weight of L1 loss."
+        "--l1_weight", default=1.0, type=float, help="Weight of L1 loss."
     )
     parser.add_argument(
         "--cos_weight",
         default=1.0,
         type=float,
-        help="Weight of cosine similarity loss."
+        help="Weight of cosine similarity loss.",
     )
     parser.add_argument(
         "--cos_type",
         default="raw",
         type=str,
         choices=["raw", "log_sig"],
-        help="Type of the cosine similarity loss."
+        help="Type of the cosine similarity loss.",
     )
 
     # pruning related
@@ -307,27 +302,24 @@ def _parse_args():
         "--pruning_units",
         default="conv,head,interm,attlayer,ffnlayer",
         type=str,
-        help="Pruning units as a comma-separated list."
+        help="Pruning units as a comma-separated list.",
     )
     parser.add_argument(
         "--reg_learning_rate",
         default=0.02,
         type=float,
-        help="Regularization learning rate."
+        help="Regularization learning rate.",
     )
     parser.add_argument(
-        "--target_sparsity",
-        default=0.75,
-        type=float,
-        help="Target sparsity."
+        "--target_sparsity", default=0.75, type=float, help="Target sparsity."
     )
     parser.add_argument(
         "--sparsity_warmup_updates",
         default=5000,
         type=int,
-        help="Warmup updates for the target sparsity."
+        help="Warmup updates for the target sparsity.",
     )
-    
+
     return parser.parse_args()
 
 

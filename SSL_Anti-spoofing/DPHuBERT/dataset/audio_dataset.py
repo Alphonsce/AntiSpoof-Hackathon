@@ -63,17 +63,27 @@ class BucketizeBatchSampler(BatchSampler):
             max_len = max(lengths)
 
         if not (0 <= min_len <= max_len):
-            raise AssertionError("``min_len`` should be non-negative and smaller than ``max_len``")
+            raise AssertionError(
+                "``min_len`` should be non-negative and smaller than ``max_len``"
+            )
         if max_token_count is not None and batch_size is not None:
-            raise AssertionError("The ``max_token_count`` and ``batch_size`` can't be both set.")
+            raise AssertionError(
+                "The ``max_token_count`` and ``batch_size`` can't be both set."
+            )
         if max_token_count is None and batch_size is None:
-            raise AssertionError("One of ``max_token_count`` or ``batch_size`` must be set.")
+            raise AssertionError(
+                "One of ``max_token_count`` or ``batch_size`` must be set."
+            )
         if max_token_count is not None:
             assert (
                 max_len <= max_token_count
             ), "The  ``max_token_count`` must be greater than or equal to the maximum value of ``lengths``."
         # Filter out samples which are outside the bounds of [min_len, max_len]
-        filtered_length_idx = [(length, i) for i, length in enumerate(lengths) if min_len <= length <= max_len]
+        filtered_length_idx = [
+            (length, i)
+            for i, length in enumerate(lengths)
+            if min_len <= length <= max_len
+        ]
         if len(filtered_length_idx) == 0:
             raise AssertionError("``lengths`` cannot be empty after filtering.")
         sorted_filtered_length_idx = sorted(filtered_length_idx, key=lambda x: x[0])
@@ -86,7 +96,9 @@ class BucketizeBatchSampler(BatchSampler):
         self.buckets = self._get_buckets(self.lengths, num_buckets, min_len, max_len)
         self._update_iter_list()
 
-    def _get_buckets(self, lengths: List[int], num_buckets: int, min_len: int, max_len: int) -> Dict[int, Tensor]:
+    def _get_buckets(
+        self, lengths: List[int], num_buckets: int, min_len: int, max_len: int
+    ) -> Dict[int, Tensor]:
         """Generate buckets based on the dataset.
         Args:
             lengths (List[int]): The lengths of the samples in the dataset.
@@ -115,11 +127,15 @@ class BucketizeBatchSampler(BatchSampler):
     def _update_iter_list(self) -> None:
         if self.shuffle:
             for k in self.buckets:
-                self.buckets[k] = self.buckets[k][torch.randperm(self.buckets[k].size(0))]
+                self.buckets[k] = self.buckets[k][
+                    torch.randperm(self.buckets[k].size(0))
+                ]
         self.iter_list = []
         total_len = 0
         batch = []
-        max_batch_size = self.max_token_count if self.max_token_count else self.batch_size
+        max_batch_size = (
+            self.max_token_count if self.max_token_count else self.batch_size
+        )
         for k in self.buckets:
             for i in range(self.buckets[k].size(0)):
                 index = int(self.buckets[k][i])
@@ -196,7 +212,9 @@ class DistributedBatchSampler(DistributedSampler):
         if shuffle:
             g = torch.Generator()
             g.manual_seed(self.seed + self.epoch)
-            perm = torch.randperm(len(self.batch_sampler.iter_list), generator=g).tolist()
+            perm = torch.randperm(
+                len(self.batch_sampler.iter_list), generator=g
+            ).tolist()
             indices = [self.batch_sampler.iter_list[i] for i in perm]
         else:
             indices = self.batch_sampler.iter_list
@@ -230,7 +248,9 @@ class AudioDataset(Dataset):
         tsv_dir: Union[str, Path],
         subset: str,
     ) -> None:
-        self.f_list, self.ind_list, self.len_list = self._get_lists(Path(tsv_dir), subset)
+        self.f_list, self.ind_list, self.len_list = self._get_lists(
+            Path(tsv_dir), subset
+        )
 
     def __len__(self):
         return len(self.f_list)
@@ -296,7 +316,7 @@ def _crop_audio(
             length in the mini-batch.
 
     Returns:
-        (Tuple(Tensor, Tensor)): 
+        (Tuple(Tensor, Tensor)):
             Returns the Tensors for the waveform and the waveform length.
     """
     frame_offset = 0
@@ -349,8 +369,10 @@ class CollateFnAudio:
             num_frames = min([sample[0].shape[1] for sample in batch])
         waveforms, lengths = [], []
         for sample in batch:
-            waveform, length = sample   # waveform has shape (channel, time)
-            waveform, length = _crop_audio(waveform, length, num_frames, self.rand_crop)    # waveform has shape (time,)
+            waveform, length = sample  # waveform has shape (channel, time)
+            waveform, length = _crop_audio(
+                waveform, length, num_frames, self.rand_crop
+            )  # waveform has shape (time,)
             waveforms.append(waveform)
             lengths.append(length)
         # make sure the shapes are the same if not apply zero-padding

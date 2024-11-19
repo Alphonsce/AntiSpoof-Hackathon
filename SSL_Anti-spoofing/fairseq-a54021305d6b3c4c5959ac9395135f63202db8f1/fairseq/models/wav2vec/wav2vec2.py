@@ -507,7 +507,7 @@ class Wav2Vec2Model(BaseFairseqModel):
         logits = logits / self.logit_temp
 
         if is_xla_tensor(logits) or neg_is_pos.any():
-            fillval = -float(2 ** 30)
+            fillval = -float(2**30)
             if not hasattr(self, "_inftensor"):
                 self._inftensor = (
                     torch.tensor(fillval).to(x.device)
@@ -939,9 +939,11 @@ class TransformerEncoder(nn.Module):
                         layer_results.append(
                             (
                                 x[:-pad_length],
-                                z[:, :-pad_length, :-pad_length]
-                                if z is not None
-                                else z,
+                                (
+                                    z[:, :-pad_length, :-pad_length]
+                                    if z is not None
+                                    else z
+                                ),
                             )
                         )
                     else:

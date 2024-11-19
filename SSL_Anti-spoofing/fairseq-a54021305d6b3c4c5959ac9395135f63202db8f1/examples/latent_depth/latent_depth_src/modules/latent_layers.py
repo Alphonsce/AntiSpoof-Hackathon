@@ -12,7 +12,8 @@ class LayerSelect(nn.Module):
     either (soft) weighting or (hard) selection of residual connection.
     https://arxiv.org/abs/2009.13102
     """
-    def __init__(self, num_layers, num_logits, soft_select=False, sampling_tau=5.):
+
+    def __init__(self, num_layers, num_logits, soft_select=False, sampling_tau=5.0):
         super(LayerSelect, self).__init__()
         self.layer_logits = torch.nn.Parameter(
             torch.Tensor(num_logits, num_layers),
@@ -33,9 +34,11 @@ class LayerSelect(nn.Module):
         """
         assert logit_idx is not None
         self.samples = self._gumbel_sigmoid(
-            self.layer_logits[logit_idx, :].detach()
-            if self.detach_grad
-            else self.layer_logits[logit_idx, :],
+            (
+                self.layer_logits[logit_idx, :].detach()
+                if self.detach_grad
+                else self.layer_logits[logit_idx, :]
+            ),
             dim=-1,
             tau=self.tau,
             hard=self.hard_select,

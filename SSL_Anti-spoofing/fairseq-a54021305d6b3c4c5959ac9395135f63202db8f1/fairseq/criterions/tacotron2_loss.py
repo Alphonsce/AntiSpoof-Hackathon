@@ -58,7 +58,7 @@ class GuidedAttentionLoss(torch.nn.Module):
         grid_x = grid_x.to(s_len.device)
         grid_y = grid_y.to(s_len.device)
         w = (grid_y.float() / s_len - grid_x.float() / t_len) ** 2
-        return 1.0 - torch.exp(-w / (2 * (sigma ** 2)))
+        return 1.0 - torch.exp(-w / (2 * (sigma**2)))
 
     def _get_weights(self, src_lens, tgt_lens):
         bsz, max_s_len, max_t_len = len(src_lens), max(src_lens), max(tgt_lens)

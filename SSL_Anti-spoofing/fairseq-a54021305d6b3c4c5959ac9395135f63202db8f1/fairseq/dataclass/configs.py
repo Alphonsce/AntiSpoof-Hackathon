@@ -152,7 +152,7 @@ class CommonConfig(FairseqDataclass):
         default=False, metadata={"help": "don't flatten FP16 grads tensor"}
     )
     fp16_init_scale: int = field(
-        default=2 ** 7, metadata={"help": "default FP16 loss scale"}
+        default=2**7, metadata={"help": "default FP16 loss scale"}
     )
     fp16_scale_window: Optional[int] = field(
         default=None,
@@ -188,7 +188,7 @@ class CommonConfig(FairseqDataclass):
         },
     )
     amp_init_scale: int = field(
-        default=2 ** 7, metadata={"help": "default AMP loss scale"}
+        default=2**7, metadata={"help": "default AMP loss scale"}
     )
     amp_scale_window: Optional[int] = field(
         default=None,

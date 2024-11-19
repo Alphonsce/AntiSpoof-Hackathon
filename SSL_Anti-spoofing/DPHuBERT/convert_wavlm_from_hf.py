@@ -17,8 +17,10 @@ if __name__ == "__main__":
 
     # default config of wavlm base
     wavlm_base_plus_config = dict(
-        extractor_mode="group_norm",    # wavlm base only uses a group norm at the first conv layer
-        extractor_conv_layer_config=[(512, 10, 5)] + [(512, 3, 2)] * 4 + [(512, 2, 2)] * 2,
+        extractor_mode="group_norm",  # wavlm base only uses a group norm at the first conv layer
+        extractor_conv_layer_config=[(512, 10, 5)]
+        + [(512, 3, 2)] * 4
+        + [(512, 2, 2)] * 2,
         extractor_conv_bias=False,
         encoder_embed_dim=768,
         encoder_projection_dropout=0.1,
@@ -35,7 +37,7 @@ if __name__ == "__main__":
         encoder_ff_interm_features=[3072] * 12,
         encoder_ff_interm_dropout=0.0,
         encoder_dropout=0.1,
-        encoder_layer_norm_first=False,     # wavlm base uses post norm
+        encoder_layer_norm_first=False,  # wavlm base uses post norm
         encoder_layer_drop=0.05,
         aux_num_out=None,
         normalize_waveform=False,
@@ -48,13 +50,13 @@ if __name__ == "__main__":
 
     torch.save(
         {
-            'state_dict': imported.state_dict(),
-            'config': wavlm_base_plus_config,
-        }, 
-        out_name
+            "state_dict": imported.state_dict(),
+            "config": wavlm_base_plus_config,
+        },
+        out_name,
     )
 
     # verify the saved ckpt
     ckpt = torch.load(out_name, map_location="cpu")
-    model = wav2vec2_model(**ckpt['config'])
-    print(model.load_state_dict(ckpt['state_dict'], strict=False))
+    model = wav2vec2_model(**ckpt["config"])
+    print(model.load_state_dict(ckpt["state_dict"], strict=False))

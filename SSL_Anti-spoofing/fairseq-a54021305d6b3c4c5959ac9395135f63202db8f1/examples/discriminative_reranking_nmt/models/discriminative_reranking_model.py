@@ -27,9 +27,9 @@ SENTENCE_REP_CHOICES = ChoiceEnum(["head", "meanpool", "maxpool"])
 
 def update_init_roberta_model_state(state):
     """
-   update the state_dict of a Roberta model for initializing
-   weights of the BertRanker
-   """
+    update the state_dict of a Roberta model for initializing
+    weights of the BertRanker
+    """
     for k in list(state.keys()):
         if ".lm_head." in k or "version" in k:
             del state[k]
@@ -173,9 +173,11 @@ class BertRanker(BaseRanker):
                 dropout=args.dropout,
                 attention_dropout=args.attention_dropout,
                 activation_dropout=args.activation_dropout,
-                max_seq_len=task.max_positions()
-                if task.max_positions()
-                else args.tokens_per_sample,
+                max_seq_len=(
+                    task.max_positions()
+                    if task.max_positions()
+                    else args.tokens_per_sample
+                ),
                 num_segments=2,
                 offset_positions_by_padding=False,
                 encoder_normalize_before=args.encoder_normalize_before,

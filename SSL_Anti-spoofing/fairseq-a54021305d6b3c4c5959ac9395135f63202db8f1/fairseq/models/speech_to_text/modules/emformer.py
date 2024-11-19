@@ -81,12 +81,16 @@ class Fp32LayerNorm(nn.Module):
         output = torch.nn.functional.layer_norm(
             input.float(),
             self.torch_module.normalized_shape,
-            self.torch_module.weight.float()
-            if self.torch_module.weight is not None
-            else None,
-            self.torch_module.bias.float()
-            if self.torch_module.bias is not None
-            else None,
+            (
+                self.torch_module.weight.float()
+                if self.torch_module.weight is not None
+                else None
+            ),
+            (
+                self.torch_module.bias.float()
+                if self.torch_module.bias is not None
+                else None
+            ),
             self.torch_module.eps,
         ).type_as(input)
         return output
@@ -348,7 +352,7 @@ class NoSegAugmentedMemoryMultiheadAttentionBmm(nn.Module):
         self.dropout = dropout
 
         self.head_dim = embed_dim // num_heads
-        self.scaling = self.head_dim ** -0.5
+        self.scaling = self.head_dim**-0.5
 
         self.std_scale = std_scale
         self.use_mem = use_mem

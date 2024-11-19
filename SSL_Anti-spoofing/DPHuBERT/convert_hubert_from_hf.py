@@ -13,11 +13,13 @@ if __name__ == "__main__":
     original = HubertModel.from_pretrained("facebook/hubert-base-ls960")
     imported = import_huggingface_model(original)
     print(imported)
-    
+
     # default config of hubert base
     hubert_base_config = dict(
-        extractor_mode="group_norm",    # hubert base only uses a group norm at the first conv layer
-        extractor_conv_layer_config=[(512, 10, 5)] + [(512, 3, 2)] * 4 + [(512, 2, 2)] * 2,
+        extractor_mode="group_norm",  # hubert base only uses a group norm at the first conv layer
+        extractor_conv_layer_config=[(512, 10, 5)]
+        + [(512, 3, 2)] * 4
+        + [(512, 2, 2)] * 2,
         extractor_conv_bias=False,
         encoder_embed_dim=768,
         encoder_projection_dropout=0.1,
@@ -32,7 +34,7 @@ if __name__ == "__main__":
         encoder_ff_interm_features=[3072] * 12,
         encoder_ff_interm_dropout=0.0,
         encoder_dropout=0.1,
-        encoder_layer_norm_first=False,     # hubert base uses post norm
+        encoder_layer_norm_first=False,  # hubert base uses post norm
         encoder_layer_drop=0.05,
         aux_num_out=None,
         normalize_waveform=False,
@@ -45,14 +47,14 @@ if __name__ == "__main__":
 
     torch.save(
         {
-            'state_dict': imported.state_dict(),
-            'config': hubert_base_config,
-        }, 
-        out_name
+            "state_dict": imported.state_dict(),
+            "config": hubert_base_config,
+        },
+        out_name,
     )
 
     # verify the saved ckpt
     ckpt = torch.load(out_name, map_location="cpu")
-    model = wav2vec2_model(**ckpt['config'])
-    res = model.load_state_dict(ckpt['state_dict'], strict=False)
+    model = wav2vec2_model(**ckpt["config"])
+    res = model.load_state_dict(ckpt["state_dict"], strict=False)
     print(f"Missing: {res.missing_keys}\nUnexpected: {res.unexpected_keys}")

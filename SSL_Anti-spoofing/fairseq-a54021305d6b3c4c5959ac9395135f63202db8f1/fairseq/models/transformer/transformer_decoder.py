@@ -161,7 +161,7 @@ class TransformerDecoderBase(FairseqIncrementalDecoder):
                 self.output_embed_dim, len(dictionary), bias=False
             )
             nn.init.normal_(
-                self.output_projection.weight, mean=0, std=self.output_embed_dim ** -0.5
+                self.output_projection.weight, mean=0, std=self.output_embed_dim**-0.5
             )
         num_base_layers = cfg.base_layers
         for i in range(num_base_layers):
@@ -403,9 +403,9 @@ class TransformerDecoderBase(FairseqIncrementalDecoder):
             weights_key = "{}.embed_positions.weights".format(name)
             if weights_key in state_dict:
                 del state_dict[weights_key]
-            state_dict[
-                "{}.embed_positions._float_tensor".format(name)
-            ] = torch.FloatTensor(1)
+            state_dict["{}.embed_positions._float_tensor".format(name)] = (
+                torch.FloatTensor(1)
+            )
 
         if f"{name}.output_projection.weight" not in state_dict:
             if self.share_input_output_embed:
@@ -430,9 +430,9 @@ class TransformerDecoderBase(FairseqIncrementalDecoder):
                 for m in ("weight", "bias"):
                     k = "{}.layers.{}.layer_norms.{}.{}".format(name, i, old, m)
                     if k in state_dict:
-                        state_dict[
-                            "{}.layers.{}.{}.{}".format(name, i, new, m)
-                        ] = state_dict[k]
+                        state_dict["{}.layers.{}.{}.{}".format(name, i, new, m)] = (
+                            state_dict[k]
+                        )
                         del state_dict[k]
 
         version_key = "{}.version".format(name)

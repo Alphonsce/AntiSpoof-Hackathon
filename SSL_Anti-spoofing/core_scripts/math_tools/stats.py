@@ -23,7 +23,7 @@ def f_var2std(var):
     std = f_var2std(var)
     Args:
      var: np.arrary, variance
-    
+
     Return:
      std: np.array, standard-devitation
 
@@ -35,22 +35,22 @@ def f_var2std(var):
     floored_idx = std < nii_dconf.std_floor
     std[floored_idx] = 1.0
     return std
-    
+
 
 def f_online_mean_std(data, mean_old, var_old, cnt_old):
-    """ 
+    """
     mean, var, count=f_online_mean_var(data, mean, var, num_count):
-    
+
     online algorithm to accumulate mean and var
-    
+
     Args:
       data: input data as numpy.array, in shape [length, dimension]
-    
+
       mean: mean to be updated, np.array [dimension]
 
       var: var to be updated, np.array [dimension]
 
-      num_count: how many data rows have been calculated before 
+      num_count: how many data rows have been calculated before
         this calling.
 
     Return:
@@ -58,8 +58,8 @@ def f_online_mean_std(data, mean_old, var_old, cnt_old):
       var: var, np.array [dimension]
       count: accumulated data number, = num_count + data.shape[0]
 
-    Ref. parallel algorithm                                                 
-    https://en.wikipedia.org/wiki/Algorithms_for_calculating_variance  
+    Ref. parallel algorithm
+    https://en.wikipedia.org/wiki/Algorithms_for_calculating_variance
     """
 
     try:
@@ -69,7 +69,7 @@ def f_online_mean_std(data, mean_old, var_old, cnt_old):
         # if input data is empty, don't update
         if cnt_this == 0:
             return mean_old, var_old, cnt_old
-        
+
         if data.ndim == 1:
             # single dimension data, 1d array
             mean_this = data.mean()
@@ -80,7 +80,7 @@ def f_online_mean_std(data, mean_old, var_old, cnt_old):
             mean_this = data.mean(axis=0)
             var_this = data.var(axis=0)
             dim = data.shape[1]
-            
+
         # difference of accumulated mean and data mean
         diff_mean = mean_this - mean_old
 
@@ -90,10 +90,9 @@ def f_online_mean_std(data, mean_old, var_old, cnt_old):
 
         # update count
         updated_count = cnt_old + cnt_this
-        
+
         # update mean
-        new_mean = mean_old + diff_mean * (float(cnt_this) /
-                                           (cnt_old + cnt_this))
+        new_mean = mean_old + diff_mean * (float(cnt_this) / (cnt_old + cnt_this))
         # update var
         if cnt_old == 0:
             # if this is the first data
@@ -104,27 +103,28 @@ def f_online_mean_std(data, mean_old, var_old, cnt_old):
                 new_var = var_this
         else:
             # not first data
-            new_var = (var_old * (float(cnt_old) / updated_count) 
-                       + var_this * (float(cnt_this)/ updated_count) 
-                       + (diff_mean * diff_mean
-                          / (float(cnt_this)/cnt_old 
-                             + float(cnt_old)/cnt_this
-                             + 2.0)))
+            new_var = (
+                var_old * (float(cnt_old) / updated_count)
+                + var_this * (float(cnt_this) / updated_count)
+                + (
+                    diff_mean
+                    * diff_mean
+                    / (float(cnt_this) / cnt_old + float(cnt_old) / cnt_this + 2.0)
+                )
+            )
         # done
         return new_mean, new_var, updated_count
-        
+
     except ValueError:
         if data.ndim > 1:
-            if data.shape[1] != mean_old.shape[0] or \
-               data.shape[1] != var_old.shape[0]:
+            if data.shape[1] != mean_old.shape[0] or data.shape[1] != var_old.shape[0]:
                 nii_display.f_print("Dimension incompatible", "error")
                 nii_display.f_die("Error in online mean var calculation")
         else:
-            if mean_old.shape[0] != 1 or \
-               var_old.shape[0] != 1:
+            if mean_old.shape[0] != 1 or var_old.shape[0] != 1:
                 nii_display.f_print("Dimension incompatible", "error")
                 nii_display.f_die("Error in online mean var calculation")
-            
+
 
 if __name__ == "__main__":
     pass
