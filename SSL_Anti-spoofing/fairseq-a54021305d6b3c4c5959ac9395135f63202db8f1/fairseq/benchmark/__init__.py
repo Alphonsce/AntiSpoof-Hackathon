@@ -4,5 +4,4 @@
 # LICENSE file in the root directory of this source tree.
 
 # import models/tasks to register them
-from . import (dummy_dataset, dummy_lm, dummy_masked_lm, dummy_model,  # noqa
-               dummy_mt)
+from . import dummy_dataset, dummy_lm, dummy_masked_lm, dummy_model, dummy_mt  # noqa

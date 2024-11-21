@@ -6,8 +6,7 @@
 import numpy as np
 import torch
 import torchaudio
-from fairseq.tasks.text_to_speech import (batch_compute_distortion,
-                                          compute_rms_dist)
+from fairseq.tasks.text_to_speech import batch_compute_distortion, compute_rms_dist
 from scipy.interpolate import interp1d
 
 

@@ -13,7 +13,9 @@ from typing import Optional
 
 import torch
 from examples.speech_recognition.kaldi.kaldi_decoder import (
-    KaldiDecoder, KaldiDecoderConfig)
+    KaldiDecoder,
+    KaldiDecoderConfig,
+)
 from fairseq.data import Dictionary, StripTokenDataset, data_utils
 from fairseq.dataclass import FairseqDataclass
 from fairseq.distributed.utils import get_data_parallel_world_size

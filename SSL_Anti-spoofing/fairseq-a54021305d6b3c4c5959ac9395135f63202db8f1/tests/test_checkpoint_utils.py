@@ -13,8 +13,11 @@ from unittest.mock import patch
 
 from fairseq import checkpoint_utils
 from omegaconf import OmegaConf
-from tests.utils import (create_dummy_data, preprocess_translation_data,
-                         train_translation_model)
+from tests.utils import (
+    create_dummy_data,
+    preprocess_translation_data,
+    train_translation_model,
+)
 
 
 class TestCheckpointUtils(unittest.TestCase):

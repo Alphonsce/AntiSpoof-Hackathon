@@ -13,10 +13,17 @@ from typing import Optional
 
 import numpy as np
 from fairseq import metrics, utils
-from fairseq.data import (AppendTokenDataset, ConcatDataset,
-                          LanguagePairDataset, PrependTokenDataset,
-                          StripTokenDataset, TruncateDataset, data_utils,
-                          encoders, indexed_dataset)
+from fairseq.data import (
+    AppendTokenDataset,
+    ConcatDataset,
+    LanguagePairDataset,
+    PrependTokenDataset,
+    StripTokenDataset,
+    TruncateDataset,
+    data_utils,
+    encoders,
+    indexed_dataset,
+)
 from fairseq.data.indexed_dataset import get_available_dataset_impl
 from fairseq.dataclass import ChoiceEnum, FairseqDataclass
 from fairseq.tasks import FairseqTask, register_task

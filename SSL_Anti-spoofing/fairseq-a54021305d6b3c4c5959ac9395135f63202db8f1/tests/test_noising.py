@@ -9,8 +9,13 @@ from typing import Dict, List
 import tests.utils as test_utils
 import torch
 from fairseq import utils
-from fairseq.data import (Dictionary, LanguagePairDataset, TransformEosDataset,
-                          data_utils, noising)
+from fairseq.data import (
+    Dictionary,
+    LanguagePairDataset,
+    TransformEosDataset,
+    data_utils,
+    noising,
+)
 
 
 class TestDataNoising(unittest.TestCase):

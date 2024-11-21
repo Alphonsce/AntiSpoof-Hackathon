@@ -444,12 +444,12 @@ class Model(nn.Module):
         device,
         ssl_backbone="wav2vec",
         freeze_ssl=False,
-        behaviour="last_layer",
+        ssl_behaviour="last_layer",
     ):
         """
         ssl_backbone: wav2vec / dp_hubert
         freeze_ssl: freeze SSL part on train or not
-        behaviour: ONLY for DPHubert architecture: can train with weighted sum
+        behaviour: ONLY for DPHubert architecture: can train with weighted sum: "last-layer" or "weighted-sum"
         """
         super().__init__()
         self.device = device
@@ -466,9 +466,15 @@ class Model(nn.Module):
         if ssl_backbone == "wav2vec":
             self.ssl_model = SSLModel(self.device)
         elif ssl_backbone == "dp_hubert":
-            self.ssl_model = DPHubertModel(self.device, behaviour, freeze_ssl)
+            self.ssl_model = DPHubertModel(self.device, ssl_behaviour, freeze_ssl)
         else:
             raise Exception("Unknown backbone. Select from: wav2vec, dp_hubert")
+
+        if freeze_ssl:
+            print("Freezing SSL parameters")
+            for param in self.ssl_model.parameters():
+                param.requires_grad = False
+
         self.LL = nn.Linear(self.ssl_model.out_dim, 128)
 
         self.first_bn = nn.BatchNorm2d(num_features=1)

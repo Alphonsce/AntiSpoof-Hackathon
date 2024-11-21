@@ -6,11 +6,18 @@
 from collections import OrderedDict
 
 from fairseq import utils
-from fairseq.models import (FairseqMultiModel, register_model,
-                            register_model_architecture)
-from fairseq.models.transformer import (Embedding, TransformerDecoder,
-                                        TransformerEncoder, TransformerModel,
-                                        base_architecture)
+from fairseq.models import (
+    FairseqMultiModel,
+    register_model,
+    register_model_architecture,
+)
+from fairseq.models.transformer import (
+    Embedding,
+    TransformerDecoder,
+    TransformerEncoder,
+    TransformerModel,
+    base_architecture,
+)
 from fairseq.utils import safe_hasattr
 
 
@@ -62,8 +69,7 @@ class MultilingualTransformerModel(FairseqMultiModel):
     @classmethod
     def build_model(cls, args, task):
         """Build a new model instance."""
-        from fairseq.tasks.multilingual_translation import \
-            MultilingualTranslationTask
+        from fairseq.tasks.multilingual_translation import MultilingualTranslationTask
 
         assert isinstance(task, MultilingualTranslationTask)
 

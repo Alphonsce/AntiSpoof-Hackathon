@@ -11,8 +11,11 @@ from torch.utils.data import DataLoader
 from tqdm import tqdm
 
 from core_scripts.startup_config import set_random_seed
-from data_utils_SSL import (Dataset_ASVspoof2019_train,
-                            Dataset_ASVspoof2021_eval, genSpoof_list)
+from data_utils_SSL import (
+    Dataset_ASVspoof2019_train,
+    Dataset_ASVspoof2021_eval,
+    genSpoof_list,
+)
 from model import Model
 
 __author__ = "Hemlata Tak"
@@ -145,6 +148,17 @@ if __name__ == "__main__":
     %      |- ASVspoof2019.LA.cm.train.trn.txt
   
     """
+
+    ### SSL-related:
+    parser.add_argument("--ssl_backbone", default="wav2vec")
+    parser.add_argument("--freeze_ssl", action="store_true", default=False)
+    parser.add_argument(
+        "--ssl_behaviour",
+        default="last-layer",
+        help="Only for DPHubert. Can also be 'weighted-sum' .",
+    )
+
+    # =============
 
     # Hyperparameters
     parser.add_argument("--batch_size", type=int, default=14)
@@ -334,7 +348,13 @@ if __name__ == "__main__":
     device = "cuda" if torch.cuda.is_available() else "cpu"
     print("Device: {}".format(device))
 
-    model = Model(args, device)
+    model = Model(
+        args,
+        device,
+        ssl_backbone=args.ssl_backbone,
+        freeze_ssl=args.freeze_ssl,
+        ssl_behaviour=args.ssl_behaviour,
+    )
     nb_params = sum([param.view(-1).size()[0] for param in model.parameters()])
     model = model.to(device)
     print("nb_params:", nb_params)

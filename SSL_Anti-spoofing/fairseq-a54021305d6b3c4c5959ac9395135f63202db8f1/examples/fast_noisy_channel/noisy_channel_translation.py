@@ -54,8 +54,7 @@ class NoisyChannelTranslation(TranslationTask):
         if getattr(args, "score_reference", False):
             raise NotImplementedError()
         else:
-            from .noisy_channel_sequence_generator import \
-                NoisyChannelSequenceGenerator
+            from .noisy_channel_sequence_generator import NoisyChannelSequenceGenerator
 
             use_cuda = torch.cuda.is_available() and not self.args.cpu
             assert (

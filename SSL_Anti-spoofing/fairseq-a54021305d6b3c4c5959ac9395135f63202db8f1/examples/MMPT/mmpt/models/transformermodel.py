@@ -19,9 +19,12 @@ import torch
 from torch import nn
 
 try:
-    from transformers.modeling_bert import (BertEncoder, BertModel,
-                                            BertPredictionHeadTransform,
-                                            BertPreTrainedModel)
+    from transformers.modeling_bert import (
+        BertEncoder,
+        BertModel,
+        BertPredictionHeadTransform,
+        BertPreTrainedModel,
+    )
 except ImportError:
     pass
 

@@ -11,11 +11,21 @@ from typing import Optional
 import numpy as np
 import torch
 from fairseq import utils
-from fairseq.data import (AppendTokenDataset, Dictionary, IdDataset,
-                          LMContextWindowDataset, MonolingualDataset,
-                          NestedDictionaryDataset, NumelDataset, PadDataset,
-                          PrependTokenDataset, StripTokenDataset,
-                          TokenBlockDataset, TruncatedDictionary, data_utils)
+from fairseq.data import (
+    AppendTokenDataset,
+    Dictionary,
+    IdDataset,
+    LMContextWindowDataset,
+    MonolingualDataset,
+    NestedDictionaryDataset,
+    NumelDataset,
+    PadDataset,
+    PrependTokenDataset,
+    StripTokenDataset,
+    TokenBlockDataset,
+    TruncatedDictionary,
+    data_utils,
+)
 from fairseq.data.indexed_dataset import get_available_dataset_impl
 from fairseq.data.shorten_dataset import maybe_shorten_dataset
 from fairseq.dataclass import ChoiceEnum, FairseqDataclass

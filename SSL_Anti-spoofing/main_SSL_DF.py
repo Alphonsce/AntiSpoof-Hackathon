@@ -10,8 +10,11 @@ from torch import Tensor, nn
 from torch.utils.data import DataLoader
 
 from core_scripts.startup_config import set_random_seed
-from data_utils_SSL import (Dataset_ASVspoof2019_train,
-                            Dataset_ASVspoof2021_eval, genSpoof_list)
+from data_utils_SSL import (
+    Dataset_ASVspoof2019_train,
+    Dataset_ASVspoof2021_eval,
+    genSpoof_list,
+)
 from model import Model
 
 __author__ = "Hemlata Tak"

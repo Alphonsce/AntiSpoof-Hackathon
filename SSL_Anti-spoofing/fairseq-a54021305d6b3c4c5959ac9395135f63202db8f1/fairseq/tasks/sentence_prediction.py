@@ -10,12 +10,22 @@ from dataclasses import dataclass, field
 from typing import Optional
 
 import numpy as np
-from fairseq.data import (ConcatSentencesDataset, Dictionary, IdDataset,
-                          NestedDictionaryDataset, NumelDataset,
-                          NumSamplesDataset, OffsetTokensDataset,
-                          PrependTokenDataset, RawLabelDataset,
-                          RightPadDataset, RollDataset, SortDataset,
-                          StripTokenDataset, data_utils)
+from fairseq.data import (
+    ConcatSentencesDataset,
+    Dictionary,
+    IdDataset,
+    NestedDictionaryDataset,
+    NumelDataset,
+    NumSamplesDataset,
+    OffsetTokensDataset,
+    PrependTokenDataset,
+    RawLabelDataset,
+    RightPadDataset,
+    RollDataset,
+    SortDataset,
+    StripTokenDataset,
+    data_utils,
+)
 from fairseq.data.shorten_dataset import maybe_shorten_dataset
 from fairseq.dataclass import ChoiceEnum
 from fairseq.tasks import FairseqDataclass, FairseqTask, register_task

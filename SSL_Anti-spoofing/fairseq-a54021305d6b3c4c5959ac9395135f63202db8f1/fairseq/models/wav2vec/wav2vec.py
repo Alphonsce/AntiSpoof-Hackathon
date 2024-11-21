@@ -14,9 +14,13 @@ import torch.nn as nn
 import torch.nn.functional as F
 from fairseq.dataclass import ChoiceEnum, FairseqDataclass
 from fairseq.models import BaseFairseqModel, register_model
-from fairseq.modules import (Fp32GroupNorm, Fp32LayerNorm,
-                             GumbelVectorQuantizer, KmeansVectorQuantizer,
-                             TransposeLast)
+from fairseq.modules import (
+    Fp32GroupNorm,
+    Fp32LayerNorm,
+    GumbelVectorQuantizer,
+    KmeansVectorQuantizer,
+    TransposeLast,
+)
 from fairseq.tasks import FairseqTask
 from fairseq.utils import buffered_arange
 from omegaconf import II

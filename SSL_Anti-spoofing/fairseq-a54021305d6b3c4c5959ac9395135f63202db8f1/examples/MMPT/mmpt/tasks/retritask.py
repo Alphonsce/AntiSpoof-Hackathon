@@ -14,8 +14,12 @@ from tqdm import tqdm
 from ..datasets import MMDataset
 from ..evaluators.predictor import Predictor
 from ..modules import vectorpool
-from ..processors import (ShardedHow2MetaProcessor, ShardedTextProcessor,
-                          ShardedVideoProcessor, VariedLenAligner)
+from ..processors import (
+    ShardedHow2MetaProcessor,
+    ShardedTextProcessor,
+    ShardedVideoProcessor,
+    VariedLenAligner,
+)
 from ..utils import get_local_rank, get_world_size, set_seed
 from .task import Task
 

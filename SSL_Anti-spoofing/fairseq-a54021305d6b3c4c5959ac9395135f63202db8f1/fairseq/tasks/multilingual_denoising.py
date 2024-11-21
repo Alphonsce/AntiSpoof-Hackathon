@@ -7,9 +7,17 @@ import logging
 import os
 
 import numpy as np
-from fairseq.data import (AppendTokenDataset, ConcatDataset, DenoisingDataset,
-                          Dictionary, PrependTokenDataset, ResamplingDataset,
-                          SortDataset, TokenBlockDataset, data_utils)
+from fairseq.data import (
+    AppendTokenDataset,
+    ConcatDataset,
+    DenoisingDataset,
+    Dictionary,
+    PrependTokenDataset,
+    ResamplingDataset,
+    SortDataset,
+    TokenBlockDataset,
+    data_utils,
+)
 from fairseq.data.encoders.utils import get_whole_word_mask
 from fairseq.tasks import register_task
 

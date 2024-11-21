@@ -19,9 +19,16 @@ import torch
 import torch.nn as nn
 import torch.nn.functional as F
 from fairseq import metrics, options, utils
-from fairseq.data import (FairseqDataset, LanguagePairDataset, NoisingDataset,
-                          PrependTokenDataset, RoundRobinZipDatasets,
-                          TransformEosLangPairDataset, data_utils, encoders)
+from fairseq.data import (
+    FairseqDataset,
+    LanguagePairDataset,
+    NoisingDataset,
+    PrependTokenDataset,
+    RoundRobinZipDatasets,
+    TransformEosLangPairDataset,
+    data_utils,
+    encoders,
+)
 from fairseq.sequence_generator import SequenceGenerator
 from fairseq.tasks import register_task
 from fairseq.tasks.translation import TranslationTask, load_langpair_dataset

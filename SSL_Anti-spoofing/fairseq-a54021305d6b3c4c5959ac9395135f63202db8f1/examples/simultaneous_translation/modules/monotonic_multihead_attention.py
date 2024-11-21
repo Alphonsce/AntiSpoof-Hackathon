@@ -9,10 +9,14 @@ from typing import Dict, Optional
 import torch
 import torch.nn as nn
 from examples.simultaneous_translation.utils.monotonic_attention import (
-    expected_alignment_from_p_choose, expected_soft_attention,
-    mass_preservation)
+    expected_alignment_from_p_choose,
+    expected_soft_attention,
+    mass_preservation,
+)
 from examples.simultaneous_translation.utils.p_choose_strategy import (
-    learnable_p_choose, waitk_p_choose)
+    learnable_p_choose,
+    waitk_p_choose,
+)
 from fairseq.modules import MultiheadAttention
 from torch import Tensor
 

@@ -8,13 +8,19 @@ from typing import Dict, List, NamedTuple, Optional
 import torch
 import torch.nn as nn
 from examples.simultaneous_translation.modules.monotonic_transformer_layer import (
-    TransformerMonotonicDecoderLayer, TransformerMonotonicEncoderLayer)
+    TransformerMonotonicDecoderLayer,
+    TransformerMonotonicEncoderLayer,
+)
 from fairseq.models import register_model, register_model_architecture
-from fairseq.models.transformer import (TransformerDecoder, TransformerEncoder,
-                                        TransformerModel, base_architecture,
-                                        tiny_architecture,
-                                        transformer_iwslt_de_en,
-                                        transformer_vaswani_wmt_en_de_big)
+from fairseq.models.transformer import (
+    TransformerDecoder,
+    TransformerEncoder,
+    TransformerModel,
+    base_architecture,
+    tiny_architecture,
+    transformer_iwslt_de_en,
+    transformer_vaswani_wmt_en_de_big,
+)
 from torch import Tensor
 
 DEFAULT_MAX_SOURCE_POSITIONS = 1024

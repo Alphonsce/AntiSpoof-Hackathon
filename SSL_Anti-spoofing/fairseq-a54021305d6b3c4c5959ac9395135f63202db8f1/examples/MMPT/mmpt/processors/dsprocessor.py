@@ -15,8 +15,13 @@ import numpy as np
 import torch
 
 from .how2processor import TextGenerationProcessor
-from .processor import (Aligner, MetaProcessor, MMAttentionMask2DProcessor,
-                        TextProcessor, VideoProcessor)
+from .processor import (
+    Aligner,
+    MetaProcessor,
+    MMAttentionMask2DProcessor,
+    TextProcessor,
+    VideoProcessor,
+)
 
 # ------------- A General Aligner for all downstream tasks-----------------
 

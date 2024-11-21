@@ -12,18 +12,24 @@ from tempfile import NamedTemporaryFile
 
 import pandas as pd
 import torchaudio
-from examples.speech_synthesis.data_utils import (extract_energy,
-                                                  extract_logmel_spectrogram,
-                                                  extract_pitch,
-                                                  get_feature_value_min_max,
-                                                  get_global_cmvn,
-                                                  get_mfa_alignment,
-                                                  get_unit_alignment,
-                                                  ipa_phonemize)
-from examples.speech_to_text.data_utils import (create_zip, gen_config_yaml,
-                                                gen_vocab, get_zip_manifest,
-                                                load_tsv_to_dicts,
-                                                save_df_to_tsv)
+from examples.speech_synthesis.data_utils import (
+    extract_energy,
+    extract_logmel_spectrogram,
+    extract_pitch,
+    get_feature_value_min_max,
+    get_global_cmvn,
+    get_mfa_alignment,
+    get_unit_alignment,
+    ipa_phonemize,
+)
+from examples.speech_to_text.data_utils import (
+    create_zip,
+    gen_config_yaml,
+    gen_vocab,
+    get_zip_manifest,
+    load_tsv_to_dicts,
+    save_df_to_tsv,
+)
 from fairseq.data.audio.audio_utils import convert_waveform
 from tqdm import tqdm
 

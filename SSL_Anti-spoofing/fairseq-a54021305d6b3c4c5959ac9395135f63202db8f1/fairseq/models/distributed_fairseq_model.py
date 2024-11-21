@@ -10,10 +10,12 @@ import threading
 
 import torch
 import torch.nn as nn
-from fairseq.distributed import (DistributedTimeoutWrapper,
-                                 LegacyDistributedDataParallel,
-                                 ModuleProxyWrapper,
-                                 TPUDistributedDataParallel)
+from fairseq.distributed import (
+    DistributedTimeoutWrapper,
+    LegacyDistributedDataParallel,
+    ModuleProxyWrapper,
+    TPUDistributedDataParallel,
+)
 from torch.nn.parallel import DistributedDataParallel
 
 logger = logging.getLogger(__name__)
@@ -22,7 +24,9 @@ logger = logging.getLogger(__name__)
 _SLOWMO_DDP_DISABLED = False
 try:
     from fairscale.experimental.nn.data_parallel import (
-        SlowMoBaseAlgorithm, SlowMoDistributedDataParallel)
+        SlowMoBaseAlgorithm,
+        SlowMoDistributedDataParallel,
+    )
 except ImportError:
     _SLOWMO_DDP_DISABLED = True
 
@@ -66,7 +70,9 @@ def DistributedFairseqModel(args, model, process_group, device):
             logger.info("enable fp16 communication hook in DDP")
             try:
                 from torch.distributed.algorithms.ddp_comm_hooks import (
-                    DDPCommHookType, register_ddp_comm_hook)
+                    DDPCommHookType,
+                    register_ddp_comm_hook,
+                )
             except:
                 logger.error(
                     "Could not import from torch.distributed.algorithms.ddp_comm_hooks; you may need to update your pytorch version"
@@ -116,8 +122,7 @@ def DistributedFairseqModel(args, model, process_group, device):
         wrapped_model = ModuleProxyWrapper(wrapped_model)
     elif args.ddp_backend == "fully_sharded":
         try:
-            from fairscale.nn.data_parallel import \
-                FullyShardedDataParallel as FSDP
+            from fairscale.nn.data_parallel import FullyShardedDataParallel as FSDP
         except ImportError:
             raise ImportError(
                 "Cannot find FullyShardedDataParallel. "

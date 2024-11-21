@@ -17,8 +17,7 @@ from fairseq.data import AddTargetDataset, Dictionary, encoders
 from fairseq.data.text_compressor import TextCompressionLevel, TextCompressor
 from fairseq.dataclass import FairseqDataclass
 from fairseq.dataclass.configs import GenerationConfig
-from fairseq.tasks.audio_pretraining import (AudioPretrainingConfig,
-                                             AudioPretrainingTask)
+from fairseq.tasks.audio_pretraining import AudioPretrainingConfig, AudioPretrainingTask
 
 from .. import utils
 from ..logging import metrics

@@ -25,12 +25,17 @@ from fairseq.utils import apply_to_sample
 from omegaconf import open_dict
 
 try:
-    from flashlight.lib.sequence.criterion import (CpuViterbiPath,
-                                                   get_data_ptr_as_bytes)
-    from flashlight.lib.text.decoder import (LM, CriterionType, KenLM,
-                                             LexiconDecoder,
-                                             LexiconDecoderOptions, LMState,
-                                             SmearingMode, Trie)
+    from flashlight.lib.sequence.criterion import CpuViterbiPath, get_data_ptr_as_bytes
+    from flashlight.lib.text.decoder import (
+        LM,
+        CriterionType,
+        KenLM,
+        LexiconDecoder,
+        LexiconDecoderOptions,
+        LMState,
+        SmearingMode,
+        Trie,
+    )
     from flashlight.lib.text.dictionary import create_word_dict, load_words
 except:
     warnings.warn(
@@ -173,8 +178,10 @@ class W2lKenLMDecoder(W2lDecoder):
             assert (
                 args.unit_lm
             ), "lexicon free decoding can only be done with a unit language model"
-            from flashlight.lib.text.decoder import (LexiconFreeDecoder,
-                                                     LexiconFreeDecoderOptions)
+            from flashlight.lib.text.decoder import (
+                LexiconFreeDecoder,
+                LexiconFreeDecoderOptions,
+            )
 
             d = {w: [[w]] for w in tgt_dict.symbols}
             self.word_dict = create_word_dict(d)
@@ -440,8 +447,10 @@ class W2lFairseqLMDecoder(W2lDecoder):
             assert (
                 args.unit_lm
             ), "lexicon free decoding can only be done with a unit language model"
-            from flashlight.lib.text.decoder import (LexiconFreeDecoder,
-                                                     LexiconFreeDecoderOptions)
+            from flashlight.lib.text.decoder import (
+                LexiconFreeDecoder,
+                LexiconFreeDecoderOptions,
+            )
 
             d = {w: [[w]] for w in tgt_dict.symbols}
             self.word_dict = create_word_dict(d)

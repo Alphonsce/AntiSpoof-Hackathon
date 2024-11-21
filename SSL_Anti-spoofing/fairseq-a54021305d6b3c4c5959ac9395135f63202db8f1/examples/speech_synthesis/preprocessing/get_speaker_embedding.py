@@ -13,8 +13,7 @@ import numpy as np
 import torchaudio
 import torchaudio.sox_effects as ta_sox
 import yaml
-from examples.speech_synthesis.preprocessing.speaker_embedder import \
-    SpkrEmbedder
+from examples.speech_synthesis.preprocessing.speaker_embedder import SpkrEmbedder
 from examples.speech_to_text.data_utils import load_tsv_to_dicts
 from tqdm import tqdm
 

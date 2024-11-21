@@ -6,8 +6,9 @@
 import argparse
 import logging
 
-from examples.textless_nlp.gslm.speech2unit.pretrained.utils import \
-    get_and_dump_features
+from examples.textless_nlp.gslm.speech2unit.pretrained.utils import (
+    get_and_dump_features,
+)
 
 
 def get_parser():

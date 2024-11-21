@@ -14,8 +14,7 @@ import torch.nn as nn
 from fairseq import utils
 from fairseq.data import Dictionary
 from fairseq.data.audio.data_cfg import MultitaskConfig, S2SDataConfig
-from fairseq.data.audio.speech_to_speech_dataset import \
-    SpeechToSpeechDatasetCreator
+from fairseq.data.audio.speech_to_speech_dataset import SpeechToSpeechDatasetCreator
 from fairseq.tasks import LegacyFairseqTask, register_task
 from fairseq.tasks.text_to_speech import batch_mel_cepstral_distortion
 
@@ -284,8 +283,9 @@ class SpeechToSpeechTask(LegacyFairseqTask):
         model = super().build_model(args)
 
         if len(self.multitask_tasks) > 0:
-            from fairseq.models.speech_to_speech.s2s_transformer import \
-                S2STransformerMultitaskModelBase
+            from fairseq.models.speech_to_speech.s2s_transformer import (
+                S2STransformerMultitaskModelBase,
+            )
 
             assert isinstance(model, S2STransformerMultitaskModelBase)
 
@@ -333,14 +333,14 @@ class SpeechToSpeechTask(LegacyFairseqTask):
                 )
         else:
             if getattr(args, "teacher_forcing", False):
-                from fairseq.speech_generator import \
-                    TeacherForcingAutoRegressiveSpeechGenerator
+                from fairseq.speech_generator import (
+                    TeacherForcingAutoRegressiveSpeechGenerator,
+                )
 
                 generator = TeacherForcingAutoRegressiveSpeechGenerator
                 logger.info("Teacher forcing mode for generation")
             else:
-                from fairseq.speech_generator import \
-                    AutoRegressiveSpeechGenerator
+                from fairseq.speech_generator import AutoRegressiveSpeechGenerator
 
                 generator = AutoRegressiveSpeechGenerator
             seq_generator = generator(
@@ -464,8 +464,7 @@ class DummyMultiTask(LegacyFairseqTask):
         self, models, args, seq_gen_cls=None, extra_gen_cls_kwargs=None
     ):
         if self.args.decoder_type == "ctc":
-            from examples.speech_recognition.w2l_decoder import \
-                W2lViterbiDecoder
+            from examples.speech_recognition.w2l_decoder import W2lViterbiDecoder
 
             return W2lViterbiDecoder(args, self.tgt_dict)
         else:

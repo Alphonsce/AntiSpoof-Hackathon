@@ -9,8 +9,9 @@ from fairseq import metrics, utils
 from fairseq.criterions import FairseqCriterion, register_criterion
 
 try:
-    from fairseq.model_parallel.megatron.mpu.cross_entropy import \
-        vocab_parallel_cross_entropy
+    from fairseq.model_parallel.megatron.mpu.cross_entropy import (
+        vocab_parallel_cross_entropy,
+    )
 
     has_megatron_submodule = True
 except (ImportError, ModuleNotFoundError):

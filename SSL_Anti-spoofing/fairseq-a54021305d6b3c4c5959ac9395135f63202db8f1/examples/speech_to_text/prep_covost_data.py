@@ -13,13 +13,16 @@ from typing import Optional, Tuple
 
 import pandas as pd
 import torchaudio
-from examples.speech_to_text.data_utils import (create_zip,
-                                                extract_fbank_features,
-                                                filter_manifest_df,
-                                                gen_config_yaml, gen_vocab,
-                                                get_zip_manifest,
-                                                load_df_from_tsv,
-                                                save_df_to_tsv)
+from examples.speech_to_text.data_utils import (
+    create_zip,
+    extract_fbank_features,
+    filter_manifest_df,
+    gen_config_yaml,
+    gen_vocab,
+    get_zip_manifest,
+    load_df_from_tsv,
+    save_df_to_tsv,
+)
 from torch import Tensor
 from torch.utils.data import Dataset
 from torchaudio.datasets.utils import download_url, extract_archive

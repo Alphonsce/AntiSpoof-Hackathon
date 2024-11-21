@@ -6,9 +6,13 @@
 import logging
 
 import torch
-from fairseq.models import (FairseqEncoder, FairseqEncoderDecoderModel,
-                            FairseqIncrementalDecoder, register_model,
-                            register_model_architecture)
+from fairseq.models import (
+    FairseqEncoder,
+    FairseqEncoderDecoderModel,
+    FairseqIncrementalDecoder,
+    register_model,
+    register_model_architecture,
+)
 from fairseq.modules import LocationAttention, LSTMCellWithZoneOut
 from torch import nn
 from torch.nn import functional as F

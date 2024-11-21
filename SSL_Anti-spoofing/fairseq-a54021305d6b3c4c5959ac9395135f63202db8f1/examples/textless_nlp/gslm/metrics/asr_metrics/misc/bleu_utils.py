@@ -14,8 +14,12 @@ import warnings
 from collections import Counter
 from fractions import Fraction
 
-from nltk.translate.bleu_score import (SmoothingFunction, brevity_penalty,
-                                       closest_ref_length, modified_precision)
+from nltk.translate.bleu_score import (
+    SmoothingFunction,
+    brevity_penalty,
+    closest_ref_length,
+    modified_precision,
+)
 
 
 def corpus_bleu(

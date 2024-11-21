@@ -46,8 +46,7 @@ class ASGCriterion(FairseqCriterion):
         linseg_updates,
         hide_linseg_messages,
     ):
-        from flashlight.lib.sequence.criterion import (ASGLoss,
-                                                       CriterionScaleMode)
+        from flashlight.lib.sequence.criterion import ASGLoss, CriterionScaleMode
 
         super().__init__(task)
         self.tgt_dict = task.target_dictionary

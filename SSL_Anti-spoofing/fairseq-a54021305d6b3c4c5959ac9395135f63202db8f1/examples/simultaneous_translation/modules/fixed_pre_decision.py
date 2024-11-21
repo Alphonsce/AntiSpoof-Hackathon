@@ -7,9 +7,11 @@ import torch.nn.functional as F
 from torch import Tensor
 
 from . import register_monotonic_attention
-from .monotonic_multihead_attention import (MonotonicAttention,
-                                            MonotonicInfiniteLookbackAttention,
-                                            WaitKAttention)
+from .monotonic_multihead_attention import (
+    MonotonicAttention,
+    MonotonicInfiniteLookbackAttention,
+    WaitKAttention,
+)
 
 
 def fixed_pooling_monotonic_attention(monotonic_attention):

@@ -16,10 +16,13 @@ import pandas as pd
 import sentencepiece as sp
 import soundfile as sf
 import torch
-from fairseq.data.audio.audio_utils import (_get_kaldi_fbank,
-                                            _get_torchaudio_fbank,
-                                            convert_waveform, is_npy_data,
-                                            is_sf_audio_data)
+from fairseq.data.audio.audio_utils import (
+    _get_kaldi_fbank,
+    _get_torchaudio_fbank,
+    convert_waveform,
+    is_npy_data,
+    is_sf_audio_data,
+)
 from tqdm import tqdm
 
 UNK_TOKEN, UNK_TOKEN_ID = "<unk>", 3

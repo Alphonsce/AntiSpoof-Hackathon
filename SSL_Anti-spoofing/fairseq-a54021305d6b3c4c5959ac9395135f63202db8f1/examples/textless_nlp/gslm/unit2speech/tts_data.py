@@ -7,9 +7,12 @@
 import numpy as np
 import torch
 from examples.textless_nlp.gslm.unit2speech.tacotron2.text import (
-    EOS_TOK, SOS_TOK, code_to_sequence, text_to_sequence)
-from examples.textless_nlp.gslm.unit2speech.tacotron2.utils import \
-    load_code_dict
+    EOS_TOK,
+    SOS_TOK,
+    code_to_sequence,
+    text_to_sequence,
+)
+from examples.textless_nlp.gslm.unit2speech.tacotron2.utils import load_code_dict
 
 
 class TacotronInputDataset:

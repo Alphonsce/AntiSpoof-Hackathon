@@ -11,12 +11,19 @@ from argparse import ArgumentError
 from collections import OrderedDict, defaultdict
 
 from fairseq import models, options
-from fairseq.data import (Dictionary, FairseqDataset, IndexedDataset,
-                          LanguagePairDataset, data_utils)
+from fairseq.data import (
+    Dictionary,
+    FairseqDataset,
+    IndexedDataset,
+    LanguagePairDataset,
+    data_utils,
+)
 from fairseq.tasks import LegacyFairseqTask, register_task
 
-from .multitask_data_utils import (MultidatasetEpochBatchIterator,
-                                   MultitaskDatasetWrapper)
+from .multitask_data_utils import (
+    MultidatasetEpochBatchIterator,
+    MultitaskDatasetWrapper,
+)
 
 logger = logging.getLogger(__name__)
 

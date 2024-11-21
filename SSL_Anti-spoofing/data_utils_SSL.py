@@ -9,8 +9,12 @@ import torch.nn as nn
 from torch import Tensor
 from torch.utils.data import Dataset
 
-from RawBoost import (ISD_additive_noise, LnL_convolutive_noise,
-                      SSI_additive_noise, normWav)
+from RawBoost import (
+    ISD_additive_noise,
+    LnL_convolutive_noise,
+    SSI_additive_noise,
+    normWav,
+)
 
 ___author__ = "Hemlata Tak"
 __email__ = "tak@eurecom.fr"
