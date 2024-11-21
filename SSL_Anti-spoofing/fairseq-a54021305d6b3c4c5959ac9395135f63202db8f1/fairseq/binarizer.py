@@ -7,7 +7,6 @@ from collections import Counter
 from typing import Dict
 
 import torch
-
 from fairseq.file_chunker_utils import Chunker
 from fairseq.file_io import PathManager
 from fairseq.tokenizer import tokenize_line

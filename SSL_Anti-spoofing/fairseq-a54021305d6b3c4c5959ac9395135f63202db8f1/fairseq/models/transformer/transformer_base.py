@@ -11,11 +11,9 @@ from fairseq import utils
 from fairseq.dataclass.utils import gen_parser_from_dataclass
 from fairseq.distributed import fsdp_wrap
 from fairseq.models import FairseqEncoderDecoderModel
-from fairseq.models.transformer import (
-    TransformerEncoderBase,
-    TransformerDecoderBase,
-    TransformerConfig,
-)
+from fairseq.models.transformer import (TransformerConfig,
+                                        TransformerDecoderBase,
+                                        TransformerEncoderBase)
 from torch import Tensor
 
 

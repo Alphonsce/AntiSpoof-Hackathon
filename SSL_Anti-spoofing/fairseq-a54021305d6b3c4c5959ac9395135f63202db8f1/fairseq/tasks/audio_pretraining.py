@@ -8,18 +8,16 @@
 import logging
 import os
 import sys
-
 from argparse import Namespace
 from dataclasses import dataclass, field
 from typing import Optional
-from omegaconf import MISSING, II, OmegaConf
 
 from fairseq.data import BinarizedAudioDataset, FileAudioDataset
-from fairseq.dataclass import FairseqDataclass, ChoiceEnum
 from fairseq.data.text_compressor import TextCompressionLevel
+from fairseq.dataclass import ChoiceEnum, FairseqDataclass
+from omegaconf import II, MISSING, OmegaConf
 
 from . import FairseqTask, register_task
-
 
 logger = logging.getLogger(__name__)
 

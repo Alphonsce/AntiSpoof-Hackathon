@@ -1,14 +1,13 @@
+import math
+from functools import reduce, wraps
+from inspect import isfunction
+from operator import mul
+
 import torch
 import torch.nn as nn
 import torch.nn.functional as F
-import math
-from inspect import isfunction
-from operator import mul
-from functools import reduce, wraps
-
 from aml.multimodal_video.utils.einops.lib import rearrange, repeat
 from aml.multimodal_video.utils.einops.lib.layers.torch import Rearrange
-
 from fairseq.modules.local_attention import LocalAttention
 
 # constants

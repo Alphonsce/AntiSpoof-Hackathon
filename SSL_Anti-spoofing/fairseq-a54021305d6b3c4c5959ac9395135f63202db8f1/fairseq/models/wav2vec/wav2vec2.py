@@ -14,21 +14,14 @@ import torch.nn.functional as F
 from fairseq import utils
 from fairseq.data.data_utils import compute_mask_indices
 from fairseq.dataclass import ChoiceEnum, FairseqDataclass
+from fairseq.distributed import fsdp_wrap
 from fairseq.models import BaseFairseqModel, register_model
-from fairseq.modules import (
-    Fp32GroupNorm,
-    Fp32LayerNorm,
-    GradMultiply,
-    GumbelVectorQuantizer,
-    LayerNorm,
-    MultiheadAttention,
-    SamePad,
-    TransposeLast,
-)
+from fairseq.modules import (Fp32GroupNorm, Fp32LayerNorm, GradMultiply,
+                             GumbelVectorQuantizer, LayerNorm,
+                             MultiheadAttention, SamePad, TransposeLast)
 from fairseq.modules.checkpoint_activations import checkpoint_wrapper
 from fairseq.modules.transformer_sentence_encoder import init_bert_params
 from fairseq.utils import buffered_arange, index_put, is_xla_tensor
-from fairseq.distributed import fsdp_wrap
 
 from .utils import pad_to_multiple
 

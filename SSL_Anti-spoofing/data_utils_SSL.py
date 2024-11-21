@@ -1,19 +1,16 @@
 import os
+import random
+from random import randrange
+
+import librosa
 import numpy as np
 import torch
 import torch.nn as nn
 from torch import Tensor
-import librosa
 from torch.utils.data import Dataset
-from RawBoost import (
-    ISD_additive_noise,
-    LnL_convolutive_noise,
-    SSI_additive_noise,
-    normWav,
-)
-from random import randrange
-import random
 
+from RawBoost import (ISD_additive_noise, LnL_convolutive_noise,
+                      SSI_additive_noise, normWav)
 
 ___author__ = "Hemlata Tak"
 __email__ = "tak@eurecom.fr"
@@ -28,7 +25,10 @@ def genSpoof_list(dir_meta, is_train=False, is_eval=False):
 
     if is_train:
         for line in l_meta:
-            _, key, _, _, label = line.strip().split()
+            if "2019" in dir_meta:
+                _, key, _, _, label = line.strip().split()
+            elif "2021" in dir_meta:
+                raise Exception("Training on 2021 does not work at the moment")
 
             file_list.append(key)
             d_meta[key] = 1 if label == "bonafide" else 0
@@ -36,7 +36,10 @@ def genSpoof_list(dir_meta, is_train=False, is_eval=False):
 
     elif is_eval:
         for line in l_meta:
-            key = line.strip()
+            if "2019" in dir_meta:
+                _, key, _, _, _ = line.strip().split()
+            elif "2021" in dir_meta:
+                _, key, *_ = line.strip().split()
             file_list.append(key)
         return file_list
     else:

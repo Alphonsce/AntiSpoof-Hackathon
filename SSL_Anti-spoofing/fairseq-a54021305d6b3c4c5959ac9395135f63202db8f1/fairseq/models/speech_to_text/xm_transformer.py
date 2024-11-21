@@ -4,25 +4,20 @@
 # This source code is licensed under the MIT license found in the
 # LICENSE file in the root directory of this source tree.
 
-import logging
 import copy
+import logging
 from typing import Dict, List, Optional, Tuple
 
-from fairseq import utils, checkpoint_utils
-from fairseq.models import (
-    FairseqEncoderDecoderModel,
-    FairseqEncoder,
-    register_model,
-    register_model_architecture,
-)
+import torch.nn as nn
+from fairseq import checkpoint_utils, utils
+from fairseq.data.data_utils import lengths_to_padding_mask
+from fairseq.models import (FairseqEncoder, FairseqEncoderDecoderModel,
+                            register_model, register_model_architecture)
 from fairseq.models.transformer import Embedding, TransformerDecoder
 from fairseq.models.wav2vec import Wav2VecEncoder
 from fairseq.modules.layer_norm import LayerNorm
-from fairseq.data.data_utils import lengths_to_padding_mask
 from fairseq.utils import safe_hasattr
 from torch import Tensor
-import torch.nn as nn
-
 
 logger = logging.getLogger(__name__)
 

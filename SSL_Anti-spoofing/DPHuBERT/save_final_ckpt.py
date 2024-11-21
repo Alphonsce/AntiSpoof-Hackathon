@@ -1,8 +1,8 @@
-from argparse import ArgumentParser
 import json
 import pathlib
-import torch
+from argparse import ArgumentParser
 
+import torch
 from prune import load_pruned_model
 
 

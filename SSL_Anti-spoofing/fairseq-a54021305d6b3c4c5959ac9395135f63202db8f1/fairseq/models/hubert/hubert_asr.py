@@ -5,11 +5,11 @@
 
 import contextlib
 from argparse import Namespace
+from dataclasses import dataclass, field
 from typing import Any
 
 import torch
 import torch.nn as nn
-from dataclasses import dataclass, field
 from fairseq import checkpoint_utils, tasks, utils
 from fairseq.dataclass import FairseqDataclass
 from fairseq.dataclass.utils import convert_namespace_to_omegaconf

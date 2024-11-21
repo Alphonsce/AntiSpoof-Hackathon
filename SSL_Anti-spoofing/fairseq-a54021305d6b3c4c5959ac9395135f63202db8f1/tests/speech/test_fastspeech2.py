@@ -6,12 +6,11 @@
 import unittest
 
 import torch
-from tqdm import tqdm
-
 from fairseq import utils
 from fairseq.checkpoint_utils import load_model_ensemble_and_task
 from fairseq.tasks.text_to_speech import batch_mel_cepstral_distortion
 from tests.speech import TestFairseqSpeech
+from tqdm import tqdm
 
 
 @unittest.skipIf(not torch.cuda.is_available(), "test requires a GPU")

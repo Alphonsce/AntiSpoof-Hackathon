@@ -6,8 +6,8 @@ Based on https://github.com/fatchord/WaveRNN
 """
 
 import os
-import sys
 import re
+import sys
 
 __author__ = "Xin Wang"
 __email__ = "wangxin@nii.ac.jp"

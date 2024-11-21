@@ -7,8 +7,10 @@ A simple monitor on training / inference process
 """
 
 from __future__ import print_function
+
 import os
 import sys
+
 import numpy as np
 
 import core_scripts.other_tools.display as nii_display

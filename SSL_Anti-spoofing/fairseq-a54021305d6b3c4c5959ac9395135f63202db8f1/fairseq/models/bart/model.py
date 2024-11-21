@@ -6,9 +6,8 @@
 BART: Denoising Sequence-to-Sequence Pre-training for
 Natural Language Generation, Translation, and Comprehension
 """
-from typing import Optional
-
 import logging
+from typing import Optional
 
 import torch
 import torch.nn as nn
@@ -18,7 +17,6 @@ from fairseq.models.transformer import TransformerModel
 from fairseq.modules.transformer_sentence_encoder import init_bert_params
 
 from .hub_interface import BARTHubInterface
-
 
 logger = logging.getLogger(__name__)
 

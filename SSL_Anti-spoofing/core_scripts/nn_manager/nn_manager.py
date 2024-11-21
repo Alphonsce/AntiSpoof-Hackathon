@@ -7,21 +7,21 @@ A simple wrapper to run the training / testing process
 """
 from __future__ import print_function
 
-import time
 import datetime
-import numpy as np
+import time
 
+import numpy as np
 import torch
 import torch.nn as nn
 import torch.nn.functional as F
 
 import core_scripts.data_io.conf as nii_dconf
+import core_scripts.nn_manager.nn_manager_conf as nii_nn_manage_conf
+import core_scripts.nn_manager.nn_manager_tools as nii_nn_tools
+import core_scripts.op_manager.op_display_tools as nii_op_display_tk
+import core_scripts.op_manager.op_process_monitor as nii_monitor
 import core_scripts.other_tools.display as nii_display
 import core_scripts.other_tools.str_tools as nii_str_tk
-import core_scripts.op_manager.op_process_monitor as nii_monitor
-import core_scripts.op_manager.op_display_tools as nii_op_display_tk
-import core_scripts.nn_manager.nn_manager_tools as nii_nn_tools
-import core_scripts.nn_manager.nn_manager_conf as nii_nn_manage_conf
 
 __author__ = "Xin Wang"
 __email__ = "wangxin@nii.ac.jp"

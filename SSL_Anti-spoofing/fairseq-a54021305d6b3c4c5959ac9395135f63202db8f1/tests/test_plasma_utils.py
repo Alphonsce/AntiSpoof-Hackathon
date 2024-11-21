@@ -1,15 +1,15 @@
 import contextlib
-import unittest
 import tempfile
+import unittest
 from io import StringIO
 
 import numpy as np
-
-from tests.utils import create_dummy_data, preprocess_lm_data, train_language_model
+from tests.utils import (create_dummy_data, preprocess_lm_data,
+                         train_language_model)
 
 try:
+    from fairseq.data.plasma_utils import PlasmaStore, PlasmaView
     from pyarrow import plasma
-    from fairseq.data.plasma_utils import PlasmaView, PlasmaStore
 
     PYARROW_AVAILABLE = True
 except ImportError:

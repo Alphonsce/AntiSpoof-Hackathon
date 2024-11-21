@@ -5,13 +5,13 @@ log_parser
 tools to parse log_train and log_err
 """
 
-from __future__ import absolute_import
-from __future__ import print_function
+from __future__ import absolute_import, print_function
 
-import numpy as np
 import os
 import re
 import sys
+
+import numpy as np
 
 __author__ = "Xin Wang"
 __email__ = "wangxin@nii.ac.jp"

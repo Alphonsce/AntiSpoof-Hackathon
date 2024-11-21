@@ -11,8 +11,8 @@ from __future__ import absolute_import
 
 import os
 import sys
-import numpy as np
 
+import numpy as np
 import torch
 import torch.utils.data
 import torch.utils.data.sampler as torch_sampler

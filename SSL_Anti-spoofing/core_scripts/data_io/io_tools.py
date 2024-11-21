@@ -7,10 +7,11 @@ Functions to load data
 """
 from __future__ import absolute_import
 
-import os
-import sys
 import json
+import os
 import pickle
+import sys
+
 import numpy as np
 
 __author__ = "Xin Wang"

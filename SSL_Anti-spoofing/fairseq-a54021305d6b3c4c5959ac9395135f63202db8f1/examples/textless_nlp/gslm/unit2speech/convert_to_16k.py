@@ -1,9 +1,10 @@
 import os
 import shlex
 import subprocess
-import progressbar
-from time import time
 from pathlib import Path
+from time import time
+
+import progressbar
 
 
 def find_all_files(path_dir, extension):

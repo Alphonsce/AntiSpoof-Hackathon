@@ -1,11 +1,9 @@
 import json
 import pathlib
-import torch
 from argparse import ArgumentParser
 
-from wav2vec2.model import (
-    wav2vec2_model,
-)
+import torch
+from wav2vec2.model import wav2vec2_model
 
 
 def prune_from_ckpt(distilled_ckpt, original_ckpt):

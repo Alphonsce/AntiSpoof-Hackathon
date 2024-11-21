@@ -3,9 +3,9 @@
 from argparse import ArgumentParser
 from pathlib import Path
 from typing import Union
-from tqdm import tqdm
 
 import torchaudio
+from tqdm import tqdm
 
 
 def create_tsv(

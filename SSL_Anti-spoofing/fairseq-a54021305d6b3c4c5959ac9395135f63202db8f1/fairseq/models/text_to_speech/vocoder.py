@@ -3,24 +3,20 @@
 # This source code is licensed under the MIT license found in the
 # LICENSE file in the root directory of this source tree.
 
-import logging
 import json
+import logging
 from typing import Dict
 
 import numpy as np
 import torch
-from torch import nn
 import torch.nn.functional as F
-
-from fairseq.data.audio.audio_utils import (
-    get_window,
-    get_fourier_basis,
-    get_mel_filters,
-    TTSSpectrogram,
-)
+from fairseq.data.audio.audio_utils import (TTSSpectrogram, get_fourier_basis,
+                                            get_mel_filters, get_window)
 from fairseq.data.audio.speech_to_text_dataset import S2TDataConfig
-from fairseq.models.text_to_speech.codehifigan import CodeGenerator as CodeHiFiGANModel
+from fairseq.models.text_to_speech.codehifigan import \
+    CodeGenerator as CodeHiFiGANModel
 from fairseq.models.text_to_speech.hifigan import Generator as HiFiGANModel
+from torch import nn
 
 logger = logging.getLogger(__name__)
 

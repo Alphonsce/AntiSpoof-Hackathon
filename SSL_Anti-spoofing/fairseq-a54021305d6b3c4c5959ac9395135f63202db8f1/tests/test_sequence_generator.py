@@ -9,9 +9,8 @@ import tempfile
 import unittest
 
 import numpy as np
-import torch
-
 import tests.utils as test_utils
+import torch
 from fairseq import search
 from fairseq.data.dictionary import Dictionary
 from fairseq.models.transformer import TransformerModel

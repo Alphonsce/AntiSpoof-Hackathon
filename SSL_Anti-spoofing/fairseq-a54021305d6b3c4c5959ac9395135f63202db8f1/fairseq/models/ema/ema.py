@@ -22,7 +22,6 @@ import copy
 import logging
 
 import torch
-
 from fairseq import checkpoint_utils
 
 

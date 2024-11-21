@@ -8,11 +8,9 @@ from dataclasses import dataclass, field
 
 import torch
 import torch.nn.functional as F
-
 from fairseq import metrics, utils
 from fairseq.criterions import FairseqCriterion, register_criterion
 from fairseq.dataclass import ChoiceEnum, FairseqDataclass
-
 
 _EPSILON = torch.finfo(torch.float32).eps
 TARGET_DIST_NORM_CHOICES = ChoiceEnum(["none", "minmax"])

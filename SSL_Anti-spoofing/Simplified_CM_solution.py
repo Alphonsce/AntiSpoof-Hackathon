@@ -1,16 +1,16 @@
+import math
+from collections import OrderedDict
+
+import fairseq
+import numpy as np
+import scipy.io as sio
 import torch
 import torch.nn as nn
 import torch.nn.functional as F
-import numpy as np
-import math
 from torch import Tensor
-import scipy.io as sio
-from torch.utils import data
-from collections import OrderedDict
-from torch.nn.parameter import Parameter
 from torch.autograd import Variable
-
-import fairseq
+from torch.nn.parameter import Parameter
+from torch.utils import data
 
 ___author__ = "Hemlata Tak"
 __email__ = "tak@eurecom.fr"

@@ -12,11 +12,14 @@ Example:
 $: python evaluate.py score.txt ./keys eval
 """
 
-import sys, os.path
+import os.path
+import sys
+from glob import glob
+
 import numpy as np
 import pandas
+
 import eval_metric_LA as em
-from glob import glob
 
 if len(sys.argv) != 4:
     print("CHECK: invalid input arguments. Please read the instruction below:")

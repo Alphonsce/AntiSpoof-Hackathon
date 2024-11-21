@@ -6,8 +6,10 @@ Functions to print/display the training/inference information
 
 """
 from __future__ import print_function
+
 import os
 import sys
+
 import numpy as np
 
 import core_scripts.other_tools.display as nii_display

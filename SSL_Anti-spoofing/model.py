@@ -1,13 +1,14 @@
 import random
 from typing import Union
 
+import fairseq
 import numpy as np
 import torch
 import torch.nn as nn
 import torch.nn.functional as F
 from torch import Tensor
-import fairseq
 
+from dp_hubert_model import DPHubertModel
 
 ___author__ = "Hemlata Tak"
 __email__ = "tak@eurecom.fr"
@@ -21,7 +22,7 @@ class SSLModel(nn.Module):
     def __init__(self, device):
         super(SSLModel, self).__init__()
 
-        cp_path = "xlsr2_300m.pt"  # Change the pre-trained XLSR model path.
+        cp_path = "./checkpoints_xlsr/xlsr2_300m.pt"  # Change the pre-trained XLSR model path.
         model, cfg, task = fairseq.checkpoint_utils.load_model_ensemble_and_task(
             [cp_path]
         )
@@ -437,7 +438,19 @@ class Residual_block(nn.Module):
 
 
 class Model(nn.Module):
-    def __init__(self, args, device):
+    def __init__(
+        self,
+        args,
+        device,
+        ssl_backbone="wav2vec",
+        freeze_ssl=False,
+        behaviour="last_layer",
+    ):
+        """
+        ssl_backbone: wav2vec / dp_hubert
+        freeze_ssl: freeze SSL part on train or not
+        behaviour: ONLY for DPHubert architecture: can train with weighted sum
+        """
         super().__init__()
         self.device = device
 
@@ -450,7 +463,12 @@ class Model(nn.Module):
         ####
         # create network wav2vec 2.0
         ####
-        self.ssl_model = SSLModel(self.device)
+        if ssl_backbone == "wav2vec":
+            self.ssl_model = SSLModel(self.device)
+        elif ssl_backbone == "dp_hubert":
+            self.ssl_model = DPHubertModel(self.device, behaviour, freeze_ssl)
+        else:
+            raise Exception("Unknown backbone. Select from: wav2vec, dp_hubert")
         self.LL = nn.Linear(self.ssl_model.out_dim, 128)
 
         self.first_bn = nn.BatchNorm2d(num_features=1)

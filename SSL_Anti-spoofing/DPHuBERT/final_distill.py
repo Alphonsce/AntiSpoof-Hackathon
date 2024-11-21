@@ -4,19 +4,13 @@ import logging
 import pathlib
 from argparse import ArgumentParser
 
+import pytorch_lightning as pl
 import torch
 import torch.nn as nn
-import pytorch_lightning as pl
-from pytorch_lightning.callbacks import ModelCheckpoint, LearningRateMonitor
+from lightning import DistillLoss, DistillModule
 from lightning_lite.utilities.rank_zero import _get_rank
-
-from lightning import (
-    DistillModule,
-    DistillLoss,
-)
-from wav2vec2.model import (
-    wav2vec2_model,
-)
+from pytorch_lightning.callbacks import LearningRateMonitor, ModelCheckpoint
+from wav2vec2.model import wav2vec2_model
 
 _LG = logging.getLogger(f"{__name__}:{_get_rank()}")
 

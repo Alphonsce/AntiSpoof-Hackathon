@@ -4,17 +4,16 @@
 # LICENSE file in the root directory of this source tree.
 
 from dataclasses import dataclass, field
-import torch
-from omegaconf import II
 
+import torch
 from fairseq import metrics, utils
 from fairseq.dataclass import ChoiceEnum
 from fairseq.tasks import register_task
 from fairseq.tasks.translation import TranslationConfig, TranslationTask
+from omegaconf import II
 
 from .logsumexp_moe import LogSumExpMoE
 from .mean_pool_gating_network import MeanPoolGatingNetwork
-
 
 METHOD_CHOICES = ChoiceEnum(["sMoElp", "sMoEup", "hMoElp", "hMoEup"])
 

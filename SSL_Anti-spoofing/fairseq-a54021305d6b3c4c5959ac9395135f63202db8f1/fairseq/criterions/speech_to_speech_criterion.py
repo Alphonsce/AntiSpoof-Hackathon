@@ -4,19 +4,16 @@
 # LICENSE file in the root directory of this source tree.
 
 import math
-import torch
 
+import torch
 from fairseq import metrics, utils
 from fairseq.criterions import register_criterion
 from fairseq.criterions.ctc import CtcCriterion
 from fairseq.criterions.label_smoothed_cross_entropy import (
     LabelSmoothedCrossEntropyCriterion,
-    LabelSmoothedCrossEntropyCriterionConfig,
-)
-from fairseq.criterions.tacotron2_loss import (
-    Tacotron2Criterion,
-    Tacotron2CriterionConfig,
-)
+    LabelSmoothedCrossEntropyCriterionConfig)
+from fairseq.criterions.tacotron2_loss import (Tacotron2Criterion,
+                                               Tacotron2CriterionConfig)
 
 
 class MultitaskCriterion:

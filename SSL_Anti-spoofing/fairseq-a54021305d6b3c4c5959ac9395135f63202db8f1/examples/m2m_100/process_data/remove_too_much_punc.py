@@ -1,5 +1,5 @@
-import gzip
 import argparse
+import gzip
 from string import punctuation
 
 

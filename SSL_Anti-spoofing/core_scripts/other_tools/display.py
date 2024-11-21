@@ -5,12 +5,11 @@ dispaly.py
 Tools to display the commands or warnings
 
 """
-from __future__ import absolute_import
-from __future__ import print_function
+from __future__ import absolute_import, print_function
 
+import datetime
 import os
 import sys
-import datetime
 
 __author__ = "Xin Wang"
 __email__ = "wangxin@nii.ac.jp"

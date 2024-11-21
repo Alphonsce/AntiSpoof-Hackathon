@@ -5,16 +5,15 @@
 # the root directory of this source tree. An additional grant of patent rights
 # can be found in the PATENTS file in the same directory.
 
-from typing import List, Dict, Any
 from dataclasses import dataclass, field
+from typing import Any, Dict, List
 
 import torch
 import torch.nn.functional as F
-
 from fairseq import metrics, utils
 from fairseq.criterions import FairseqCriterion, register_criterion
-from fairseq.dataclass import FairseqDataclass
 from fairseq.data.data_utils import lengths_to_mask
+from fairseq.dataclass import FairseqDataclass
 from fairseq.models.fairseq_model import FairseqEncoderModel
 
 

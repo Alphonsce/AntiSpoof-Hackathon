@@ -8,9 +8,9 @@ TODO (huxu): fairseq wrapper class for all dataset you defined: mostly MMDataset
 
 from collections import OrderedDict
 
+from fairseq.data import FairseqDataset, data_utils
 from torch.utils.data import Dataset
 from torch.utils.data.dataloader import default_collate
-from fairseq.data import FairseqDataset, data_utils
 
 
 class FairseqMMDataset(FairseqDataset):

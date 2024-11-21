@@ -1,33 +1,34 @@
 import argparse
-import sys
 import os
+import sys
+
 import numpy as np
 import torch
-from torch import nn
-from torch import Tensor
-from torch.utils.data import DataLoader
 import yaml
-from data_utils_SSL import (
-    genSpoof_list,
-    Dataset_ASVspoof2019_train,
-    Dataset_ASVspoof2021_eval,
-)
-from model import Model
 from tensorboardX import SummaryWriter
-from core_scripts.startup_config import set_random_seed
+from torch import Tensor, nn
+from torch.utils.data import DataLoader
+from tqdm import tqdm
 
+from core_scripts.startup_config import set_random_seed
+from data_utils_SSL import (Dataset_ASVspoof2019_train,
+                            Dataset_ASVspoof2021_eval, genSpoof_list)
+from model import Model
 
 __author__ = "Hemlata Tak"
 __email__ = "tak@eurecom.fr"
 
 
-def evaluate_accuracy(dev_loader, model, device):
+def evaluate_accuracy(dev_loader, model, device, total):
     val_loss = 0.0
     num_total = 0.0
+    batch_loss = 100
     model.eval()
     weight = torch.FloatTensor([0.1, 0.9]).to(device)
     criterion = nn.CrossEntropyLoss(weight=weight)
-    for batch_x, batch_y in dev_loader:
+    for batch_x, batch_y in tqdm(
+        dev_loader, desc=f"Eval Epoch, eval-loss: {val_loss}", total=total
+    ):
 
         batch_size = batch_x.size(0)
         num_total += batch_size
@@ -43,8 +44,10 @@ def evaluate_accuracy(dev_loader, model, device):
     return val_loss
 
 
-def produce_evaluation_file(dataset, model, device, save_path):
-    data_loader = DataLoader(dataset, batch_size=10, shuffle=False, drop_last=False)
+def produce_evaluation_file(dataset, model, device, save_path, total, batch_size):
+    data_loader = DataLoader(
+        dataset, batch_size=batch_size, shuffle=False, drop_last=False
+    )
     num_correct = 0.0
     num_total = 0.0
     model.eval()
@@ -53,7 +56,7 @@ def produce_evaluation_file(dataset, model, device, save_path):
     key_list = []
     score_list = []
 
-    for batch_x, utt_id in data_loader:
+    for batch_x, utt_id in tqdm(data_loader, desc="Evaluation", total=total):
         fname_list = []
         score_list = []
         batch_size = batch_x.size(0)
@@ -73,10 +76,10 @@ def produce_evaluation_file(dataset, model, device, save_path):
     print("Scores saved to {}".format(save_path))
 
 
-def train_epoch(train_loader, model, lr, optim, device):
+def train_epoch(train_loader, model, lr, optim, device, total):
     running_loss = 0
-
     num_total = 0.0
+    batch_loss = 100
 
     model.train()
 
@@ -84,7 +87,9 @@ def train_epoch(train_loader, model, lr, optim, device):
     weight = torch.FloatTensor([0.1, 0.9]).to(device)
     criterion = nn.CrossEntropyLoss(weight=weight)
 
-    for batch_x, batch_y in train_loader:
+    for batch_x, batch_y in tqdm(
+        train_loader, desc=f"Train epoch, Train-Loss: {running_loss}", total=total
+    ):
 
         batch_size = batch_x.size(0)
         num_total += batch_size
@@ -144,8 +149,8 @@ if __name__ == "__main__":
     # Hyperparameters
     parser.add_argument("--batch_size", type=int, default=14)
     parser.add_argument("--num_epochs", type=int, default=100)
-    parser.add_argument("--lr", type=float, default=0.000001)
-    parser.add_argument("--weight_decay", type=float, default=0.0001)
+    parser.add_argument("--lr", type=float, default=1e-4)
+    parser.add_argument("--weight_decay", type=float, default=5e-5)
     parser.add_argument("--loss", type=str, default="weighted_CCE")
     # model
     parser.add_argument(
@@ -344,7 +349,9 @@ if __name__ == "__main__":
         print("Model loaded : {}".format(args.model_path))
 
     # evaluation
-    eval_protocol = args.protocols_path + "ASVspoof2021_LA_eval/keys/LA/CM/trial_metadata.txt"
+    eval_protocol = (
+        args.protocols_path + "ASVspoof2021_LA_eval/keys/LA/CM/trial_metadata.txt"
+    )
     if args.eval:
         file_eval = genSpoof_list(
             dir_meta=eval_protocol,
@@ -355,15 +362,23 @@ if __name__ == "__main__":
         eval_path = args.database_path + f"ASVspoof2021_{args.track}_eval/"
         eval_set = Dataset_ASVspoof2021_eval(
             list_IDs=file_eval,
-            base_dir=os.path.join(
-                eval_path
-            ),
+            base_dir=eval_path,
         )
-        produce_evaluation_file(eval_set, model, device, args.eval_output)
+        produce_evaluation_file(
+            eval_set,
+            model,
+            device,
+            args.eval_output,
+            total=len(file_eval) // args.batch_size + 1,
+            batch_size=args.batch_size,
+        )
         sys.exit(0)
 
     # define train dataloader
-    train_protocol = args.protocols_path + "2019_LA/ASVspoof2019_LA_cm_protocols/ASVspoof2019.LA.cm.train.trn.txt"
+    train_protocol = (
+        args.protocols_path
+        + "2019_LA/ASVspoof2019_LA_cm_protocols/ASVspoof2019.LA.cm.train.trn.txt"
+    )
     d_label_trn, file_train = genSpoof_list(
         dir_meta=train_protocol,
         is_train=True,
@@ -371,15 +386,12 @@ if __name__ == "__main__":
     )
 
     print("no. of training trials", len(file_train))
-    train_path = "/2019_LA/ASVspoof2019_LA_eval"
+    train_path = args.database_path + "/2019_LA/ASVspoof2019_LA_train/"
     train_set = Dataset_ASVspoof2019_train(
         args,
         list_IDs=file_train,
         labels=d_label_trn,
-        base_dir=os.path.join(
-            args.database_path
-            + "{}_{}_train/".format(prefix_2019.split(".")[0], args.track)
-        ),
+        base_dir=train_path,
         algo=args.algo,
     )
 
@@ -394,7 +406,10 @@ if __name__ == "__main__":
     del train_set, d_label_trn
 
     # define validation dataloader
-    dev_protocol = args.protocols_path + "2019_LA/ASVspoof2019_LA_cm_protocols/ASVspoof2019.LA.cm.dev.trl.txt"
+    dev_protocol = (
+        args.protocols_path
+        + "2019_LA/ASVspoof2019_LA_cm_protocols/ASVspoof2019.LA.cm.dev.trl.txt"
+    )
     d_label_dev, file_dev = genSpoof_list(
         dir_meta=dev_protocol,
         is_train=False,
@@ -403,11 +418,12 @@ if __name__ == "__main__":
 
     print("no. of validation trials", len(file_dev))
 
+    val_path = args.database_path + "/2019_LA/ASVspoof2019_LA_dev/"
     dev_set = Dataset_ASVspoof2019_train(
         args,
         list_IDs=file_dev,
         labels=d_label_dev,
-        base_dir=dev_protocol,
+        base_dir=val_path,
         algo=args.algo,
     )
     dev_loader = DataLoader(
@@ -419,14 +435,23 @@ if __name__ == "__main__":
     num_epochs = args.num_epochs
     writer = SummaryWriter("logs/{}".format(model_tag))
 
-    for epoch in range(num_epochs):
+    for epoch in tqdm(range(num_epochs), desc="Epoch Number:..."):
 
-        running_loss = train_epoch(train_loader, model, args.lr, optimizer, device)
-        val_loss = evaluate_accuracy(dev_loader, model, device)
+        running_loss = train_epoch(
+            train_loader,
+            model,
+            args.lr,
+            optimizer,
+            device,
+            total=len(file_train) // args.batch_size + 1,
+        )
+        val_loss = evaluate_accuracy(
+            dev_loader, model, device, total=len(file_dev) // args.batch_size + 1
+        )
         writer.add_scalar("val_loss", val_loss, epoch)
         writer.add_scalar("loss", running_loss, epoch)
         print("\n{} - {} - {} ".format(epoch, running_loss, val_loss))
         torch.save(
             model.state_dict(),
-            os.path.join(model_save_path, "epoch_{}.pth".format(epoch)),
+            os.path.join(model_save_path, "last.pth"),
         )

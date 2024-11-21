@@ -11,13 +11,15 @@ Usage:
 """
 
 from __future__ import print_function
+
+import importlib
 import os
 import sys
+
 import numpy as np
 import torch
 import torch.nn as nn
 import torch.nn.functional as F
-import importlib
 
 __author__ = "Xin Wang"
 __email__ = "wangxin@nii.ac.jp"

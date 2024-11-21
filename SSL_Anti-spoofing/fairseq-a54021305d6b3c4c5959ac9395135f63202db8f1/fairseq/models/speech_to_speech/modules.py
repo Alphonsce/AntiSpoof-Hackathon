@@ -4,10 +4,9 @@
 # LICENSE file in the root directory of this source tree.
 
 import torch
-from torch import nn
-
 from fairseq.models import FairseqEncoder
 from fairseq.models.transformer import Linear
+from torch import nn
 
 
 class CTCDecoder(FairseqEncoder):

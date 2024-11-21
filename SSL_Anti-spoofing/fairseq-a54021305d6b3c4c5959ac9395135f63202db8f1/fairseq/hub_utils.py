@@ -16,7 +16,6 @@ from fairseq.data import encoders
 from omegaconf import open_dict
 from torch import nn
 
-
 logger = logging.getLogger(__name__)
 
 

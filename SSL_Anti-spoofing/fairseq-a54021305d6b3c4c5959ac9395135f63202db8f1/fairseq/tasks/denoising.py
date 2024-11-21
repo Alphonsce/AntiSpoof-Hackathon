@@ -6,25 +6,15 @@
 import logging
 import os
 
+import numpy as np
 from fairseq import utils
-from fairseq.data import (
-    AppendTokenDataset,
-    DenoisingDataset,
-    Dictionary,
-    IdDataset,
-    NestedDictionaryDataset,
-    NumelDataset,
-    PadDataset,
-    PrependTokenDataset,
-    StripTokenDataset,
-    TokenBlockDataset,
-    data_utils,
-)
+from fairseq.data import (AppendTokenDataset, DenoisingDataset, Dictionary,
+                          IdDataset, NestedDictionaryDataset, NumelDataset,
+                          PadDataset, PrependTokenDataset, StripTokenDataset,
+                          TokenBlockDataset, data_utils)
 from fairseq.data.encoders.utils import get_whole_word_mask
 from fairseq.data.shorten_dataset import maybe_shorten_dataset
 from fairseq.tasks import LegacyFairseqTask, register_task
-import numpy as np
-
 
 logger = logging.getLogger(__name__)
 

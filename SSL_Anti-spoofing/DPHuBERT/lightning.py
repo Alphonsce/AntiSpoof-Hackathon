@@ -1,22 +1,15 @@
 import math
 import pathlib
-from typing import Optional, List, Union
+from typing import List, Optional, Union
 
+import pytorch_lightning as pl
 import torch
 import torch.nn as nn
+from dataset.audio_dataset import (AudioDataset, BucketizeBatchSampler,
+                                   CollateFnAudio, DistributedBatchSampler)
 from torch.optim.optimizer import Optimizer
 from torch.utils.data import DataLoader
-import pytorch_lightning as pl
-
-from wav2vec2.model import (
-    Wav2Vec2Model,
-)
-from dataset.audio_dataset import (
-    BucketizeBatchSampler,
-    DistributedBatchSampler,
-    CollateFnAudio,
-    AudioDataset,
-)
+from wav2vec2.model import Wav2Vec2Model
 
 
 class LinearDecayLRScheduler(torch.optim.lr_scheduler._LRScheduler):

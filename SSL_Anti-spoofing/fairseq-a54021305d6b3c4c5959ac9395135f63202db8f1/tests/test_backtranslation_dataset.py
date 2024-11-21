@@ -7,11 +7,8 @@ import unittest
 
 import tests.utils as test_utils
 import torch
-from fairseq.data import (
-    BacktranslationDataset,
-    LanguagePairDataset,
-    TransformEosDataset,
-)
+from fairseq.data import (BacktranslationDataset, LanguagePairDataset,
+                          TransformEosDataset)
 from fairseq.sequence_generator import SequenceGenerator
 
 

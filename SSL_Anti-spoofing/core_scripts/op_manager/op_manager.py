@@ -9,18 +9,18 @@ from __future__ import absolute_import
 
 import os
 import sys
+
 import numpy as np
 import torch
 import torch.optim as torch_optim
 import torch.optim.lr_scheduler as torch_optim_steplr
 
-
-import core_scripts.other_tools.list_tools as nii_list_tools
-import core_scripts.other_tools.display as nii_warn
-import core_scripts.other_tools.str_tools as nii_str_tk
 import core_scripts.op_manager.conf as nii_op_config
-import core_scripts.op_manager.op_process_monitor as nii_op_monitor
 import core_scripts.op_manager.lr_scheduler as nii_lr_scheduler
+import core_scripts.op_manager.op_process_monitor as nii_op_monitor
+import core_scripts.other_tools.display as nii_warn
+import core_scripts.other_tools.list_tools as nii_list_tools
+import core_scripts.other_tools.str_tools as nii_str_tk
 
 __author__ = "Xin Wang"
 __email__ = "wangxin@nii.ac.jp"

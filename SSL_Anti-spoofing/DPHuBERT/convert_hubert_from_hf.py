@@ -1,11 +1,9 @@
 """Convert Hugging Face's HuBERT to our format."""
 
 import torch
-from transformers import HubertModel
 from torchaudio.models.wav2vec2.utils import import_huggingface_model
-
+from transformers import HubertModel
 from wav2vec2.model import wav2vec2_model
-
 
 if __name__ == "__main__":
     out_name = "pretrained/hubert-base-ls960.hf.pth"

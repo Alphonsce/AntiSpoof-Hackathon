@@ -4,16 +4,14 @@
 # LICENSE file in the root directory of this source tree.
 
 import math
+from dataclasses import dataclass, field
 
 from fairseq import metrics, utils
 from fairseq.criterions import register_criterion
 
 from .label_smoothed_cross_entropy import (
     LabelSmoothedCrossEntropyCriterion,
-    LabelSmoothedCrossEntropyCriterionConfig,
-)
-
-from dataclasses import dataclass, field
+    LabelSmoothedCrossEntropyCriterionConfig)
 
 
 @dataclass

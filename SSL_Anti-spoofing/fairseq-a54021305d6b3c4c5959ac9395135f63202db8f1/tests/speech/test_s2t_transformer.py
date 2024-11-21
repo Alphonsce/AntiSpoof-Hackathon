@@ -7,12 +7,11 @@ import unittest
 from argparse import Namespace
 
 import torch
-from tqdm import tqdm
-
 from fairseq import utils
 from fairseq.checkpoint_utils import load_model_ensemble_and_task
 from fairseq.scoring.wer import WerScorer
 from tests.speech import TestFairseqSpeech
+from tqdm import tqdm
 
 
 @unittest.skipIf(not torch.cuda.is_available(), "test requires a GPU")

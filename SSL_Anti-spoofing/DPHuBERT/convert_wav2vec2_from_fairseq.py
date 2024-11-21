@@ -1,11 +1,9 @@
 """Convert fairseq's wav2vec2 to our format."""
 
-import torch
 import fairseq
+import torch
 from torchaudio.models.wav2vec2.utils import import_fairseq_model
-
 from wav2vec2.model import wav2vec2_model
-
 
 if __name__ == "__main__":
     out_name = "pretrained/wav2vec2-base-ls960.fairseq.pth"

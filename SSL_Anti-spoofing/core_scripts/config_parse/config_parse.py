@@ -7,12 +7,12 @@ Configuration parser
 """
 from __future__ import absolute_import
 
+import configparser
 import os
 import sys
-import configparser
 
-import core_scripts.other_tools.list_tools as nii_list_tools
 import core_scripts.other_tools.display as nii_display
+import core_scripts.other_tools.list_tools as nii_list_tools
 
 __author__ = "Xin Wang"
 __email__ = "wangxin@nii.ac.jp"

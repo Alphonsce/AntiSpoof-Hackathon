@@ -129,3 +129,7 @@ dmypy.json
 .pyre/
 
 *.txt
+
+checkpoints_xlsr
+
+*.tfevents.*

@@ -6,19 +6,17 @@
 # can be found in the PATENTS file in the same directory.
 
 import logging
-from typing import Any, Dict, List
-from functools import lru_cache
 from dataclasses import dataclass, field
+from functools import lru_cache
+from typing import Any, Dict, List
 
 import torch
-from omegaconf import II
-
+import torch.nn.functional as F
 from fairseq import metrics, utils
 from fairseq.criterions import FairseqCriterion, register_criterion
-from fairseq.dataclass import FairseqDataclass
 from fairseq.data.data_utils import lengths_to_mask
-import torch.nn.functional as F
-
+from fairseq.dataclass import FairseqDataclass
+from omegaconf import II
 
 logger = logging.getLogger(__name__)
 
