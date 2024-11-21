@@ -36,31 +36,22 @@ class DPHubertModel(nn.Module):
 
     def extract_feat(self, input_data):
 
-        # put the model to GPU if it not there
-        if (
-            next(self.model.parameters()).device != input_data.device
-            or next(self.model.parameters()).dtype != input_data.dtype
-        ):
-            self.model.to(input_data.device, dtype=input_data.dtype)
-            self.model.train()
+        # input should be in shape (batch, length)
+        if input_data.ndim == 3:
+            input_tmp = input_data[:, :, 0]
+        else:
+            input_tmp = input_data
 
-        if True:
-            # input should be in shape (batch, length)
-            if input_data.ndim == 3:
-                input_tmp = input_data[:, :, 0]
-            else:
-                input_tmp = input_data
-
-            # [batch, length, dim]
-            if self.behaviour == "last-layer":
-                emb = self.model.extract_features(input_tmp)[0][
-                    -1
-                ]  # getting features from the last layer of transformer
-            elif self.behaviour == "weighted-sum":
-                all_layers_out = self.model.extract_features(input_tmp)[0][1:]
-                all_layers_out = torch.stack(all_layers_out)
-                emb = (all_layers_out * self.sum_weights).sum(dim=0)
-                return emb
-            else:
-                raise Exception("Possible behaviours are: 'last-layer' and 'weighted-sum' ")
+        # [batch, length, dim]
+        if self.behaviour == "last-layer":
+            emb = self.model.extract_features(input_tmp)[0][
+                -1
+            ]  # getting features from the last layer of transformer
+        elif self.behaviour == "weighted-sum":
+            all_layers_out = self.model.extract_features(input_tmp)[0][1:]
+            all_layers_out = torch.stack(all_layers_out)
+            emb = (all_layers_out * self.sum_weights).sum(dim=0)
+            return emb
+        else:
+            raise Exception("Possible behaviours are: 'last-layer' and 'weighted-sum' ")
         return emb

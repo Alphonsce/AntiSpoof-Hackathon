@@ -24,6 +24,11 @@ Code is in the `rawformer_asv_spoof`
 cd spoof5/Baseline-AASIST
 ```
 
+Install packages:
+```
+
+```
+
 ## AASIST + DPHubert with feature aggregation:
 
 Code is in the `SSL_Anti-spoofing`

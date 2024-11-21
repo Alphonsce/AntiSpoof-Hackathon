@@ -161,6 +161,7 @@ if __name__ == "__main__":
     # =============
 
     # Hyperparameters
+    parser.add_argument("--num_workers", type=int, default=4)
     parser.add_argument("--batch_size", type=int, default=14)
     parser.add_argument("--num_epochs", type=int, default=100)
     parser.add_argument("--lr", type=float, default=1e-4)
@@ -418,7 +419,7 @@ if __name__ == "__main__":
     train_loader = DataLoader(
         train_set,
         batch_size=args.batch_size,
-        num_workers=8,
+        num_workers=args.num_workers,
         shuffle=True,
         drop_last=True,
     )
@@ -447,13 +448,13 @@ if __name__ == "__main__":
         algo=args.algo,
     )
     dev_loader = DataLoader(
-        dev_set, batch_size=args.batch_size, num_workers=8, shuffle=False
+        dev_set, batch_size=args.batch_size, num_workers=args.num_workers, shuffle=False
     )
     del dev_set, d_label_dev
 
     # Training and validation
     num_epochs = args.num_epochs
-    writer = SummaryWriter("logs/{}".format(model_tag))
+    # writer = SummaryWriter("logs/{}".format(model_tag))
 
     for epoch in tqdm(range(num_epochs), desc="Epoch Number:..."):
 
@@ -468,8 +469,8 @@ if __name__ == "__main__":
         val_loss = evaluate_accuracy(
             dev_loader, model, device, total=len(file_dev) // args.batch_size + 1
         )
-        writer.add_scalar("val_loss", val_loss, epoch)
-        writer.add_scalar("loss", running_loss, epoch)
+        # writer.add_scalar("val_loss", val_loss, epoch)
+        # writer.add_scalar("loss", running_loss, epoch)
         print("\n{} - {} - {} ".format(epoch, running_loss, val_loss))
         torch.save(
             model.state_dict(),
