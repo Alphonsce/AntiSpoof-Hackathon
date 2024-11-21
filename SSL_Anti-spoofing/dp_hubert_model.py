@@ -61,4 +61,6 @@ class DPHubertModel(nn.Module):
                 all_layers_out = torch.stack(all_layers_out)
                 emb = (all_layers_out * self.sum_weights).sum(dim=0)
                 return emb
+            else:
+                raise Exception("Possible behaviours are: 'last-layer' and 'weighted-sum' ")
         return emb
