@@ -181,7 +181,6 @@ def produce_submit_file(data_loader, model, device, save_path, need_sigmoid=Fals
         # add outputs
         fname_list.extend(utt_id)
         score_list.extend(batch_out.tolist())
-        break
         
     # assert len(fname_list) == len(score_list)
 
