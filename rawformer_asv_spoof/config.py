@@ -12,9 +12,12 @@ class SysConfig:
         self.wandb_key                  = 'b117cc2bdbcbc127dc0a49d6d94cc6f49a6ef821'
         self.wandb_notes                = 'lr=8*1e-4, ts_hidden=660, rand_seed=1024, pre-emphasis=0.97'
         
-        self.path_label_asv_spoof_2019_la_train     = '/dataset/2019_LA/ASVspoof2019_LA_cm_protocols/ASVspoof2019.LA.cm.train.trn.txt'
+        # self.path_label_asv_spoof_2019_la_train     = '/dataset/2019_LA/ASVspoof2019_LA_cm_protocols/ASVspoof2019.LA.cm.train.trn.txt'
+        # self.path_asv_spoof_2019_la_train           = '/dataset/2019_LA/ASVspoof2019_LA_train/flac'
+        self.path_label_asv_spoof_2019_la_train     = '/dataset/ASVspoof2021_LA_eval/keys/LA/CM/trial_metadata.txt'
+        self.path_asv_spoof_2019_la_train           = '/dataset/ASVspoof2021_LA_eval/flac'
+        
         self.path_label_asv_spoof_2019_la_dev       = '/dataset/2019_LA/ASVspoof2019_LA_cm_protocols/ASVspoof2019.LA.cm.dev.trl.txt'
-        self.path_asv_spoof_2019_la_train           = '/dataset/2019_LA/ASVspoof2019_LA_train/flac'
         self.path_asv_spoof_2019_la_dev             = '/dataset/2019_LA/ASVspoof2019_LA_dev/flac'
         
         self.path_label_asv_spoof_2021_la_eval      = '/dataset/ASVspoof2021_LA_eval/keys/LA/CM/trial_metadata.txt'
@@ -28,7 +31,7 @@ class SysConfig:
 class ExpConfig:
     
     def __init__(self):
-        self.eval_every_n_epochs = 3
+        self.eval_every_n_epochs = 5
         
         self.random_seed                = 1024
         
@@ -38,7 +41,7 @@ class ExpConfig:
         self.train_duration_sec         = 4
         self.test_duration_sec          = 4
         
-        self.batch_size_train           = 32
+        self.batch_size_train           = 24
         self.batch_size_test            = 80
         self.embedding_size             = 64
         self.max_epoch                  = 300

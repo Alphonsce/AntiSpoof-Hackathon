@@ -6,6 +6,11 @@ def create_rawboost_args():
     ##===================================================Rawboost data augmentation parameters======================================================================#
 
     parser.add_argument(
+        "--comment",
+        default=""
+    )
+
+    parser.add_argument(
         "--algo",
         type=int,
         default=0,

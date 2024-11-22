@@ -95,7 +95,7 @@ def run(rank, world_size, port, rawboost_args):
             
             if sys_config.ckpt_save_dir is not None:
                 os.makedirs(sys_config.ckpt_save_dir, exist_ok=True)
-                save_path = sys_config.ckpt_save_dir + f"ep_{epoch}_rawboost_algo_{rawboost_args.algo}_allow_aug_{exp_config.allow_data_augmentation}" + ".pth"
+                save_path = sys_config.ckpt_save_dir + f"{rawboost_args.comment}_ep_{epoch}_rawboost_algo_{rawboost_args.algo}_allow_aug_{exp_config.allow_data_augmentation}" + ".pth"
                 torch.save(model.state_dict(), save_path)
             
             if eer < best_eer:

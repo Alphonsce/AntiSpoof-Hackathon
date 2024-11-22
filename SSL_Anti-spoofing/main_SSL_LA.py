@@ -118,6 +118,12 @@ if __name__ == "__main__":
     parser = argparse.ArgumentParser(description="ASVspoof2021 baseline system")
     # Dataset
     parser.add_argument(
+        "--train_year",
+        type=str,
+        default="2019",
+    )
+    
+    parser.add_argument(
         "--database_path",
         type=str,
         default="/data/a.varlamov/asvspoof/",
@@ -161,10 +167,10 @@ if __name__ == "__main__":
     # =============
 
     # Hyperparameters
-    parser.add_argument("--num_workers", type=int, default=4)
-    parser.add_argument("--batch_size", type=int, default=14)
+    parser.add_argument("--num_workers", type=int, default=2)
+    parser.add_argument("--batch_size", type=int, default=24)
     parser.add_argument("--num_epochs", type=int, default=100)
-    parser.add_argument("--lr", type=float, default=1e-4)
+    parser.add_argument("--lr", type=float, default=1e-5)
     parser.add_argument("--weight_decay", type=float, default=5e-5)
     parser.add_argument("--loss", type=str, default="weighted_CCE")
     # model
@@ -396,10 +402,14 @@ if __name__ == "__main__":
         sys.exit(0)
 
     # define train dataloader
-    train_protocol = (
-        args.protocols_path
-        + "2019_LA/ASVspoof2019_LA_cm_protocols/ASVspoof2019.LA.cm.train.trn.txt"
-    )
+    if args.train_year == "2019":
+        train_protocol = (
+            args.protocols_path
+            + "2019_LA/ASVspoof2019_LA_cm_protocols/ASVspoof2019.LA.cm.train.trn.txt"
+        )
+    elif args.train_year == "2021":
+        train_protocol = args.protocols_path + "ASVspoof2021_LA_eval/keys/LA/CM/trial_metadata.txt"
+        
     d_label_trn, file_train = genSpoof_list(
         dir_meta=train_protocol,
         is_train=True,
@@ -407,7 +417,10 @@ if __name__ == "__main__":
     )
 
     print("no. of training trials", len(file_train))
-    train_path = args.database_path + "/2019_LA/ASVspoof2019_LA_train/"
+    if args.train_year == "2019":
+        train_path = args.database_path + "/2019_LA/ASVspoof2019_LA_train/"
+    elif args.train_year == "2021":
+        train_path = args.database_path + f"ASVspoof2021_{args.track}_eval/"
     train_set = Dataset_ASVspoof2019_train(
         args,
         list_IDs=file_train,

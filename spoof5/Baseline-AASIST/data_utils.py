@@ -11,7 +11,7 @@ ___author__ = "Hemlata Tak, Jee-weon Jung"
 __email__ = "tak@eurecom.fr, jeeweon.jung@navercorp.com"
 
 
-def genSpoof_list(dir_meta, is_train=False, is_eval=False, train_type="2019"):
+def genSpoof_list(dir_meta, is_train=False, is_eval=False):
     """
     Train 2019_metadata format:
     ----
@@ -33,9 +33,9 @@ def genSpoof_list(dir_meta, is_train=False, is_eval=False, train_type="2019"):
     # I modified for train
     if is_train:
         for line in tqdm(l_meta, desc="Reading train data"):
-            if train_type == "2019":
+            if "2019" in str(dir_meta):
                 _, key, _, _, label = line.strip().split(" ")
-            elif train_type == "2021":
+            elif "2021" in str(dir_meta):
                 _, key, _, _, _, label, _, _ = line.strip().split(" ")
             file_list.append(key)
             d_meta[key] = 1 if label == "bonafide" else 0
@@ -106,12 +106,11 @@ class TrainDataset(Dataset):
         key = self.list_IDs[index]
         X, fs = sf.read(str(self.base_dir / f"{key}.flac"))
         if self.use_rawboost:
-            X = process_Rawboost_feature(X, fs, self.rawboost_args, self.rawboost_algo)
-        X_pad = pad_random(X, self.cut)
+            Y = process_Rawboost_feature(X, fs, self.rawboost_args, self.rawboost_algo)
+        X_pad = pad(Y, self.cut)
         x_inp = Tensor(X_pad)
         y = self.labels[key]
         return x_inp, y
-
 
 class TestDataset(Dataset):
     def __init__(self, list_IDs, base_dir):

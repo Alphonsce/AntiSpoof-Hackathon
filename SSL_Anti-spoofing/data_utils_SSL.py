@@ -32,7 +32,8 @@ def genSpoof_list(dir_meta, is_train=False, is_eval=False):
             if "2019" in dir_meta:
                 _, key, _, _, label = line.strip().split()
             elif "2021" in dir_meta:
-                raise Exception("Training on 2021 does not work at the moment")
+                # LA_0009 LA_E_9332881 alaw ita_tx A07 spoof notrim eval
+                _, key, _, _, _, label, *_ = line.strip().split()
 
             file_list.append(key)
             d_meta[key] = 1 if label == "bonafide" else 0
