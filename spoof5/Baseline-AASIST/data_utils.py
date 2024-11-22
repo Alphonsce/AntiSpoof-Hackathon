@@ -107,6 +107,8 @@ class TrainDataset(Dataset):
         X, fs = sf.read(str(self.base_dir / f"{key}.flac"))
         if self.use_rawboost:
             Y = process_Rawboost_feature(X, fs, self.rawboost_args, self.rawboost_algo)
+        else:
+            Y = X
         X_pad = pad(Y, self.cut)
         x_inp = Tensor(X_pad)
         y = self.labels[key]
