@@ -7,7 +7,7 @@ class SysConfig:
         
         self.wandb_disabled             = False
         self.wandb_project              = 'ASVSpoof-Rawformer'
-        self.wandb_name                 = 'Rawformer-ACN-Aug'
+        self.wandb_name                 = 'Rawformer-2021-Train-no-aug'
         self.wandb_entity               = 'jurujin'
         self.wandb_key                  = 'b117cc2bdbcbc127dc0a49d6d94cc6f49a6ef821'
         self.wandb_notes                = 'lr=8*1e-4, ts_hidden=660, rand_seed=1024, pre-emphasis=0.97'
@@ -31,7 +31,7 @@ class SysConfig:
 class ExpConfig:
     
     def __init__(self):
-        self.eval_every_n_epochs = 5
+        self.eval_every_n_epochs = 1
         
         self.random_seed                = 1024
         
@@ -41,16 +41,16 @@ class ExpConfig:
         self.train_duration_sec         = 4
         self.test_duration_sec          = 4
         
-        self.batch_size_train           = 24
-        self.batch_size_test            = 80
+        self.batch_size_train           = 32
+        self.batch_size_test            = 32
         self.embedding_size             = 64
         self.max_epoch                  = 300
         
-        self.lr                         = 10 * 1e-4
+        self.lr                         = 1 * 1e-4
         self.lr_min                     = 1e-6 # this could not work because i turned off scheduler in some cases
         
         self.transformer_hidden         = 660
         
-        self.allow_data_augmentation    = True
+        self.allow_data_augmentation    = False
         # self.data_augmentation          = ['ACN', 'HPF', 'LPF', 'GAN'] # Augmentations besides RawBoost
         self.data_augmentation = ["ACN"]
