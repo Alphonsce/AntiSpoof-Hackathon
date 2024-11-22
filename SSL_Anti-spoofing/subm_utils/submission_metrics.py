@@ -172,18 +172,14 @@ def produce_submit_file(data_loader, model, device, save_path, need_sigmoid=Fals
         batch_x = batch_x.to(device)
         with torch.no_grad():
             # first is hidden layer, second is result
-            _, batch_out = model(batch_x)
-            batch_out = (batch_out[:, 1])
+            batch_out = model.forward(batch_x)
             # 1 - for bonafide speech class
             if need_sigmoid:
                 batch_out = F.sigmoid(batch_out)
-        
-            # print(batch_out)
 
         # add outputs
         fname_list.extend(utt_id)
         score_list.extend(batch_out.tolist())
-
     assert len(fname_list) == len(score_list)
 
     # saving results
