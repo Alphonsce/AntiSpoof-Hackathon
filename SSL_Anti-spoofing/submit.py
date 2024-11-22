@@ -6,17 +6,21 @@ from subm_utils.submission_dataset import get_data_for_evaldataset, EvalDataset,
 # from model.models import get_model
 from subm_utils.submission_metrics import produce_submit_file
 
-def get_semaa_model(config_path, ckpt_path, device):
+from model import Model
+
+def get_ssl_aasist_model(ckpt_path, ssl_backbone, ssl_behaviour, device):
     '''
     Initializes Rawformer Architecture from the given checkpoint
     '''
-    with open(config_path, "r") as f_json:
-        config = json.loads(f_json.read())
-    model_config = config["model_config"]
+    model = Model(
+        args=None,  # not used
+        device=device,
+        ssl_backbone=ssl_backbone,
+        freeze_ssl=False,
+        ssl_behaviour=ssl_behaviour,
+    )
     
-    state_dict = torch.load(ckpt_path)
-    model = get_model(model_config, device)
-    model.load_state_dict(state_dict)
+    model.load_state_dict(torch.load(ckpt_path, map_location=device))
     
     return model
 
@@ -27,7 +31,7 @@ def main(args):
     eval_dataset = {"eval": eval_dataset}
     dataloader = get_dataloaders(eval_dataset, args)["eval"]
 
-    model = get_semaa_model(args.config_path, args.ckpt_path, args.device).to(args.device)
+    model = get_ssl_aasist_model(args.ckpt_path, args.ssl_backbone, args.ssl_behaviour, args.device).to(args.device)
 
     produce_submit_file(dataloader, model, args.device, args.output_file, need_sigmoid=args.need_sigmoid)
 

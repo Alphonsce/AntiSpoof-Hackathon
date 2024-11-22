@@ -88,7 +88,7 @@ def compute_eer(bonafide_scores, spoof_scores):
     return eer, thresholds[min_index]
 
 
-@torch.inference_mode
+# @torch.inference_mode
 def produce_evaluation_file(
     data_loader, model, device, loss_fn, save_path, trial_path, random=False, dropout=0
 ):
@@ -150,7 +150,7 @@ def produce_evaluation_file(
     return current_loss
 
 
-@torch.inference_mode()
+# @torch.inference_mode()
 def produce_submit_file(data_loader, model, device, save_path, need_sigmoid=False):
     """
     Create file, that need to give in function calculcate_t-DCF_EER
@@ -173,6 +173,7 @@ def produce_submit_file(data_loader, model, device, save_path, need_sigmoid=Fals
         with torch.no_grad():
             # first is hidden layer, second is result
             batch_out = model.forward(batch_x)
+            batch_out = (batch_out[:, 1])
             # 1 - for bonafide speech class
             if need_sigmoid:
                 batch_out = F.sigmoid(batch_out)
@@ -180,7 +181,9 @@ def produce_submit_file(data_loader, model, device, save_path, need_sigmoid=Fals
         # add outputs
         fname_list.extend(utt_id)
         score_list.extend(batch_out.tolist())
-    assert len(fname_list) == len(score_list)
+        break
+        
+    # assert len(fname_list) == len(score_list)
 
     # saving results
     with open(save_path, "w") as fh:
