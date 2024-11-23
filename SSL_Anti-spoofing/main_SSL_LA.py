@@ -410,6 +410,9 @@ if __name__ == "__main__":
     elif args.train_year == "2021":
         train_protocol = args.protocols_path + "ASVspoof2021_LA_eval/keys/LA/CM/trial_metadata.txt"
         
+    elif args.train_year == "2021_DF":
+        train_protocol = args.protocols_path + "ASVspoof2021_LA_eval/keys/DF/CM/trial_metadata.txt"
+        
     d_label_trn, file_train = genSpoof_list(
         dir_meta=train_protocol,
         is_train=True,
@@ -421,6 +424,9 @@ if __name__ == "__main__":
         train_path = args.database_path + "/2019_LA/ASVspoof2019_LA_train/"
     elif args.train_year == "2021":
         train_path = args.database_path + f"ASVspoof2021_{args.track}_eval/"
+    elif args.train_year == "2021_DF":
+        train_path = args.database_path + f"ASVspoof2021_DF_eval/"
+        
     train_set = Dataset_ASVspoof2019_train(
         args,
         list_IDs=file_train,
@@ -487,5 +493,5 @@ if __name__ == "__main__":
         print("\n{} - {} - {} ".format(epoch, running_loss, val_loss))
         torch.save(
             model.state_dict(),
-            os.path.join(model_save_path, "last.pth"),
+            os.path.join(f"{model_save_path}", f"ep_{epoch}_ckpt.pth"),
         )

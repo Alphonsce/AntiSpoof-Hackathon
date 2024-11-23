@@ -36,7 +36,7 @@ def genSpoof_list(dir_meta, is_train=False, is_eval=False):
             if "2019" in str(dir_meta):
                 _, key, _, _, label = line.strip().split(" ")
             elif "2021" in str(dir_meta):
-                _, key, _, _, _, label, _, _ = line.strip().split(" ")
+                _, key, _, _, _, label, *_ = line.strip().split(" ")
             file_list.append(key)
             d_meta[key] = 1 if label == "bonafide" else 0
         return d_meta, file_list
