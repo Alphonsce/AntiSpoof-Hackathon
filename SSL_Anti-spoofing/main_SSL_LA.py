@@ -16,7 +16,7 @@ from data_utils_SSL import (
     Dataset_ASVspoof2021_eval,
     genSpoof_list,
 )
-from model import Model
+from model import Model, ModelWithSEMAA
 
 __author__ = "Hemlata Tak"
 __email__ = "tak@eurecom.fr"
@@ -116,6 +116,13 @@ def train_epoch(train_loader, model, lr, optim, device, total):
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description="ASVspoof2021 baseline system")
+    
+    parser.add_argument(
+        "--use_semaa",
+        action="store_true",
+        default=False
+    )
+    
     # Dataset
     parser.add_argument(
         "--train_year",
@@ -355,13 +362,23 @@ if __name__ == "__main__":
     device = "cuda" if torch.cuda.is_available() else "cpu"
     print("Device: {}".format(device))
 
-    model = Model(
-        args,
-        device,
-        ssl_backbone=args.ssl_backbone,
-        freeze_ssl=args.freeze_ssl,
-        ssl_behaviour=args.ssl_behaviour,
-    )
+    if not args.use_semaa:
+        model = Model(
+            args,
+            device,
+            ssl_backbone=args.ssl_backbone,
+            freeze_ssl=args.freeze_ssl,
+            ssl_behaviour=args.ssl_behaviour,
+        )
+    else:
+        print("using model with SEMAA")
+        model = ModelWithSEMAA(
+            args,
+            device,
+            ssl_backbone=args.ssl_backbone,
+            freeze_ssl=args.freeze_ssl,
+            ssl_behaviour=args.ssl_behaviour,
+        )
     nb_params = sum([param.view(-1).size()[0] for param in model.parameters()])
     model = model.to(device)
     print("nb_params:", nb_params)

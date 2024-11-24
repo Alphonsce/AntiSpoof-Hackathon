@@ -9,6 +9,7 @@ import torch.nn.functional as F
 from torch import Tensor
 
 from dp_hubert_model import DPHubertModel
+from semaa_utils import CONV, SelfAttention
 
 ___author__ = "Hemlata Tak"
 __email__ = "tak@eurecom.fr"
@@ -616,6 +617,219 @@ class Model(nn.Module):
 
         S_max, _ = torch.max(torch.abs(out_S), dim=1)
         S_avg = torch.mean(out_S, dim=1)
+
+        last_hidden = torch.cat([T_max, T_avg, S_max, S_avg, master.squeeze(1)], dim=1)
+
+        last_hidden = self.drop(last_hidden)
+        output = self.out_layer(last_hidden)
+
+        return output
+
+class ModelWithSEMAA(nn.Module):
+    def __init__(
+        self,
+        args,
+        device,
+        ssl_backbone="wav2vec",
+        freeze_ssl=False,
+        ssl_behaviour="last_layer",
+    ):
+        """
+        ssl_backbone: wav2vec / dp_hubert
+        freeze_ssl: freeze SSL part on train or not
+        behaviour: ONLY for DPHubert architecture: can train with weighted sum: "last-layer" or "weighted-sum"
+        """
+        super().__init__()
+        self.device = device
+
+        # AASIST parameters
+        filts = [128, [1, 32], [32, 32], [32, 64], [64, 64]]
+        gat_dims = [64, 32]
+        pool_ratios = [0.5, 0.5, 0.5, 0.5]
+        temperatures = [2.0, 2.0, 100.0, 100.0]
+
+        ####
+        # create network wav2vec 2.0
+        ####
+        if ssl_backbone == "wav2vec":
+            self.ssl_model = SSLModel(self.device)
+        elif ssl_backbone == "dp_hubert":
+            self.ssl_model = DPHubertModel(self.device, ssl_behaviour, freeze_ssl)
+        else:
+            raise Exception("Unknown backbone. Select from: wav2vec, dp_hubert")
+
+        if freeze_ssl:
+            print("Freezing SSL parameters")
+            for param in self.ssl_model.parameters():
+                param.requires_grad = False
+
+        self.LL = nn.Linear(self.ssl_model.out_dim, 128)
+
+        self.conv_time = CONV(
+            out_channels=filts[0], kernel_size=128, in_channels=1
+        )
+        self.first_bn = nn.BatchNorm2d(num_features=1)
+
+        self.drop = nn.Dropout(0.5, inplace=True)
+        self.drop_way = nn.Dropout(0.2, inplace=True)
+        self.selu = nn.SELU(inplace=True)
+
+        self.attention = SelfAttention(32)
+        self.attention_asp = nn.Sequential(
+            nn.Conv2d(64, 128, kernel_size=(1, 1)),
+            nn.SELU(inplace=True),
+            nn.BatchNorm2d(128),
+            nn.Conv2d(128, 64, kernel_size=(1, 1)),
+        )
+
+        self.encoder = nn.Sequential(
+            nn.Sequential(Residual_block(nb_filts=filts[1], first=True)),
+            nn.Sequential(Residual_block(nb_filts=filts[2])),
+            nn.Sequential(Residual_block(nb_filts=filts[3])),
+            nn.Sequential(Residual_block(nb_filts=filts[4])),
+            nn.Sequential(Residual_block(nb_filts=filts[4])),
+            nn.Sequential(Residual_block(nb_filts=filts[4])),
+        )
+
+        self.pos_S = nn.Parameter(torch.randn(1, 42, 128))
+        self.master1 = nn.Parameter(torch.randn(1, 1, gat_dims[0]))
+        self.master2 = nn.Parameter(torch.randn(1, 1, gat_dims[0]))
+
+        self.GAT_layer_S = GraphAttentionLayer(
+            128, gat_dims[0], temperature=temperatures[0]
+        )
+        self.GAT_layer_T = GraphAttentionLayer(
+            128, gat_dims[0], temperature=temperatures[1]
+        )
+
+        self.HtrgGAT_layer_ST11 = HtrgGraphAttentionLayer(
+            gat_dims[0], gat_dims[1], temperature=temperatures[2]
+        )
+        self.HtrgGAT_layer_ST12 = HtrgGraphAttentionLayer(
+            gat_dims[1], gat_dims[1], temperature=temperatures[2]
+        )
+
+        self.HtrgGAT_layer_ST21 = HtrgGraphAttentionLayer(
+            gat_dims[0], gat_dims[1], temperature=temperatures[2]
+        )
+        self.HtrgGAT_layer_ST22 = HtrgGraphAttentionLayer(
+            gat_dims[1], gat_dims[1], temperature=temperatures[2]
+        )
+
+        self.pool_S = GraphPool(pool_ratios[0], gat_dims[0], 0.3)
+        self.pool_T = GraphPool(pool_ratios[1], gat_dims[0], 0.3)
+        self.pool_hS1 = GraphPool(pool_ratios[2], gat_dims[1], 0.3)
+        self.pool_hT1 = GraphPool(pool_ratios[2], gat_dims[1], 0.3)
+
+        self.pool_hS2 = GraphPool(pool_ratios[2], gat_dims[1], 0.3)
+        self.pool_hT2 = GraphPool(pool_ratios[2], gat_dims[1], 0.3)
+
+        self.out_layer = nn.Linear(9 * gat_dims[1], 2)
+        
+        
+    def forward(self, x):
+        x_ssl_feat = self.ssl_model.extract_feat(x.squeeze(-1))
+        x = self.LL(x_ssl_feat)  # (bs,frame_number,feat_out_dim)
+        
+        x = x.transpose(1, 2)  # (bs,feat_out_dim,frame_number)
+        x = x.unsqueeze(1)
+
+        # x = self.conv_time(x)     # This one acted as feature extractor for SEMAA
+        
+        x = F.max_pool2d(torch.abs(x), (3, 3))
+
+        x = self.first_bn(x)
+        x = self.selu(x)
+
+        # get embeddings using encoder
+
+        e = self.encoder(x)
+        # ASP
+
+        w = self.attention_asp(e)
+        # ASP_S
+        w1 = F.softmax(w, dim=3)
+
+        mu_s = torch.sum(e * w1, dim=3)
+        sg_s = torch.sqrt((torch.sum((e**2) * w1, dim=3) - mu_s**2).clamp(min=1e-4))
+        e_S = torch.cat((mu_s, sg_s), 1)
+        e_S = torch.abs(e_S)
+
+        # spectral GAT (GAT-S)
+
+        e_S = e_S.transpose(1, 2) + self.pos_S
+        gat_S = self.GAT_layer_S(e_S)
+
+        out_S = self.pool_S(gat_S)  # (#bs, #node, #dim)
+
+        # ASP_T
+        w2 = F.softmax(w, dim=2)
+        mu_t = torch.sum(e * w2, dim=2)
+        sg_t = torch.sqrt((torch.sum((e**2) * w2, dim=2) - mu_t**2).clamp(min=1e-4))
+        e_T = torch.cat((mu_t, sg_t), 1)
+        e_T = torch.abs(e_T)
+
+        # temporal GAT (GAT-T)
+
+        e_T = e_T.transpose(1, 2)
+        gat_T = self.GAT_layer_T(e_T)
+        out_T = self.pool_T(gat_T)
+
+        # learnable master node
+        master1 = self.master1.expand(x.size(0), -1, -1)  # [bs,1,64]
+        master2 = self.master2.expand(x.size(0), -1, -1)
+
+        # inference 1
+        out_T1, out_S1, master1 = self.HtrgGAT_layer_ST11(
+            out_T, out_S, master=self.master1
+        )
+        out_S1 = self.pool_hS1(out_S1)
+        out_T1 = self.pool_hT1(out_T1)
+
+        out_T_aug, out_S_aug, master_aug = self.HtrgGAT_layer_ST12(
+            out_T1, out_S1, master=master1
+        )
+        out_T1 = out_T1 + out_T_aug
+        out_S1 = out_S1 + out_S_aug
+        master1 = master1 + master_aug
+
+        # inference 2
+        out_T2, out_S2, master2 = self.HtrgGAT_layer_ST21(
+            out_T, out_S, master=self.master2
+        )
+        out_S2 = self.pool_hS2(out_S2)
+        out_T2 = self.pool_hT2(out_T2)
+
+        out_T_aug, out_S_aug, master_aug = self.HtrgGAT_layer_ST22(
+            out_T2, out_S2, master=master2
+        )
+        out_T2 = out_T2 + out_T_aug
+        out_S2 = out_S2 + out_S_aug
+        master2 = master2 + master_aug
+
+        out_T1 = self.drop_way(out_T1)
+        out_T2 = self.drop_way(out_T2)
+        out_S1 = self.drop_way(out_S1)
+        out_S2 = self.drop_way(out_S2)
+        master1 = self.drop_way(master1)
+        master2 = self.drop_way(master2)
+
+        out_T1 = self.attention(out_T1)
+        out_T2 = self.attention(out_T2)
+        out_S1 = self.attention(out_S1)
+        out_S2 = self.attention(out_S2)
+
+        out_T = torch.max(out_T1, out_T2)
+        out_S = torch.max(out_S1, out_S2)
+        master = torch.max(master1, master2)
+
+        T_max = torch.abs(out_T)
+        out_Tzsa3 = out_T.unsqueeze(1)
+        T_avg = torch.mean(out_Tzsa3, dim=1)
+
+        S_max = torch.abs(out_S)
+        out_Szsa3 = out_S.unsqueeze(1)
+        S_avg = torch.mean(out_Szsa3, dim=1)
 
         last_hidden = torch.cat([T_max, T_avg, S_max, S_avg, master.squeeze(1)], dim=1)
 
