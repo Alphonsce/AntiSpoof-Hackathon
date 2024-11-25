@@ -6,19 +6,28 @@ from subm_utils.submission_dataset import get_data_for_evaldataset, EvalDataset,
 # from model.models import get_model
 from subm_utils.submission_metrics import produce_submit_file
 
-from model import Model
+from model import Model, ModelWithSEMAA
 
-def get_ssl_aasist_model(ckpt_path, ssl_backbone, ssl_behaviour, device):
+def get_ssl_aasist_model(ckpt_path, ssl_backbone, ssl_behaviour, device, use_semaa):
     '''
     Initializes Rawformer Architecture from the given checkpoint
     '''
-    model = Model(
-        args=None,  # not used
-        device=device,
-        ssl_backbone=ssl_backbone,
-        freeze_ssl=False,
-        ssl_behaviour=ssl_behaviour,
-    )
+    if not use_semaa:
+        model = Model(
+            args=None,  # not used
+            device=device,
+            ssl_backbone=ssl_backbone,
+            freeze_ssl=False,
+            ssl_behaviour=ssl_behaviour
+        )
+    else:
+        model = ModelWithSEMAA(
+            args=None,  # not used
+            device=device,
+            ssl_backbone=ssl_backbone,
+            freeze_ssl=False,
+            ssl_behaviour=ssl_behaviour
+        )
     
     model.load_state_dict(torch.load(ckpt_path, map_location=device))
     
@@ -31,7 +40,7 @@ def main(args):
     eval_dataset = {"eval": eval_dataset}
     dataloader = get_dataloaders(eval_dataset, args)["eval"]
 
-    model = get_ssl_aasist_model(args.ckpt_path, args.ssl_backbone, args.ssl_behaviour, args.device).to(args.device)
+    model = get_ssl_aasist_model(args.ckpt_path, args.ssl_backbone, args.ssl_behaviour, args.device, args.use_semaa).to(args.device)
 
     produce_submit_file(dataloader, model, args.device, args.output_file, need_sigmoid=args.need_sigmoid)
 
@@ -39,6 +48,7 @@ def main(args):
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
 
+    parser.add_argument("--use_semaa", action="store_true", default=False)
     parser.add_argument("--architecture", default="SEMAA", help="Rawformer / SEMAA / wav2vec / dp_hubert")
 
     parser.add_argument("--ckpt_path", default=None)
