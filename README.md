@@ -154,8 +154,8 @@ Additional train parameters:
 - you can change `--ssl_backbone` parameter to `dp_hubert` to train with DPHubert
   - For DPHubert you can also use weighted sum feature aggregation, you can it with `--ssl_behaviour` parameter, change it to `weighted-sum`
 
-- also you can freeze weights of SSL model, just pass `--freeze_ssl` parameter
-
+- you can freeze weights of SSL model, just pass `--freeze_ssl` parameter
+- You can also use SEMAA architecture as classifier, not only AASIST, for it add argument: `--use_semaa`
 - Example:
 ```
 python ./main_SSL_LA.py \

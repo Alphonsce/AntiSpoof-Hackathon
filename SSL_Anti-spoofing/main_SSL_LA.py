@@ -430,6 +430,9 @@ if __name__ == "__main__":
     elif args.train_year == "2021_DF":
         train_protocol = args.protocols_path + "ASVspoof2021_LA_eval/keys/DF/CM/trial_metadata.txt"
         
+    elif args.train_year == "2021_DF_BIG":
+        train_protocol = args.protocols_path + "ASVspoof2021_DF_eval/all_data_meta.csv"
+        
     d_label_trn, file_train = genSpoof_list(
         dir_meta=train_protocol,
         is_train=True,
@@ -441,7 +444,7 @@ if __name__ == "__main__":
         train_path = args.database_path + "/2019_LA/ASVspoof2019_LA_train/"
     elif args.train_year == "2021":
         train_path = args.database_path + f"ASVspoof2021_{args.track}_eval/"
-    elif args.train_year == "2021_DF":
+    elif args.train_year == "2021_DF" or args.train_year == "2021_DF_BIG":
         train_path = args.database_path + f"ASVspoof2021_DF_eval/"
         
     train_set = Dataset_ASVspoof2019_train(

@@ -9,6 +9,8 @@ import torch.nn as nn
 from torch import Tensor
 from torch.utils.data import Dataset
 
+from augmentations import apply_torch_codecs
+
 from RawBoost import (
     ISD_additive_noise,
     LnL_convolutive_noise,
@@ -84,8 +86,15 @@ class Dataset_ASVspoof2019_train(Dataset):
     def __getitem__(self, index):
 
         utt_id = self.list_IDs[index]
-        X, fs = librosa.load(self.base_dir + "flac/" + utt_id + ".flac", sr=16000)
+        
+        if ".wav" not in utt_id:
+            X, fs = librosa.load(self.base_dir + "flac/" + utt_id + ".flac", sr=16000)
+            
+        elif ".wav" in utt_id:
+            X, fs = librosa.load(self.base_dir + utt_id, sr=16000)
+            
         Y = process_Rawboost_feature(X, fs, self.args, self.algo)
+        Y, fs = apply_torch_codecs(torch.tensor(Y, dtype=torch.float32), fs)
         X_pad = pad(Y, self.cut)
         x_inp = Tensor(X_pad)
         target = self.labels[utt_id]
