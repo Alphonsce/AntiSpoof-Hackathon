@@ -60,6 +60,7 @@ def genSpoof_list(dir_meta, is_train=False, is_eval=False):
 
 def pad(x, max_len=64600):
     x_len = x.shape[0]
+    
     if x_len >= max_len:
         return x[:max_len]
     # need to pad
@@ -88,13 +89,30 @@ class Dataset_ASVspoof2019_train(Dataset):
         utt_id = self.list_IDs[index]
         
         if ".wav" not in utt_id:
-            X, fs = librosa.load(self.base_dir + "flac/" + utt_id + ".flac", sr=16000)
+            try:
+                X, fs = librosa.load(self.base_dir + "flac/" + utt_id + ".flac", sr=16000)
+            except:
+                print("Except in reading")
+                utt_id = "DF_E_2000032"
+                X, fs = librosa.load(self.base_dir + "flac/" + utt_id + ".flac", sr=16000)
             
         elif ".wav" in utt_id:
-            X, fs = librosa.load(self.base_dir + utt_id, sr=16000)
+            try:
+                X, fs = librosa.load(self.base_dir + utt_id, sr=16000)
+            except:
+                utt_id = "DF_E_2000032"
+                X, fs = librosa.load(self.base_dir + "flac/" + utt_id + ".flac", sr=16000)
             
-        Y = process_Rawboost_feature(X, fs, self.args, self.algo)
-        Y, fs = apply_torch_codecs(torch.tensor(Y, dtype=torch.float32), fs)
+        try:
+            Y = process_Rawboost_feature(X, fs, self.args, self.algo)
+            Y, fs = apply_torch_codecs(torch.tensor(Y, dtype=torch.float32), fs)
+        except:
+            print("Except in rawboost")
+            Y = X
+        if Y.shape[0] == 0:
+            print("ZERO LENGTH!!!!")
+            utt_id = "DF_E_2000032"
+            Y, fs = librosa.load(self.base_dir + "flac/" + utt_id + ".flac", sr=16000)
         X_pad = pad(Y, self.cut)
         x_inp = Tensor(X_pad)
         target = self.labels[utt_id]

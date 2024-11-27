@@ -79,7 +79,7 @@ def produce_evaluation_file(dataset, model, device, save_path, total, batch_size
     print("Scores saved to {}".format(save_path))
 
 
-def train_epoch(train_loader, model, lr, optim, device, total):
+def train_epoch(train_loader, model, lr, optim, device, total, model_save_path):
     running_loss = 0
     num_total = 0.0
     batch_loss = 100
@@ -90,8 +90,8 @@ def train_epoch(train_loader, model, lr, optim, device, total):
     weight = torch.FloatTensor([0.1, 0.9]).to(device)
     criterion = nn.CrossEntropyLoss(weight=weight)
 
-    for batch_x, batch_y in tqdm(
-        train_loader, desc=f"Train epoch, Train-Loss: {running_loss}", total=total
+    for i, (batch_x, batch_y) in tqdm(
+        enumerate(train_loader), desc=f"Train epoch, Train-Loss: {running_loss}", total=total
     ):
 
         batch_size = batch_x.size(0)
@@ -108,6 +108,12 @@ def train_epoch(train_loader, model, lr, optim, device, total):
         optimizer.zero_grad()
         batch_loss.backward()
         optimizer.step()
+        
+        if i % 8000 == 0 and i > 0:
+            torch.save(
+                model.state_dict(),
+                os.path.join(f"{model_save_path}", f"ep_{epoch}_steps_{i}_ckpt.pth"),
+            )
 
     running_loss /= num_total
 
@@ -504,6 +510,7 @@ if __name__ == "__main__":
             optimizer,
             device,
             total=len(file_train) // args.batch_size + 1,
+            model_save_path=model_save_path
         )
         val_loss = evaluate_accuracy(
             dev_loader, model, device, total=len(file_dev) // args.batch_size + 1

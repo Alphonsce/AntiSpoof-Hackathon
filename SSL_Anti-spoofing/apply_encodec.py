@@ -13,7 +13,8 @@ import torch
 from tqdm import tqdm
 import numpy as np
 
-read_path = "/data/a.varlamov/asvspoof/ASVspoof2021_DF_eval/flac"
+# read_path = "/data/a.varlamov/asvspoof/ASVspoof2021_DF_eval/flac"
+read_path = "/data/a.varlamov/asvspoof/ASVspoof2021_DF_eval/for-norm/training/fake"
 
 output_path = "/data/a.varlamov/asvspoof/DF_flacs_encodec"
 
@@ -33,8 +34,8 @@ def augment_with_encodec(waveform, sample_rate):
 
 
 for i, path in tqdm(enumerate(os.listdir(read_path))):
-    if i > 300_000:
-        continue
+    # if i > 300_000:
+    #     continue
     if np.random.uniform(0, 1) > 0.3:
         wave, sr = torchaudio.load(f"{read_path}/{path}")
         wave_aug = augment_with_encodec(wave, sr)

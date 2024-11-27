@@ -29,7 +29,7 @@ Achieved Metrics:
 
 - Note that Rawboost augmentation is EXTREMELY slow to train with: it slowed SEMAA training up to 4 times, that's why model without augmentation was able to train better.
 
-## Loading Data:
+## Used Data:
 
 All data, that I used can be found [HERE](https://www.asvspoof.org/index2021.html).
 
@@ -53,10 +53,17 @@ Load data and keys and organize into folders, so the file structure looks like t
 - In `2019_LA` is all the data for train, dev and eval for ASVspoof2019 data. 
 - Note, that all keys for 2021 LA and DF are kept inside ASVspoof2021_LA_eval, even for DF subset!
 
+For final experiments I combined DF part of ASVspoof data with [FoR](https://bil.eecs.yorku.ca/datasets/) (I used normalized version of it) and [ITW](https://deepfake-total.com/in_the_wild) datasets.
+
+- After loading and extracting FoR data rename for dataset folder into `for-norm` and move it into `ASVspoof2021_DF_eval` directory
+- load ITW dataset and rename it into `in_the_wild_wav` and place it in the `ASVspoof2021_DF_eval` directory
+  
+- Manifest for final dataset created by me can be found [here](https://drive.google.com/file/d/1cToKUtcjersiVCkBXXkIHq2k2nzE8vnT/view?usp=sharing): (I believe it to be the biggest open-source anti-spoof dataset with manifest).
+
 ### What data I used to get my best scores:
 
-Firstly I used ASVspoof2021 LA validation subset to train my models.
-Then I also tried using ASVspoof2021 DF validation dataset, because it has a lot more attacks and is 3 times bigger.
+- Firstly I used ASVspoof2021 LA.
+- Then I also tried using ASVspoof2021 DF + FoR + ITW.
 
 Of course, you can also run my code to train with 2019 ASVspoof dataset as it was initially suggested for 2021 challenge,
 you will just need to change some parameters for your runs.
@@ -67,6 +74,8 @@ Clone repo:
 
 ```
 git clone https://github.com/Alphonsce/AntiSpoof-Hackathon.git
+
+cd AntiSpoof-Hackathon
 ```
 
 Whole project is divided into 3 main parts for each of the archutectures provided:
@@ -76,6 +85,14 @@ Whole project is divided into 3 main parts for each of the archutectures provide
 
 - By default all scripts make models train on 2021 LA eval set, but you can find more bash scripts
 for runs I did and see how to run train on 2021 DF or 2019 LA (mostly, you just need to change paths : ) )
+
+## Encodec Augmentation
+To perform encodec augmentation of the data, run the script from: `/SSL_Anti-spoofing/apply_encodec.py`
+
+```
+# But change path to your data folder inside the script
+python -m SSL_Anti-spoofing.apply_encodec
+```
 
 ## SEMAA (AASIST Improvement from ASVspoof5) Architecture + Rawboost:
 
@@ -169,6 +186,7 @@ python ./main_SSL_LA.py \
 ```
 
 - little crutch by me here, to train on 2021 DF, make: `--train_year 2021_DF`, sorry for this one, did not have much time...
+- to train on DF+FOR+ITW, you need to make `--train_year 2021_DF_BIG`, my apologies for crutches
 
 ### Submit:
 
