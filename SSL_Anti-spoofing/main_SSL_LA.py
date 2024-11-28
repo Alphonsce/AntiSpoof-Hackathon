@@ -109,11 +109,11 @@ def train_epoch(train_loader, model, lr, optim, device, total, model_save_path):
         batch_loss.backward()
         optimizer.step()
         
-        if i % 8000 == 0 and i > 0:
-            torch.save(
-                model.state_dict(),
-                os.path.join(f"{model_save_path}", f"ep_{epoch}_steps_{i}_ckpt.pth"),
-            )
+        # if i % 8000 == 0 and i > 0:
+        #     torch.save(
+        #         model.state_dict(),
+        #         os.path.join(f"{model_save_path}", f"ep_{epoch}_steps_{i}_ckpt.pth"),
+        #     )
 
     running_loss /= num_total
 

@@ -9,7 +9,7 @@ I used 3 main approaches for my solution:
   - SSL: wav2vec-XLSR
   - SSL: DPHubert: Distilled Hubert model
   - SSL: DPHubert with weighted sum feature aggregation
-- Rawformer architecture
+- RawNet2+Rawformer architecture
   
 Number of parameters:
 - SEMAA: 341k
@@ -17,19 +17,21 @@ Number of parameters:
 - DPHubert + AASIST: ~23M
 - Rawformer: 297k
 
-Achieved Metrics:
+## Checkpoints:
 
-|       Model       | Augmentation | EER on test |
-|:-----------------:|:------------:|-------------|
-|       SEMAA       |   Rawboost   |             |
-|       SEMAA       |    NO Aug    |             |
-|  wav2vec + AASIST |   Rawboost   |             |
-| DPHubert + AASIST |   Rawboost   |             |
-|     Rawformer     |    NO Aug    |             |
+- Checkpoints for SEMAA:
+    - LA data + Rawboost: [LINK](https://drive.google.com/file/d/1dgQ8MhgOTFSfMm07fY27OPJNiP01c_iI/view?usp=drive_link)
+    - LA data, no aug: [LINK](https://drive.google.com/file/d/1DK8_Ba2TSU3S3TW1AuiMCgDEQ8JUSlaP/view?usp=drive_link)
+    - DF data, no aug: [LINK](https://drive.google.com/file/d/1UxNvGqhgzDc1pNrbtc--QwTwAhUni_3E/view?usp=drive_link)
+  
+- Checkpoint for Rawnet+Rawformer: [LINK](https://drive.google.com/file/d/12LbTyL8Hurnjfd7PAEduxemremkzuJIX/view?usp=sharing)
 
-- Note that Rawboost augmentation is EXTREMELY slow to train with: it slowed SEMAA training up to 4 times, that's why model without augmentation was able to train better.
+- Checkpoints for SSL+AASIST:
+  - [DF data + FoR + ITW + Codecs + Rawboost, 3 epochs](https://drive.google.com/file/d/1PUsysDKMWoUW-8m9Gbm-cZWnOdd_QNdi/view?usp=drive_link) (this one was selected for submission)
+  - [LA data + Rawboost, 3 epochs](https://drive.google.com/file/d/1jl7LhBsFMG1V97AViOtrEdQ23Z_wonER/view?usp=drive_link) (either this one or 4 epochs one was second file for submission, can't remember...)
+  - [LA data + Rawboost, 4 epochs](https://drive.google.com/file/d/1VR9TDAMOJxABYAE-zEdFi8mvekpjEZXL/view?usp=drive_link)
 
-## Used Data:
+## Reproducing Dataset used:
 
 All data, that I used can be found [HERE](https://www.asvspoof.org/index2021.html).
 
@@ -58,7 +60,7 @@ For final experiments I combined DF part of ASVspoof data with [FoR](https://bil
 - After loading and extracting FoR data rename for dataset folder into `for-norm` and move it into `ASVspoof2021_DF_eval` directory
 - load ITW dataset and rename it into `in_the_wild_wav` and place it in the `ASVspoof2021_DF_eval` directory
   
-- Manifest for final dataset created by me can be found [here](https://drive.google.com/file/d/1cToKUtcjersiVCkBXXkIHq2k2nzE8vnT/view?usp=sharing): (I believe it to be the biggest open-source anti-spoof dataset with manifest).
+- Manifest for final dataset created by me can be found [here](https://drive.google.com/file/d/1cToKUtcjersiVCkBXXkIHq2k2nzE8vnT/view?usp=sharing): (I believe it to be the biggest open-source anti-spoof dataset with manifest). Then place this manifest insdide `ASVspoof2021_DF_eval`.
 
 ### What data I used to get my best scores:
 
