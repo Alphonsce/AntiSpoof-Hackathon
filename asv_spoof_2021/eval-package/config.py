@@ -5,8 +5,7 @@ configuration for each track
 Configurations are fixed. They follow those used on the CodaLab platforms.
 """
 
-from __future__ import absolute_import
-from __future__ import print_function
+from __future__ import absolute_import, print_function
 
 import os
 import sys

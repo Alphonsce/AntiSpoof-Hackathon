@@ -16,13 +16,9 @@ import numpy as np
 import torch
 import torch.nn.functional as F
 from examples.speech_to_text.data_utils import load_tsv_to_dicts
-from fairseq.data.audio.audio_utils import (
-    TTSMelScale,
-    TTSSpectrogram,
-    is_npy_data,
-    parse_path,
-    read_from_stored_zip,
-)
+from fairseq.data.audio.audio_utils import (TTSMelScale, TTSSpectrogram,
+                                            is_npy_data, parse_path,
+                                            read_from_stored_zip)
 from tqdm import tqdm
 
 

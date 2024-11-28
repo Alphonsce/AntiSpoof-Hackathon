@@ -6,22 +6,19 @@ Self defined model definition.
 Usage:
 
 """
-from __future__ import absolute_import
-from __future__ import print_function
+from __future__ import absolute_import, print_function
 
 import sys
+
+import core_scripts.data_io.seq_info as nii_seq_tk
+import core_scripts.other_tools.debug as nii_debug
 import numpy as np
-
-import torch
-import torch.nn as torch_nn
-import torchaudio
-import torch.nn.functional as torch_nn_func
-
 import sandbox.block_nn as nii_nn
 import sandbox.util_frontend as nii_front_end
-import core_scripts.other_tools.debug as nii_debug
-import core_scripts.data_io.seq_info as nii_seq_tk
-
+import torch
+import torch.nn as torch_nn
+import torch.nn.functional as torch_nn_func
+import torchaudio
 
 __author__ = "Xin Wang"
 __email__ = "wangxin@nii.ac.jp"

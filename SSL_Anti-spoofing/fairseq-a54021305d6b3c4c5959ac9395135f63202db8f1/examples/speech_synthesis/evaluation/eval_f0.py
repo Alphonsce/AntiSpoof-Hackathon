@@ -12,11 +12,8 @@ import numpy as np
 import torchaudio
 import tqdm
 from examples.speech_synthesis.evaluation.eval_sp import load_eval_spec
-from examples.speech_synthesis.utils import (
-    f0_frame_error,
-    gross_pitch_error,
-    voicing_decision_error,
-)
+from examples.speech_synthesis.utils import (f0_frame_error, gross_pitch_error,
+                                             voicing_decision_error)
 from tabulate import tabulate
 
 

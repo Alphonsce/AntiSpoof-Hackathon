@@ -7,12 +7,13 @@ Startup configuration utilities
 """
 from __future__ import absolute_import
 
-import os
-import sys
-import torch
 import importlib
+import os
 import random
+import sys
+
 import numpy as np
+import torch
 
 __author__ = "Xin Wang"
 __email__ = "wangxin@nii.ac.jp"

@@ -5,17 +5,14 @@ import sys
 import numpy as np
 import torch
 import yaml
+from core_scripts.startup_config import set_random_seed
+from data_utils_SSL import (Dataset_ASVspoof2019_train,
+                            Dataset_ASVspoof2021_eval, genSpoof_list)
 from tensorboardX import SummaryWriter
 from torch import Tensor, nn
 from torch.utils.data import DataLoader
 from tqdm import tqdm
 
-from core_scripts.startup_config import set_random_seed
-from data_utils_SSL import (
-    Dataset_ASVspoof2019_train,
-    Dataset_ASVspoof2021_eval,
-    genSpoof_list,
-)
 from model import Model, ModelWithSEMAA
 
 __author__ = "Hemlata Tak"
@@ -91,7 +88,9 @@ def train_epoch(train_loader, model, lr, optim, device, total, model_save_path):
     criterion = nn.CrossEntropyLoss(weight=weight)
 
     for i, (batch_x, batch_y) in tqdm(
-        enumerate(train_loader), desc=f"Train epoch, Train-Loss: {running_loss}", total=total
+        enumerate(train_loader),
+        desc=f"Train epoch, Train-Loss: {running_loss}",
+        total=total,
     ):
 
         batch_size = batch_x.size(0)
@@ -108,7 +107,7 @@ def train_epoch(train_loader, model, lr, optim, device, total, model_save_path):
         optimizer.zero_grad()
         batch_loss.backward()
         optimizer.step()
-        
+
         # if i % 8000 == 0 and i > 0:
         #     torch.save(
         #         model.state_dict(),
@@ -122,20 +121,16 @@ def train_epoch(train_loader, model, lr, optim, device, total, model_save_path):
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description="ASVspoof2021 baseline system")
-    
-    parser.add_argument(
-        "--use_semaa",
-        action="store_true",
-        default=False
-    )
-    
+
+    parser.add_argument("--use_semaa", action="store_true", default=False)
+
     # Dataset
     parser.add_argument(
         "--train_year",
         type=str,
         default="2019",
     )
-    
+
     parser.add_argument(
         "--database_path",
         type=str,
@@ -431,14 +426,18 @@ if __name__ == "__main__":
             + "2019_LA/ASVspoof2019_LA_cm_protocols/ASVspoof2019.LA.cm.train.trn.txt"
         )
     elif args.train_year == "2021":
-        train_protocol = args.protocols_path + "ASVspoof2021_LA_eval/keys/LA/CM/trial_metadata.txt"
-        
+        train_protocol = (
+            args.protocols_path + "ASVspoof2021_LA_eval/keys/LA/CM/trial_metadata.txt"
+        )
+
     elif args.train_year == "2021_DF":
-        train_protocol = args.protocols_path + "ASVspoof2021_LA_eval/keys/DF/CM/trial_metadata.txt"
-        
+        train_protocol = (
+            args.protocols_path + "ASVspoof2021_LA_eval/keys/DF/CM/trial_metadata.txt"
+        )
+
     elif args.train_year == "2021_DF_BIG":
         train_protocol = args.protocols_path + "ASVspoof2021_DF_eval/all_data_meta.csv"
-        
+
     d_label_trn, file_train = genSpoof_list(
         dir_meta=train_protocol,
         is_train=True,
@@ -452,7 +451,7 @@ if __name__ == "__main__":
         train_path = args.database_path + f"ASVspoof2021_{args.track}_eval/"
     elif args.train_year == "2021_DF" or args.train_year == "2021_DF_BIG":
         train_path = args.database_path + f"ASVspoof2021_DF_eval/"
-        
+
     train_set = Dataset_ASVspoof2019_train(
         args,
         list_IDs=file_train,
@@ -510,7 +509,7 @@ if __name__ == "__main__":
             optimizer,
             device,
             total=len(file_train) // args.batch_size + 1,
-            model_save_path=model_save_path
+            model_save_path=model_save_path,
         )
         val_loss = evaluate_accuracy(
             dev_loader, model, device, total=len(file_dev) // args.batch_size + 1

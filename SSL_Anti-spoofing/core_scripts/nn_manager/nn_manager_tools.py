@@ -9,12 +9,11 @@ from __future__ import print_function
 
 from collections import OrderedDict
 
-import numpy as np
-import torch
-
 import core_scripts.nn_manager.nn_manager_conf as nii_nn_manage_conf
 import core_scripts.other_tools.display as nii_display
 import core_scripts.other_tools.str_tools as nii_str_tk
+import numpy as np
+import torch
 
 __author__ = "Xin Wang"
 __email__ = "wangxin@nii.ac.jp"

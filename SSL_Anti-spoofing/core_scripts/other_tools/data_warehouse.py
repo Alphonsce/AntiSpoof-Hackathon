@@ -11,7 +11,6 @@ import os
 import sys
 
 import numpy as np
-
 from core_scripts.other_tools import list_tools
 
 __author__ = "Xin Wang"

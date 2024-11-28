@@ -13,11 +13,13 @@ $: python PATH_TO_SCORE_FILE PATH_TO_GROUDTRUTH_DIR phase
 Example:
 $: python evaluate.py score.txt ./keys eval
 """
-import sys, os.path
+import os.path
+import sys
+from glob import glob
+
+import eval_metrics as em
 import numpy as np
 import pandas
-import eval_metrics as em
-from glob import glob
 
 if len(sys.argv) != 4:
     print("CHECK: invalid input arguments. Please read the instruction below:")

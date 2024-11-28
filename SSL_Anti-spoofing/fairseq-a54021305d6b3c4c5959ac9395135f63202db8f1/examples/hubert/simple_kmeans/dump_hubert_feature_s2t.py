@@ -12,7 +12,8 @@ import sys
 
 from dump_hubert_feature import HubertFeatureReader
 from fairseq.data.audio.audio_utils import get_waveform
-from fairseq.data.audio.speech_to_text_dataset import read_from_uncompressed_zip
+from fairseq.data.audio.speech_to_text_dataset import \
+    read_from_uncompressed_zip
 from feature_utils import dump_feature, get_shard_range
 
 logging.basicConfig(

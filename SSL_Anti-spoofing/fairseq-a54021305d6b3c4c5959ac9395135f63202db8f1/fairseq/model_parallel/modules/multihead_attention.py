@@ -14,11 +14,8 @@ from torch import Tensor, nn
 
 try:
     from fairseq.model_parallel.megatron.mpu import (
-        ColumnParallelLinear,
-        RowParallelLinear,
-        get_cuda_rng_tracker,
-        get_model_parallel_world_size,
-    )
+        ColumnParallelLinear, RowParallelLinear, get_cuda_rng_tracker,
+        get_model_parallel_world_size)
 
     has_megatron_submodule = True
 except (ImportError, ModuleNotFoundError):

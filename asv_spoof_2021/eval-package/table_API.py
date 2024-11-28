@@ -2,18 +2,16 @@
 """
 Library of utilities for printing latex table
 """
-from __future__ import absolute_import
-from __future__ import print_function
+from __future__ import absolute_import, print_function
 
 import os
 import sys
-import numpy as np
 
 import matplotlib
 import matplotlib.pyplot as plt
+import numpy as np
 from matplotlib.gridspec import GridSpec
 from matplotlib.pyplot import cm
-
 
 __author__ = "Xin Wang"
 __email__ = "wangxin@nii.ac.jp"

@@ -4,14 +4,15 @@ Functions for dynamic programming
 
 """
 from __future__ import print_function
+
 import os
 import sys
+
+import core_scripts.other_tools.debug as nii_debug
 import numpy as np
 import torch
 import torch.nn as torch_nn
 import torch.nn.functional as torch_nn_func
-
-import core_scripts.other_tools.debug as nii_debug
 
 __author__ = "Xin Wang"
 __email__ = "wangxin@nii.ac.jp"

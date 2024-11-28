@@ -1,6 +1,5 @@
 from torch import nn
 from torch.nn.utils import weight_norm
-
 from utils import Chomp1d
 
 

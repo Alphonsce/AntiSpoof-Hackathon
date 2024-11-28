@@ -6,10 +6,9 @@ import numpy as np
 import torch
 import torch.nn as nn
 import torch.nn.functional as F
-from torch import Tensor
-
 from dp_hubert_model import DPHubertModel
 from semaa_utils import CONV, SelfAttention
+from torch import Tensor
 
 ___author__ = "Hemlata Tak"
 __email__ = "tak@eurecom.fr"
@@ -625,6 +624,7 @@ class Model(nn.Module):
 
         return output
 
+
 class ModelWithSEMAA(nn.Module):
     def __init__(
         self,
@@ -665,9 +665,7 @@ class ModelWithSEMAA(nn.Module):
 
         self.LL = nn.Linear(self.ssl_model.out_dim, 128)
 
-        self.conv_time = CONV(
-            out_channels=filts[0], kernel_size=128, in_channels=1
-        )
+        self.conv_time = CONV(out_channels=filts[0], kernel_size=128, in_channels=1)
         self.first_bn = nn.BatchNorm2d(num_features=1)
 
         self.drop = nn.Dropout(0.5, inplace=True)
@@ -725,17 +723,16 @@ class ModelWithSEMAA(nn.Module):
         self.pool_hT2 = GraphPool(pool_ratios[2], gat_dims[1], 0.3)
 
         self.out_layer = nn.Linear(9 * gat_dims[1], 2)
-        
-        
+
     def forward(self, x):
         x_ssl_feat = self.ssl_model.extract_feat(x.squeeze(-1))
         x = self.LL(x_ssl_feat)  # (bs,frame_number,feat_out_dim)
-        
+
         x = x.transpose(1, 2)  # (bs,feat_out_dim,frame_number)
         x = x.unsqueeze(1)
 
         # x = self.conv_time(x)     # This one acted as feature extractor for SEMAA
-        
+
         x = F.max_pool2d(torch.abs(x), (3, 3))
 
         x = self.first_bn(x)

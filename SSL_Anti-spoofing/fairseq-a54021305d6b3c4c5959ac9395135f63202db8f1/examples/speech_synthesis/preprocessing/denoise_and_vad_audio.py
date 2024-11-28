@@ -19,16 +19,14 @@ except ImportError:
     raise ImportError("Please install py-webrtcvad: pip install webrtcvad")
 import examples.speech_synthesis.preprocessing.denoiser.utils as utils
 import pandas as pd
-from examples.speech_synthesis.preprocessing.denoiser.pretrained import master64
-from examples.speech_synthesis.preprocessing.vad import (
-    FS_MS,
-    SCALE,
-    THRESHOLD,
-    frame_generator,
-    read_wave,
-    vad_collector,
-    write_wave,
-)
+from examples.speech_synthesis.preprocessing.denoiser.pretrained import \
+    master64
+from examples.speech_synthesis.preprocessing.vad import (FS_MS, SCALE,
+                                                         THRESHOLD,
+                                                         frame_generator,
+                                                         read_wave,
+                                                         vad_collector,
+                                                         write_wave)
 from examples.speech_to_text.data_utils import save_df_to_tsv
 from tqdm import tqdm
 

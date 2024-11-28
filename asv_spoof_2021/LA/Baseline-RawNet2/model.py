@@ -1,12 +1,12 @@
+from collections import OrderedDict
+
+import numpy as np
 import torch
 import torch.nn as nn
 import torch.nn.functional as F
 from torch import Tensor
-import numpy as np
-from torch.utils import data
-from collections import OrderedDict
 from torch.nn.parameter import Parameter
-
+from torch.utils import data
 
 ___author__ = "Hemlata Tak"
 __email__ = "tak@eurecom.fr"

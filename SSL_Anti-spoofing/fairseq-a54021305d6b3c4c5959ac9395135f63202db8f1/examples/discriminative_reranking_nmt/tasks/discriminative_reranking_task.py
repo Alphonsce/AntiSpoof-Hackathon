@@ -11,23 +11,12 @@ from dataclasses import dataclass, field
 import numpy as np
 import torch
 from fairseq import metrics
-from fairseq.data import (
-    ConcatDataset,
-    ConcatSentencesDataset,
-    Dictionary,
-    IdDataset,
-    NestedDictionaryDataset,
-    NumelDataset,
-    NumSamplesDataset,
-    PrependTokenDataset,
-    RawLabelDataset,
-    RightPadDataset,
-    SortDataset,
-    TokenBlockDataset,
-    TruncateDataset,
-    data_utils,
-    indexed_dataset,
-)
+from fairseq.data import (ConcatDataset, ConcatSentencesDataset, Dictionary,
+                          IdDataset, NestedDictionaryDataset, NumelDataset,
+                          NumSamplesDataset, PrependTokenDataset,
+                          RawLabelDataset, RightPadDataset, SortDataset,
+                          TokenBlockDataset, TruncateDataset, data_utils,
+                          indexed_dataset)
 from fairseq.dataclass import ChoiceEnum, FairseqDataclass
 from fairseq.tasks import FairseqTask, register_task
 from omegaconf import II, MISSING

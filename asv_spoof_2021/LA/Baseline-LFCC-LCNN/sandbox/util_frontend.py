@@ -19,17 +19,16 @@ It includes:
  
 """
 
-from __future__ import absolute_import
-from __future__ import print_function
+from __future__ import absolute_import, print_function
 
 import sys
-import numpy as np
 
+import core_scripts.data_io.conf as nii_conf
+import numpy as np
+import sandbox.util_dsp as nii_dsp
 import torch
 import torch.nn as torch_nn
 import torch.nn.functional as torch_nn_func
-import sandbox.util_dsp as nii_dsp
-import core_scripts.data_io.conf as nii_conf
 
 __author__ = "Xin Wang"
 __email__ = "wangxin@nii.ac.jp"

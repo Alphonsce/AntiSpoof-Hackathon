@@ -12,8 +12,7 @@ Note that Modules defined in core_modules/*.py are for discrminative models.
 There is no method for inference. But they may be combined with this code
 """
 
-from __future__ import absolute_import
-from __future__ import print_function
+from __future__ import absolute_import, print_function
 
 import os
 import sys

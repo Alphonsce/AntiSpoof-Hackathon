@@ -334,7 +334,8 @@ def generate(cfg: UnsupGenerateConfig, models, saved_cfg, use_cuda):
     def build_generator(cfg: UnsupGenerateConfig):
         w2l_decoder = cfg.w2l_decoder
         if w2l_decoder == DecoderType.VITERBI:
-            from examples.speech_recognition.w2l_decoder import W2lViterbiDecoder
+            from examples.speech_recognition.w2l_decoder import \
+                W2lViterbiDecoder
 
             return W2lViterbiDecoder(cfg, task.target_dictionary)
         elif w2l_decoder == DecoderType.KENLM:
@@ -342,11 +343,13 @@ def generate(cfg: UnsupGenerateConfig, models, saved_cfg, use_cuda):
 
             return W2lKenLMDecoder(cfg, task.target_dictionary)
         elif w2l_decoder == DecoderType.FAIRSEQ:
-            from examples.speech_recognition.w2l_decoder import W2lFairseqLMDecoder
+            from examples.speech_recognition.w2l_decoder import \
+                W2lFairseqLMDecoder
 
             return W2lFairseqLMDecoder(cfg, task.target_dictionary)
         elif w2l_decoder == DecoderType.KALDI:
-            from examples.speech_recognition.kaldi.kaldi_decoder import KaldiDecoder
+            from examples.speech_recognition.kaldi.kaldi_decoder import \
+                KaldiDecoder
 
             assert cfg.kaldi_decoder_config is not None
 

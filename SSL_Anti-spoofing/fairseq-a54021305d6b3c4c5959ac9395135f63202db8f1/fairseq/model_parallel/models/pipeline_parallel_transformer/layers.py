@@ -10,12 +10,8 @@ import torch
 import torch.nn as nn
 import torch.nn.functional as F
 from fairseq import options, utils
-from fairseq.modules import (
-    AdaptiveSoftmax,
-    LayerNorm,
-    MultiheadAttention,
-    PositionalEmbedding,
-)
+from fairseq.modules import (AdaptiveSoftmax, LayerNorm, MultiheadAttention,
+                             PositionalEmbedding)
 
 EncoderOut = namedtuple(
     "TransformerEncoderOut",

@@ -14,15 +14,14 @@ from __future__ import absolute_import
 import os
 import sys
 
-import numpy as np
-import torch
-import torch.utils.data
-
 import core_scripts.data_io.conf as nii_dconf
 import core_scripts.data_io.customize_collate_fn as nii_collate_fn
 import core_scripts.data_io.customize_sampler as nii_sampler_fn
 import core_scripts.data_io.default_data_io as nii_default_dset
 import core_scripts.other_tools.display as nii_warn
+import numpy as np
+import torch
+import torch.utils.data
 
 __author__ = "Xin Wang"
 __email__ = "wangxin@nii.ac.jp"

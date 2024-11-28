@@ -19,13 +19,12 @@ from typing import Dict, List, Union
 
 import torch
 import torch.nn as nn
-from torch.utils.data import DataLoader
-from torch.utils.tensorboard import SummaryWriter
-from torchcontrib.optim import SWA
-
 from data_utils import TestDataset, TrainDataset, genSpoof_list
 from eval.calculate_metrics import (calculate_aDCF_tdcf_tEER,
                                     calculate_minDCF_EER_CLLR)
+from torch.utils.data import DataLoader
+from torch.utils.tensorboard import SummaryWriter
+from torchcontrib.optim import SWA
 from utils import create_optimizer, seed_worker, set_seed, str_to_bool
 
 warnings.filterwarnings("ignore", category=FutureWarning)
@@ -104,7 +103,7 @@ def main(args: argparse.Namespace) -> None:
         eval_meta_file,
         args.seed,
         config,
-        args
+        args,
     )
 
     # evaluates pretrained model
@@ -217,7 +216,7 @@ def get_loader(
     eval_meta_file,
     seed: int,
     config: dict,
-    args: argparse.ArgumentParser
+    args: argparse.ArgumentParser,
 ) -> List[torch.utils.data.DataLoader]:
     """Make PyTorch DataLoaders for train / developement"""
 
@@ -233,7 +232,12 @@ def get_loader(
     print("no. training files:", len(file_train))
 
     train_set = TrainDataset(
-        list_IDs=file_train, labels=d_label_trn, base_dir=trn_database_path, use_rawboost=args.use_rawboost, algo_rawboost=args.algo, args=args
+        list_IDs=file_train,
+        labels=d_label_trn,
+        base_dir=trn_database_path,
+        use_rawboost=args.use_rawboost,
+        algo_rawboost=args.algo,
+        args=args,
     )
     gen = torch.Generator()
     gen.manual_seed(seed)
@@ -365,7 +369,7 @@ if __name__ == "__main__":
         default=None,
         help="directory to the model weight file (can be also given in the config file)",
     )
-    
+
     parser.add_argument(
         "--model_path_train",
         type=str,

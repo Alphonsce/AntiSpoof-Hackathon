@@ -8,26 +8,15 @@ from argparse import Namespace
 from pathlib import Path
 
 import torch
-from fairseq.data import (
-    ConcatDataset,
-    Dictionary,
-    ResamplingDataset,
-    TransformEosLangPairDataset,
-    encoders,
-)
-from fairseq.data.audio.multi_modality_dataset import (
-    LangPairMaskDataset,
-    ModalityDatasetItem,
-    MultiModalityDataset,
-)
+from fairseq.data import (ConcatDataset, Dictionary, ResamplingDataset,
+                          TransformEosLangPairDataset, encoders)
+from fairseq.data.audio.multi_modality_dataset import (LangPairMaskDataset,
+                                                       ModalityDatasetItem,
+                                                       MultiModalityDataset)
 from fairseq.data.audio.speech_to_text_dataset import (
-    SpeechToTextDataset,
-    SpeechToTextDatasetCreator,
-)
+    SpeechToTextDataset, SpeechToTextDatasetCreator)
 from fairseq.data.audio.speech_to_text_joint_dataset import (
-    S2TJointDataConfig,
-    SpeechToTextJointDatasetCreator,
-)
+    S2TJointDataConfig, SpeechToTextJointDatasetCreator)
 from fairseq.data.iterators import GroupedEpochBatchIterator
 from fairseq.tasks import register_task
 from fairseq.tasks.speech_to_text import SpeechToTextTask

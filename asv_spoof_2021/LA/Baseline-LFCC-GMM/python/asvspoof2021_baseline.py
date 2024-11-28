@@ -1,7 +1,7 @@
-from gmm import train_gmm
-from os.path import exists
 import pickle
+from os.path import exists
 
+from gmm import train_gmm
 
 # configs - feature extraction e.g., LFCC or CQCC
 features = "lfcc"

@@ -11,7 +11,6 @@ import re
 import sys
 
 import numpy as np
-
 from core_scripts.data_io import conf as nii_dconf
 from core_scripts.data_io.text_process import toolkit_all, toolkit_en
 from core_scripts.other_tools import display as nii_warn

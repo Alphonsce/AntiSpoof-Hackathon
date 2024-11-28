@@ -7,12 +7,12 @@ Argument parse
 """
 from __future__ import absolute_import
 
+import argparse
 import os
 import sys
-import argparse
 
-import core_scripts.other_tools.list_tools as nii_list_tools
 import core_scripts.other_tools.display as nii_display
+import core_scripts.other_tools.list_tools as nii_list_tools
 
 __author__ = "Xin Wang"
 __email__ = "wangxin@nii.ac.jp"

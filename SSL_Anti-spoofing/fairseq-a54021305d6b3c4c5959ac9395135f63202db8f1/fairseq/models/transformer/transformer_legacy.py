@@ -7,11 +7,8 @@ from fairseq.dataclass.utils import gen_parser_from_dataclass
 from fairseq.models import register_model, register_model_architecture
 from fairseq.models.transformer.transformer_base import TransformerModelBase
 from fairseq.models.transformer.transformer_config import (
-    DEFAULT_MAX_SOURCE_POSITIONS,
-    DEFAULT_MAX_TARGET_POSITIONS,
-    DEFAULT_MIN_PARAMS_TO_WRAP,
-    TransformerConfig,
-)
+    DEFAULT_MAX_SOURCE_POSITIONS, DEFAULT_MAX_TARGET_POSITIONS,
+    DEFAULT_MIN_PARAMS_TO_WRAP, TransformerConfig)
 
 
 @register_model("transformer")

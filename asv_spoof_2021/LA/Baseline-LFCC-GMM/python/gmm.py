@@ -1,35 +1,20 @@
-from numpy import (
-    log,
-    exp,
-    infty,
-    zeros_like,
-    vstack,
-    zeros,
-    errstate,
-    finfo,
-    sqrt,
-    floor,
-    tile,
-    concatenate,
-    arange,
-    meshgrid,
-    ceil,
-    linspace,
-)
-from sklearn.mixture import GaussianMixture
-from scipy.special import logsumexp
-from scipy.signal import lfilter
-from LFCC_pipeline import lfcc
-from scipy.fft import dct
+import logging
+import math
+import pickle
 from os.path import exists
 from random import sample
-import soundfile as sf
-import logging
-import pandas
-import pickle
-import math
-import h5py
 
+import h5py
+import pandas
+import soundfile as sf
+from LFCC_pipeline import lfcc
+from numpy import (arange, ceil, concatenate, errstate, exp, finfo, floor,
+                   infty, linspace, log, meshgrid, sqrt, tile, vstack, zeros,
+                   zeros_like)
+from scipy.fft import dct
+from scipy.signal import lfilter
+from scipy.special import logsumexp
+from sklearn.mixture import GaussianMixture
 
 # configs - init
 logging.basicConfig(

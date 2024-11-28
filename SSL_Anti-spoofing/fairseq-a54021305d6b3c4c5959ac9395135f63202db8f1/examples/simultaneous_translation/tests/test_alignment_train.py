@@ -43,15 +43,13 @@ class AlignmentTrainTest(TestCase):
 
     def _test_custom_alignment_train_impl(self, p_choose, alpha, eps):
         if p_choose.is_cuda:
-            from alignment_train_cuda_binding import (
-                alignment_train_cuda,
-            )  # @manual=//deeplearning/projects/fairseq-py:alignment_train_cuda_binding
+            from alignment_train_cuda_binding import \
+                alignment_train_cuda  # @manual=//deeplearning/projects/fairseq-py:alignment_train_cuda_binding
 
             alignment_train_cuda(p_choose, alpha, eps)
         else:
-            from alignment_train_cpu_binding import (
-                alignment_train_cpu,
-            )  # @manual=//deeplearning/projects/fairseq-py:alignment_train_cpu_binding
+            from alignment_train_cpu_binding import \
+                alignment_train_cpu  # @manual=//deeplearning/projects/fairseq-py:alignment_train_cpu_binding
 
             alignment_train_cpu(p_choose, alpha, eps)
 

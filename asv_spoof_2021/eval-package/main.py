@@ -64,19 +64,18 @@ Example usage:
                   --c012-path ./LA-c012.npy
 """
 
-from __future__ import absolute_import
-from __future__ import print_function
+from __future__ import absolute_import, print_function
 
+import argparse
 import os
 import sys
-import pandas
-import argparse
-import numpy as np
 
 import config
+import eval_wrapper
+import numpy as np
+import pandas
 import pd_tools
 import table_API
-import eval_wrapper
 
 __author__ = "ASVspoof consortium"
 __copyright__ = "Copyright 2022, ASVspoof consortium"

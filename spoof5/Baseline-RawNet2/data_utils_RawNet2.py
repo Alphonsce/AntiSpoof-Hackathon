@@ -1,10 +1,11 @@
+import random
+from random import randrange
+
+import librosa
 import numpy as np
 import torch
 from torch import Tensor
 from torch.utils.data import Dataset
-import librosa
-from random import randrange
-import random
 
 
 def genSpoof_list(dir_meta, is_train=False, is_eval=False):
@@ -15,18 +16,18 @@ def genSpoof_list(dir_meta, is_train=False, is_eval=False):
 
     if is_train:
         for line in l_meta:
-            _,key,_,_,_,label = line.strip().split(" ")
+            _, key, _, _, _, label = line.strip().split(" ")
             file_list.append(key)
             d_meta[key] = 1 if label == "bonafide" else 0
         return d_meta, file_list
     elif is_eval:
         for line in l_meta:
-            key= line.strip()
+            key = line.strip()
             file_list.append(key)
         return file_list
     else:
         for line in l_meta:
-            _,key,_,_,_,label = line.strip().split(" ")
+            _, key, _, _, _, label = line.strip().split(" ")
             file_list.append(key)
             d_meta[key] = 1 if label == "bonafide" else 0
         return d_meta, file_list
@@ -47,7 +48,7 @@ def pad_random(x: np.ndarray, max_len: int = 64000):
     # if duration is already long enough
     if x_len >= max_len:
         stt = np.random.randint(x_len - max_len)
-        return x[stt:stt + max_len]
+        return x[stt : stt + max_len]
 
     # if too short
     num_repeats = int(max_len / x_len) + 1
@@ -56,48 +57,49 @@ def pad_random(x: np.ndarray, max_len: int = 64000):
 
 
 class Dataset_train(Dataset):
-    def __init__(self,list_IDs, labels, base_dir):
+    def __init__(self, list_IDs, labels, base_dir):
         self.list_IDs = list_IDs
         self.labels = labels
         self.base_dir = base_dir
-        self.cut = 64000 # take ~4 sec audio 
-        self.fs  = 16000
-     
+        self.cut = 64000  # take ~4 sec audio
+        self.fs = 16000
+
     def __len__(self):
         return len(self.list_IDs)
 
     def __getitem__(self, index):
         key = self.list_IDs[index]
-        X, _ = librosa.load(self.base_dir+'flac_T/'+key+'.flac', sr=16000)  
+        X, _ = librosa.load(self.base_dir + "flac_T/" + key + ".flac", sr=16000)
         X_pad = pad_random(X, self.cut)
         x_inp = Tensor(X_pad)
-        target = self.labels[key] 
+        target = self.labels[key]
         return x_inp, target
 
+
 class Dataset_dev(Dataset):
-    def __init__(self,list_IDs, labels,base_dir):
+    def __init__(self, list_IDs, labels, base_dir):
         self.list_IDs = list_IDs
-        
+
         self.labels = labels
         self.base_dir = base_dir
-        self.cut = 64000 # take ~4 sec audio
-        self.fs  = 16000
+        self.cut = 64000  # take ~4 sec audio
+        self.fs = 16000
 
     def __len__(self):
         return len(self.list_IDs)
 
     def __getitem__(self, index):
         key = self.list_IDs[index]
-        X, _ = librosa.load(self.base_dir+'flac_D/'+key+'.flac', sr=16000) 
+        X, _ = librosa.load(self.base_dir + "flac_D/" + key + ".flac", sr=16000)
         X_pad = pad(X, self.cut)
         x_inp = Tensor(X_pad)
-        target = self.labels[key] 
+        target = self.labels[key]
         return x_inp, target
 
 
 class Dataset_eval(Dataset):
     def __init__(self, list_IDs, base_dir):
-        
+
         self.list_IDs = list_IDs
         self.base_dir = base_dir
         self.cut = 64000
@@ -107,7 +109,7 @@ class Dataset_eval(Dataset):
 
     def __getitem__(self, index):
         key = self.list_IDs[index]
-        X, _ = librosa.load(self.base_dir+'flac_E/'+key+'.flac', sr=16000)
+        X, _ = librosa.load(self.base_dir + "flac_E/" + key + ".flac", sr=16000)
         X_pad = pad(X, self.cut)
         x_inp = Tensor(X_pad)
         return x_inp, key

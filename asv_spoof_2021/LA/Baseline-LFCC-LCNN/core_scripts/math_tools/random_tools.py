@@ -8,11 +8,11 @@ Tools related to randomness
 from __future__ import absolute_import
 
 import os
-import sys
-import numpy as np
 import random
+import sys
 
 import core_scripts.other_tools.display as nii_display
+import numpy as np
 
 __author__ = "Xin Wang"
 __email__ = "wangxin@nii.ac.jp"

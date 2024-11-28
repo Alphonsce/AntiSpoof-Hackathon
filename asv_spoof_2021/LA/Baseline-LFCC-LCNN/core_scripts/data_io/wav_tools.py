@@ -16,10 +16,11 @@ from __future__ import absolute_import
 
 import os
 import sys
+
+import core_scripts.data_io.io_tools as nii_io_tk
 import numpy as np
 import scipy.io.wavfile
 import soundfile
-import core_scripts.data_io.io_tools as nii_io_tk
 
 __author__ = "Xin Wang"
 __email__ = "wangxin@nii.ac.jp"

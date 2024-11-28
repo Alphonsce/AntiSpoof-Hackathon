@@ -1,6 +1,6 @@
 import librosa
-from cqcc import cqcc
 import matplotlib.pyplot as plt
+from cqcc import cqcc
 
 # filename = "./D18_1000001.wav"
 
@@ -36,10 +36,9 @@ plt.title("Log power magnitude spectrum of CQCC")
 # plt.xlabel('Number of frames')
 plt.imshow(LogP_absCQT.T)
 
-# COMPUTE MFCC FEATURES
-from python_speech_features import mfcc
-from python_speech_features import logfbank
 import scipy.io.wavfile as wav
+# COMPUTE MFCC FEATURES
+from python_speech_features import logfbank, mfcc
 
 (rate, sig) = wav.read(filename)
 mfcc_feat = mfcc(sig, rate)  # number of frames * number of cep

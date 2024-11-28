@@ -1,10 +1,10 @@
-import soundfile as sf
-import torch
-from torch import Tensor
-from torch.utils.data import Dataset, DataLoader
 import os
 
-from submission_utils import pad_random, pad
+import soundfile as sf
+import torch
+from submission_utils import pad, pad_random
+from torch import Tensor
+from torch.utils.data import DataLoader, Dataset
 
 
 class ASVspoof2019(Dataset):
@@ -63,6 +63,7 @@ def get_data_for_dataset(path):
             label = 1 if label == "bonafide" else 0
             label_list.append(label)
     return ids_list, label_list
+
 
 def get_dataloaders(datasets, args):
     dataloaders = {}

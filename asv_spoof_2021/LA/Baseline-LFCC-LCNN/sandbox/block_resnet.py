@@ -5,18 +5,17 @@ Modified based on https://github.com/joaomonteirof/e2e_antispoofing
 
 """
 
-from __future__ import absolute_import
-from __future__ import print_function
+from __future__ import absolute_import, print_function
 
 import sys
-import numpy as np
-from scipy import signal as scipy_signal
 
+import numpy as np
+import sandbox.block_nn as nii_nn
 import torch
 import torch.nn as torch_nn
 import torch.nn.functional as torch_nn_func
 import torch.nn.init as torch_init
-import sandbox.block_nn as nii_nn
+from scipy import signal as scipy_signal
 
 __author__ = "Xin Wang"
 __email__ = "wangxin@nii.ac.jp"

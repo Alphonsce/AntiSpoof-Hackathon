@@ -1,6 +1,5 @@
 from gmm import scoring
 
-
 # scores file to write
 scores_file = "scores-lfcc-asvspoof21-DF.txt"
 

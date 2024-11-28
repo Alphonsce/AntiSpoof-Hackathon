@@ -1,10 +1,9 @@
 import os
+
 import numpy as np
-import torch
 import pandas as pd
-
+import torch
 import torch.nn.functional as F
-
 from subm_utils.submission_utils import progressbar
 
 
@@ -173,7 +172,7 @@ def produce_submit_file(data_loader, model, device, save_path, need_sigmoid=Fals
         with torch.no_grad():
             # first is hidden layer, second is result
             batch_out = model.forward(batch_x)
-            batch_out = (batch_out[:, 1])
+            batch_out = batch_out[:, 1]
             # 1 - for bonafide speech class
             if need_sigmoid:
                 batch_out = F.sigmoid(batch_out)
@@ -181,7 +180,7 @@ def produce_submit_file(data_loader, model, device, save_path, need_sigmoid=Fals
         # add outputs
         fname_list.extend(utt_id)
         score_list.extend(batch_out.tolist())
-        
+
     # assert len(fname_list) == len(score_list)
 
     # saving results

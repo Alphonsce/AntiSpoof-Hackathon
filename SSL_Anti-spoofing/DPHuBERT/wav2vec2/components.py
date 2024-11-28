@@ -14,7 +14,8 @@ from torch import Tensor, nn
 from torch.nn import Module, Parameter
 
 from .hardconcrete import HardConcrete
-from .pruning_utils import prune_conv1d_layer, prune_layer_norm, prune_linear_layer
+from .pruning_utils import (prune_conv1d_layer, prune_layer_norm,
+                            prune_linear_layer)
 
 
 def _init_transformer_params(module):

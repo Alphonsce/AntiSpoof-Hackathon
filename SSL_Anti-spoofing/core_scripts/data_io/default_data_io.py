@@ -10,10 +10,6 @@ from __future__ import absolute_import
 import os
 import sys
 
-import numpy as np
-import torch
-import torch.utils.data
-
 import core_scripts.data_io.conf as nii_dconf
 import core_scripts.data_io.customize_collate_fn as nii_collate_fn
 import core_scripts.data_io.customize_sampler as nii_sampler_fn
@@ -25,6 +21,9 @@ import core_scripts.math_tools.stats as nii_stats
 import core_scripts.other_tools.display as nii_warn
 import core_scripts.other_tools.list_tools as nii_list_tools
 import core_scripts.other_tools.str_tools as nii_str_tk
+import numpy as np
+import torch
+import torch.utils.data
 
 __author__ = "Xin Wang"
 __email__ = "wangxin@nii.ac.jp"

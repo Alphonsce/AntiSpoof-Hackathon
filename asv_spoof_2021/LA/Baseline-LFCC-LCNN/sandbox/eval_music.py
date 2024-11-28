@@ -6,8 +6,10 @@ This is just wrappers around MIR_eval http://craffel.github.io/mir_eval/
 
 """
 from __future__ import print_function
+
 import os
 import sys
+
 import numpy as np
 
 try:

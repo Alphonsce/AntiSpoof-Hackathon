@@ -1,13 +1,13 @@
 import argparse
 
 import torch
+from dataset import ASVspoof2019, get_data_for_dataset, get_dataloaders
+from loss import CapsuleLoss
+from metrics import evaluate_EER, produce_evaluation_file
 from torch import nn
 from utils import load_checkpoint, pad
 
-from dataset import get_data_for_dataset, ASVspoof2019, get_dataloaders
 from model.models import get_model
-from metrics import produce_evaluation_file, evaluate_EER
-from loss import CapsuleLoss
 
 
 def main(args, cfg):

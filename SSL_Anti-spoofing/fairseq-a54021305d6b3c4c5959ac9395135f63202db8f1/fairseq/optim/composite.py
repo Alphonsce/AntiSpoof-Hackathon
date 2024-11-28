@@ -10,7 +10,8 @@ from typing import Any, Dict, List, Optional
 
 import torch.optim
 from fairseq.dataclass import FairseqDataclass
-from fairseq.optim import FairseqOptimizer, _build_optimizer, register_optimizer
+from fairseq.optim import (FairseqOptimizer, _build_optimizer,
+                           register_optimizer)
 from fairseq.optim.lr_scheduler import FairseqLRScheduler, build_lr_scheduler
 from omegaconf import II, open_dict
 

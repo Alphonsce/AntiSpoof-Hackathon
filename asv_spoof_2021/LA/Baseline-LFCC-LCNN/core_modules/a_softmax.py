@@ -8,13 +8,12 @@ copied from https://github.com/Joyako/SphereFace-pytorch
 from __future__ import print_function
 
 from collections import OrderedDict
-import numpy as np
 
+import numpy as np
 import torch
 import torch.nn as torch_nn
 import torch.nn.functional as torch_f
 from torch.nn import Parameter
-
 
 __author__ = "Xin Wang"
 __email__ = "wangxin@nii.ac.jp"

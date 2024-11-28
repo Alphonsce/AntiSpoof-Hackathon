@@ -1,10 +1,10 @@
+import os
+
 import soundfile as sf
 import torch
 from torch import Tensor
-from torch.utils.data import Dataset, DataLoader
-import os
-
-from utils import pad_random, pad
+from torch.utils.data import DataLoader, Dataset
+from utils import pad, pad_random
 
 
 class ASVspoof2019(Dataset):

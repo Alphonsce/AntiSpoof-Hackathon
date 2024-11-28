@@ -5,12 +5,8 @@ from typing import List, Optional, Union
 import pytorch_lightning as pl
 import torch
 import torch.nn as nn
-from dataset.audio_dataset import (
-    AudioDataset,
-    BucketizeBatchSampler,
-    CollateFnAudio,
-    DistributedBatchSampler,
-)
+from dataset.audio_dataset import (AudioDataset, BucketizeBatchSampler,
+                                   CollateFnAudio, DistributedBatchSampler)
 from torch.optim.optimizer import Optimizer
 from torch.utils.data import DataLoader
 from wav2vec2.model import Wav2Vec2Model

@@ -6,9 +6,10 @@ Tools to process list(s)
 """
 from __future__ import absolute_import
 
+import collections
 import os
 import sys
-import collections
+
 import core_scripts.other_tools.display as nii_warn
 import core_scripts.other_tools.str_tools as nii_str_tool
 

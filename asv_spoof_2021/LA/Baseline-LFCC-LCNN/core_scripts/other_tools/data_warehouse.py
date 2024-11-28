@@ -6,11 +6,11 @@ Simple tools to manage data from text file
 """
 from __future__ import absolute_import
 
+import itertools
 import os
 import sys
-import itertools
-import numpy as np
 
+import numpy as np
 from core_scripts.other_tools import list_tools
 
 __author__ = "Xin Wang"

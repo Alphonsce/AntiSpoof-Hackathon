@@ -8,20 +8,21 @@ Requires model.py and config.py
 Usage: $: python main.py [options]
 """
 from __future__ import absolute_import
+
+import importlib
 import os
 import sys
-import torch
-import importlib
 
-import core_scripts.other_tools.display as nii_warn
-import core_scripts.data_io.default_data_io as nii_dset
-import core_scripts.data_io.conf as nii_dconf
-import core_scripts.other_tools.list_tools as nii_list_tool
-import core_scripts.config_parse.config_parse as nii_config_parse
 import core_scripts.config_parse.arg_parse as nii_arg_parse
-import core_scripts.op_manager.op_manager as nii_op_wrapper
+import core_scripts.config_parse.config_parse as nii_config_parse
+import core_scripts.data_io.conf as nii_dconf
+import core_scripts.data_io.default_data_io as nii_dset
 import core_scripts.nn_manager.nn_manager as nii_nn_wrapper
+import core_scripts.op_manager.op_manager as nii_op_wrapper
+import core_scripts.other_tools.display as nii_warn
+import core_scripts.other_tools.list_tools as nii_list_tool
 import core_scripts.startup_config as nii_startup
+import torch
 
 __author__ = "Xin Wang"
 __email__ = "wangxin@nii.ac.jp"

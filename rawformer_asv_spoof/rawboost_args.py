@@ -1,14 +1,12 @@
 import argparse
 
+
 def create_rawboost_args():
     parser = argparse.ArgumentParser(description="ASVspoof2021 baseline system")
 
     ##===================================================Rawboost data augmentation parameters======================================================================#
 
-    parser.add_argument(
-        "--comment",
-        default=""
-    )
+    parser.add_argument("--comment", default="")
 
     parser.add_argument(
         "--algo",

@@ -1,9 +1,9 @@
 import torch
 from torch import nn
 
-from .TCN import TemporalConvNet
 from .capsules import PrimaryCapsules, RoutingMechanism
 from .modules import Encoder, Res2Block
+from .TCN import TemporalConvNet
 
 
 def get_model(config):

@@ -529,5 +529,3 @@ class Residual_block(nn.Module):
         out += identity
         out = self.mp(out)
         return out
-
-

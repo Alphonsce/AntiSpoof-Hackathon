@@ -8,10 +8,11 @@ import yaml
 from core_scripts.startup_config import set_random_seed
 from data_utils_rawboost import (Dataset_ASVspoof2019_train,
                                  Dataset_ASVspoof2021_eval, genSpoof_list)
-from model import RawNet
 from tensorboardX import SummaryWriter
 from torch import Tensor, nn
 from torch.utils.data import DataLoader
+
+from model import RawNet
 
 __author__ = "Hemlata Tak"
 __email__ = "tak@eurecom.fr"

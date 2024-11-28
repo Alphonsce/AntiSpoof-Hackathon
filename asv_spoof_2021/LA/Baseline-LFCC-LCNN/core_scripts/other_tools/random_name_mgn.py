@@ -8,8 +8,9 @@ from __future__ import absolute_import
 
 import os
 import sys
-from core_scripts.other_tools import list_tools
+
 from core_scripts.data_io import io_tools
+from core_scripts.other_tools import list_tools
 
 __author__ = "Xin Wang"
 __email__ = "wangxin@nii.ac.jp"

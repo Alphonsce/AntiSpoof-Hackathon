@@ -6,10 +6,10 @@ Definition of gradient reverse layer
 
 Copied from https://cyberagent.ai/blog/research/11863/
 """
-from __future__ import absolute_import
-from __future__ import print_function
+from __future__ import absolute_import, print_function
 
 import sys
+
 import torch
 import torch.nn as torch_nn
 import torch.nn.functional as torch_nn_func

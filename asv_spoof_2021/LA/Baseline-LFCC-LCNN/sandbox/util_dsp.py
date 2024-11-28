@@ -12,12 +12,11 @@ https://github.com/zh217/torch-dct
 
 """
 
-from __future__ import absolute_import
-from __future__ import print_function
+from __future__ import absolute_import, print_function
 
 import sys
-import numpy as np
 
+import numpy as np
 import torch
 import torch.nn as torch_nn
 import torch.nn.functional as torch_nn_func

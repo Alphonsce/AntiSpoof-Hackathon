@@ -27,13 +27,8 @@ import numpy as np
 import torch
 
 from ..utils import ShardedTensor
-from .processor import (
-    Aligner,
-    MetaProcessor,
-    MMAttentionMask2DProcessor,
-    Processor,
-    TextProcessor,
-)
+from .processor import (Aligner, MetaProcessor, MMAttentionMask2DProcessor,
+                        Processor, TextProcessor)
 
 
 class How2MetaProcessor(MetaProcessor):

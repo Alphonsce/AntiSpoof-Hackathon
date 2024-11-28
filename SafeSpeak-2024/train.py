@@ -4,15 +4,14 @@ from copy import deepcopy
 
 import torch
 import wandb
+from dataset import get_dataloaders, get_datasets
 from IPython.core.display_functions import clear_output
-from torch import nn
-
-from dataset import get_datasets, get_dataloaders
 from loss import CapsuleLoss
-from metrics import produce_evaluation_file, calculate_eer_tdcf
-from model.models import get_model
+from metrics import calculate_eer_tdcf, produce_evaluation_file
+from torch import nn
+from utils import get_optimizer, load_checkpoint, progressbar
 
-from utils import progressbar, get_optimizer, load_checkpoint
+from model.models import get_model
 
 
 def main(config):

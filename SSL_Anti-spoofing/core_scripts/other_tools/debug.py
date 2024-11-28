@@ -13,7 +13,6 @@ import sys
 
 import numpy as np
 import torch
-
 from core_scripts.data_io import io_tools as nii_io
 
 __author__ = "Xin Wang"

@@ -8,18 +8,11 @@ from typing import Any, Dict, List, Optional
 
 import torch
 import torch.nn as nn
-from fairseq.models import (
-    FairseqEncoderDecoderModel,
-    register_model,
-    register_model_architecture,
-)
-from fairseq.models.transformer import (
-    Embedding,
-    TransformerDecoder,
-    TransformerEncoder,
-    TransformerModel,
-    base_architecture,
-)
+from fairseq.models import (FairseqEncoderDecoderModel, register_model,
+                            register_model_architecture)
+from fairseq.models.transformer import (Embedding, TransformerDecoder,
+                                        TransformerEncoder, TransformerModel,
+                                        base_architecture)
 from fairseq.modules import TransformerDecoderLayer
 from torch import Tensor
 

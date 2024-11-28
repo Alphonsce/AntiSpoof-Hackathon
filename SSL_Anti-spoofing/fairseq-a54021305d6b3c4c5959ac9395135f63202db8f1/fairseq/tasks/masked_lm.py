@@ -9,26 +9,19 @@ from dataclasses import dataclass, field
 
 import numpy as np
 from fairseq import utils
-from fairseq.data import (
-    Dictionary,
-    IdDataset,
-    MaskTokensDataset,
-    NestedDictionaryDataset,
-    NumelDataset,
-    NumSamplesDataset,
-    PrependTokenDataset,
-    RightPadDataset,
-    SortDataset,
-    TokenBlockDataset,
-    data_utils,
-)
+from fairseq.data import (Dictionary, IdDataset, MaskTokensDataset,
+                          NestedDictionaryDataset, NumelDataset,
+                          NumSamplesDataset, PrependTokenDataset,
+                          RightPadDataset, SortDataset, TokenBlockDataset,
+                          data_utils)
 from fairseq.data.encoders.utils import get_whole_word_mask
 from fairseq.data.shorten_dataset import maybe_shorten_dataset
 from fairseq.dataclass import FairseqDataclass
 from fairseq.tasks import FairseqTask, register_task
 from omegaconf import II, MISSING, OmegaConf
 
-from .language_modeling import SAMPLE_BREAK_MODE_CHOICES, SHORTEN_METHOD_CHOICES
+from .language_modeling import (SAMPLE_BREAK_MODE_CHOICES,
+                                SHORTEN_METHOD_CHOICES)
 
 logger = logging.getLogger(__name__)
 

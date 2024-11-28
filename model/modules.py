@@ -2,8 +2,8 @@ import math
 
 import numpy as np
 import torch
-from torch import nn, Tensor
 import torch.nn.functional as F
+from torch import Tensor, nn
 
 
 class SincConv(nn.Module):

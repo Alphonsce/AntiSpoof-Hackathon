@@ -1,6 +1,7 @@
-import numpy as np
 import math
 import warnings
+
+import numpy as np
 from CQCC.CQT_toolbox_2013.winfuns import winfuns
 
 

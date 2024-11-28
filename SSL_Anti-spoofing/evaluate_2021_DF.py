@@ -15,10 +15,9 @@ import os.path
 import sys
 from glob import glob
 
+import eval_metrics_DF as em
 import numpy as np
 import pandas
-
-import eval_metrics_DF as em
 
 if len(sys.argv) != 4:
     print("CHECK: invalid input arguments. Please read the instruction below:")

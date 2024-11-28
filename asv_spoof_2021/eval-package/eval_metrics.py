@@ -6,10 +6,10 @@ They are imported from eval_metrics.py in official t-DCF computatio package
 https://www.asvspoof.org/resources/tDCF_python_v2.zip
 
 """
-from __future__ import absolute_import
-from __future__ import print_function
+from __future__ import absolute_import, print_function
 
 import sys
+
 import numpy as np
 
 __author__ = "ASVspoof consortium"

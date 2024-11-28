@@ -6,8 +6,8 @@ Based on https://github.com/fatchord/WaveRNN
 """
 
 import os
-import sys
 import re
+import sys
 
 from core_scripts.data_io.text_process import toolkit_all
 

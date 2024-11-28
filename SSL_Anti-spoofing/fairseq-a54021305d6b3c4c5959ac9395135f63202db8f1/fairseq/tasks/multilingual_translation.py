@@ -11,12 +11,8 @@ from collections import OrderedDict
 
 import torch
 from fairseq import metrics, options, utils
-from fairseq.data import (
-    Dictionary,
-    LanguagePairDataset,
-    RoundRobinZipDatasets,
-    TransformEosLangPairDataset,
-)
+from fairseq.data import (Dictionary, LanguagePairDataset,
+                          RoundRobinZipDatasets, TransformEosLangPairDataset)
 from fairseq.models import FairseqMultiModel
 from fairseq.tasks.translation import load_langpair_dataset
 

@@ -11,10 +11,11 @@ PyTorch is BSD-style licensed, as found in the LICENSE file.
 from __future__ import absolute_import
 
 import os
-import sys
-import torch
 import re
-from torch._six import container_abcs, string_classes, int_classes
+import sys
+
+import torch
+from torch._six import container_abcs, int_classes, string_classes
 
 """
 The primary motivation is to handle batch of data with varied length.

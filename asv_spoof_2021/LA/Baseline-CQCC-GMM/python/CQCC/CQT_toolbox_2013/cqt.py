@@ -1,8 +1,9 @@
-import numpy as np
 import math
+
+import numpy as np
+from CQCC.CQT_toolbox_2013.cqtCell2Sparse import cell2mat, cqtCell2Sparse
 from CQCC.CQT_toolbox_2013.nsgcqwin import nsgcqwin
 from CQCC.CQT_toolbox_2013.nsgtf_real import nsgtf_real
-from CQCC.CQT_toolbox_2013.cqtCell2Sparse import cell2mat, cqtCell2Sparse
 
 
 def cqt(*args):

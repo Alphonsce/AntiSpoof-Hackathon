@@ -24,19 +24,12 @@ from .base_decoder import BaseDecoder
 from .decoder_config import FlashlightDecoderConfig
 
 try:
-    from flashlight.lib.text.decoder import (
-        LM,
-        CriterionType,
-        DecodeResult,
-        KenLM,
-        LexiconDecoder,
-        LexiconDecoderOptions,
-        LexiconFreeDecoder,
-        LexiconFreeDecoderOptions,
-        LMState,
-        SmearingMode,
-        Trie,
-    )
+    from flashlight.lib.text.decoder import (LM, CriterionType, DecodeResult,
+                                             KenLM, LexiconDecoder,
+                                             LexiconDecoderOptions,
+                                             LexiconFreeDecoder,
+                                             LexiconFreeDecoderOptions,
+                                             LMState, SmearingMode, Trie)
     from flashlight.lib.text.dictionary import create_word_dict, load_words
 except ImportError:
     warnings.warn(

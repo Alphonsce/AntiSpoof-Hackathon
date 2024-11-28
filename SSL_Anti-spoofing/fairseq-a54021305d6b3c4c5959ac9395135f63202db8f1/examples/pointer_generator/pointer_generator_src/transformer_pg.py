@@ -10,14 +10,10 @@ import torch
 import torch.nn as nn
 from fairseq import utils
 from fairseq.models import register_model, register_model_architecture
-from fairseq.models.transformer import (
-    DEFAULT_MAX_SOURCE_POSITIONS,
-    DEFAULT_MAX_TARGET_POSITIONS,
-    TransformerDecoder,
-    TransformerEncoder,
-    TransformerModel,
-    base_architecture,
-)
+from fairseq.models.transformer import (DEFAULT_MAX_SOURCE_POSITIONS,
+                                        DEFAULT_MAX_TARGET_POSITIONS,
+                                        TransformerDecoder, TransformerEncoder,
+                                        TransformerModel, base_architecture)
 from torch import Tensor
 
 logger = logging.getLogger(__name__)

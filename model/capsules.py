@@ -1,9 +1,8 @@
 import torch
+import torch.nn.functional as F
 from torch import nn
 from torch.autograd import Variable
-
 from utils import ChanelWiseStats, View
-import torch.nn.functional as F
 
 
 class PrimaryCapsules(nn.Module):

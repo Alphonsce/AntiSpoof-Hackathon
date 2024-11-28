@@ -1,3 +1,4 @@
+import json
 import sys
 import time
 
@@ -6,7 +7,6 @@ import torch
 from torch import nn
 from torch.optim import Adam
 from torch_optimizer import AdaBound
-import json
 
 
 def progressbar(it, prefix="", size=60, out=sys.stdout):  # Python3.6+

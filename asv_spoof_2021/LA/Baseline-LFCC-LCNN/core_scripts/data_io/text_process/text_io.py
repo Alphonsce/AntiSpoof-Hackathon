@@ -7,15 +7,14 @@ Based on https://github.com/fatchord/WaveRNN
 """
 
 import os
-import sys
 import re
-import numpy as np
+import sys
 
-from core_scripts.other_tools import display as nii_warn
-from core_scripts.data_io.text_process import toolkit_all
-from core_scripts.data_io.text_process import toolkit_en
-from core_scripts.other_tools import str_tools as nii_str_tk
+import numpy as np
 from core_scripts.data_io import conf as nii_dconf
+from core_scripts.data_io.text_process import toolkit_all, toolkit_en
+from core_scripts.other_tools import display as nii_warn
+from core_scripts.other_tools import str_tools as nii_str_tk
 
 __author__ = "Xin Wang"
 __email__ = "wangxin@nii.ac.jp"

@@ -1,11 +1,10 @@
 import numpy as np
 import soundfile as sf
 import torch
+from rawboost.data_utils_rawboost import process_Rawboost_feature
 from torch import Tensor
 from torch.utils.data import Dataset
 from tqdm import tqdm
-
-from rawboost.data_utils_rawboost import process_Rawboost_feature
 
 ___author__ = "Hemlata Tak, Jee-weon Jung"
 __email__ = "tak@eurecom.fr, jeeweon.jung@navercorp.com"
@@ -113,6 +112,7 @@ class TrainDataset(Dataset):
         x_inp = Tensor(X_pad)
         y = self.labels[key]
         return x_inp, y
+
 
 class TestDataset(Dataset):
     def __init__(self, list_IDs, base_dir):

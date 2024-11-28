@@ -56,14 +56,12 @@ class KaldiDecoder(object):
         try:
             from kaldi.asr import FasterRecognizer, LatticeFasterRecognizer
             from kaldi.base import set_verbose_level
-            from kaldi.decoder import (
-                FasterDecoder,
-                FasterDecoderOptions,
-                LatticeFasterDecoder,
-                LatticeFasterDecoderOptions,
-            )
+            from kaldi.decoder import (FasterDecoder, FasterDecoderOptions,
+                                       LatticeFasterDecoder,
+                                       LatticeFasterDecoderOptions)
             from kaldi.fstext import SymbolTable, read_fst_kaldi
-            from kaldi.lat.functions import DeterminizeLatticePhonePrunedOptions
+            from kaldi.lat.functions import \
+                DeterminizeLatticePhonePrunedOptions
         except:
             warnings.warn(
                 "pykaldi is required for this functionality. Please install from https://github.com/pykaldi/pykaldi"
@@ -190,12 +188,10 @@ class KaldiDecoder(object):
 
         if self.nbest > 1:
             from kaldi.fstext import shortestpath
-            from kaldi.fstext.utils import (
-                convert_compact_lattice_to_lattice,
-                convert_lattice_to_std,
-                convert_nbest_to_list,
-                get_linear_symbol_sequence,
-            )
+            from kaldi.fstext.utils import (convert_compact_lattice_to_lattice,
+                                            convert_lattice_to_std,
+                                            convert_nbest_to_list,
+                                            get_linear_symbol_sequence)
 
             lat = out["lattice"]
 

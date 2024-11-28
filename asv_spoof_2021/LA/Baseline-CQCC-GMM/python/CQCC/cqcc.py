@@ -1,10 +1,10 @@
-import numpy as np
 import math
-from CQCC.CQT_toolbox_2013.cqt import cqt
 
+import librosa
+import numpy as np
 # import scikits.samplerate as sk_samplerate
 import scipy
-import librosa
+from CQCC.CQT_toolbox_2013.cqt import cqt
 
 
 def cqcc(*args):

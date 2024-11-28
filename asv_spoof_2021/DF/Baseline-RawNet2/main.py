@@ -1,21 +1,18 @@
 import argparse
-import sys
 import os
+import sys
+
 import numpy as np
 import torch
-from torch import nn
-from torch import Tensor
-from torch.utils.data import DataLoader
 import yaml
-from data_utils import (
-    genSpoof_list,
-    Dataset_ASVspoof2019_train,
-    Dataset_ASVspoof2021_eval,
-)
-from model import RawNet
-from tensorboardX import SummaryWriter
 from core_scripts.startup_config import set_random_seed
+from data_utils import (Dataset_ASVspoof2019_train, Dataset_ASVspoof2021_eval,
+                        genSpoof_list)
+from tensorboardX import SummaryWriter
+from torch import Tensor, nn
+from torch.utils.data import DataLoader
 
+from model import RawNet
 
 __author__ = "Hemlata Tak"
 __email__ = "tak@eurecom.fr"

@@ -19,10 +19,12 @@ Mountain View, California, 94041, USA.
 """
 
 from __future__ import print_function
+
 import os
 import sys
-import numpy as np
+
 import core_scripts.data_io.io_tools as nii_io
+import numpy as np
 
 
 def protocol_parse_asvspoof2019(protocol_filepath):

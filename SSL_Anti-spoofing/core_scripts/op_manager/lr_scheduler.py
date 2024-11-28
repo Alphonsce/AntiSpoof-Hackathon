@@ -10,12 +10,11 @@ from __future__ import absolute_import
 import os
 import sys
 
+import core_scripts.other_tools.display as nii_warn
 import numpy as np
 import torch
 import torch.optim as torch_optim
 import torch.optim.lr_scheduler as torch_optim_steplr
-
-import core_scripts.other_tools.display as nii_warn
 
 __author__ = "Xin Wang"
 __email__ = "wangxin@nii.ac.jp"

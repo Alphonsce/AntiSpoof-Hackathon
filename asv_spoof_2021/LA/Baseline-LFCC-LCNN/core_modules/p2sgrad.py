@@ -14,7 +14,6 @@ The difference from a common MSE is that the network output is cos angle.
 from __future__ import print_function
 
 import numpy as np
-
 import torch
 import torch.nn as torch_nn
 import torch.nn.functional as torch_f

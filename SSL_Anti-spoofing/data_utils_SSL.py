@@ -6,17 +6,11 @@ import librosa
 import numpy as np
 import torch
 import torch.nn as nn
+from augmentations import apply_torch_codecs
+from RawBoost import (ISD_additive_noise, LnL_convolutive_noise,
+                      SSI_additive_noise, normWav)
 from torch import Tensor
 from torch.utils.data import Dataset
-
-from augmentations import apply_torch_codecs
-
-from RawBoost import (
-    ISD_additive_noise,
-    LnL_convolutive_noise,
-    SSI_additive_noise,
-    normWav,
-)
 
 ___author__ = "Hemlata Tak"
 __email__ = "tak@eurecom.fr"
@@ -60,7 +54,7 @@ def genSpoof_list(dir_meta, is_train=False, is_eval=False):
 
 def pad(x, max_len=64600):
     x_len = x.shape[0]
-    
+
     if x_len >= max_len:
         return x[:max_len]
     # need to pad
@@ -87,22 +81,28 @@ class Dataset_ASVspoof2019_train(Dataset):
     def __getitem__(self, index):
 
         utt_id = self.list_IDs[index]
-        
+
         if ".wav" not in utt_id:
             try:
-                X, fs = librosa.load(self.base_dir + "flac/" + utt_id + ".flac", sr=16000)
+                X, fs = librosa.load(
+                    self.base_dir + "flac/" + utt_id + ".flac", sr=16000
+                )
             except:
                 print("Except in reading")
                 utt_id = "DF_E_2000032"
-                X, fs = librosa.load(self.base_dir + "flac/" + utt_id + ".flac", sr=16000)
-            
+                X, fs = librosa.load(
+                    self.base_dir + "flac/" + utt_id + ".flac", sr=16000
+                )
+
         elif ".wav" in utt_id:
             try:
                 X, fs = librosa.load(self.base_dir + utt_id, sr=16000)
             except:
                 utt_id = "DF_E_2000032"
-                X, fs = librosa.load(self.base_dir + "flac/" + utt_id + ".flac", sr=16000)
-            
+                X, fs = librosa.load(
+                    self.base_dir + "flac/" + utt_id + ".flac", sr=16000
+                )
+
         try:
             Y = process_Rawboost_feature(X, fs, self.args, self.algo)
             Y, fs = apply_torch_codecs(torch.tensor(Y, dtype=torch.float32), fs)

@@ -1,17 +1,14 @@
-from datasets import load_dataset, Audio
-from transformers import EncodecModel, AutoProcessor
-
-from IPython.display import Audio
 import os
 
-import torchaudio
-
-from torchaudio.transforms import Resample
-from torchaudio.functional import resample
-import torch
-
-from tqdm import tqdm
 import numpy as np
+import torch
+import torchaudio
+from datasets import Audio, load_dataset
+from IPython.display import Audio
+from torchaudio.functional import resample
+from torchaudio.transforms import Resample
+from tqdm import tqdm
+from transformers import AutoProcessor, EncodecModel
 
 # read_path = "/data/a.varlamov/asvspoof/ASVspoof2021_DF_eval/flac"
 read_path = "/data/a.varlamov/asvspoof/ASVspoof2021_DF_eval/for-norm/training/fake"
@@ -20,16 +17,20 @@ output_path = "/data/a.varlamov/asvspoof/DF_flacs_encodec"
 
 model = EncodecModel.from_pretrained("facebook/encodec_24khz").to("cuda")
 
+
 def augment_with_encodec(waveform, sample_rate):
-    '''
-    
-    '''
+    """ """
     waveform = resample(waveform, sample_rate, 24000).flatten()
-    
-    audio_values = model(waveform.to("cuda").unsqueeze(0).unsqueeze(1)).audio_values.flatten().cpu().detach()
+
+    audio_values = (
+        model(waveform.to("cuda").unsqueeze(0).unsqueeze(1))
+        .audio_values.flatten()
+        .cpu()
+        .detach()
+    )
 
     aug_waveform = resample(audio_values, 24000, sample_rate)
-    
+
     return aug_waveform.unsqueeze(0)
 
 

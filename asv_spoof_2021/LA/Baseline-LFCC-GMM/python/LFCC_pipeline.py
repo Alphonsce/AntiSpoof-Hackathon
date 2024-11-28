@@ -1,10 +1,11 @@
-from spafe.utils.preprocessing import pre_emphasis, framing, windowing, zero_handling
-from spafe.utils.exceptions import ParameterError, ErrorMsgs
+import numpy as np
+from librosa import util
 from spafe.fbanks.linear_fbanks import linear_filter_banks
 from spafe.utils.cepstral import cms, cmvn, lifter_ceps
+from spafe.utils.exceptions import ErrorMsgs, ParameterError
+from spafe.utils.preprocessing import (framing, pre_emphasis, windowing,
+                                       zero_handling)
 from spafe.utils.spectral import dct, power_spectrum
-from librosa import util
-import numpy as np
 
 
 def lfcc(
